@@ -8,7 +8,7 @@ SLAVE_ID = 1
 
 HC_START_ADDR = 1100
 HC_COUNT=7
-HC_REGMAP_IPUT = {
+HC_REGMAP_INPUT = {
     'HC_1_SUPPLY_TEMPERATURE':   {'addr': 0, 'value': 0, 'multiplier': 0.1, 'count': 1, 'type': INT},
     'HC_1_ROOM_TEMPERATURE':     {'addr': 1, 'value': 0, 'multiplier': 0.1, 'count': 1, 'type': INT},
     'HC_1_HUMIDITY':             {'addr': 2, 'value': 0, 'multiplier': 0.1, 'count': 1, 'type': INT},
@@ -20,7 +20,7 @@ HC_REGMAP_IPUT = {
 
 BU_START_ADDR = 1900
 BU_COUNT = 5
-BU_REGMAP_IPUT = {
+BU_REGMAP_INPUT = {
     'BU_1_TOP_TEMPERATURE':      {'addr': 0, 'value': 0, 'multiplier': 0.1, 'count': 1, 'type': INT},
     'BU_1_BOTTOM_TEMPERATURE':   {'addr': 1, 'value': 0, 'multiplier': 0.1, 'count': 1, 'type': INT},
     'BU_1_PUMP':                 {'addr': 2,'value': 0, 'multiplier': 1, 'count': 1, 'type': INT},
@@ -31,7 +31,7 @@ BU_REGMAP_IPUT = {
 
 BO_START_ADDR = 500
 BO_COUNT = 3
-BO_REGMAP_IPUT = {
+BO_REGMAP_INPUT = {
     'BO_1_TEMPERATURE':  {'addr': 0, 'value': 0, 'multiplier': 0.1, 'count': 1, 'type': INT},
     'BO_1_STATE':        {'addr': 1, 'value': 0, 'multiplier': 1, 'count': 1, 'type': UINT},
     'BO_1_MODE':         {'addr': 2, 'value': 0, 'multiplier': 1, 'count': 1, 'type': UINT}
@@ -39,7 +39,7 @@ BO_REGMAP_IPUT = {
 
 HP_START_ADDR = 2300
 HP_COUNT = 27
-HP_REGMAP_IPUT = {
+HP_REGMAP_INPUT = {
     'SUPPLY_TEMPERATURE':               {'addr': 0, 'value': 0, 'multiplier': 0.1, 'count': 1, 'type': INT},
     'RETURN_TEMPERATURE':               {'addr': 1, 'value': 0, 'multiplier': 0.1, 'count': 1, 'type': INT},
     'FLOW_RATE':                        {'addr': 2, 'value': 0, 'multiplier': 1, 'count': 1, 'type': INT},

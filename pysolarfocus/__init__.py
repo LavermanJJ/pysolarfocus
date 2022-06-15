@@ -1,7 +1,31 @@
 __version__ = '0.0.5'
 
 
-from .const import BO_COUNT, BO_REGMAP_IPUT, BO_START_ADDR, BOILER_MODE, BOILER_STATE, BU_COUNT, BU_REGMAP_IPUT, BU_START_ADDR, BUFFER_MODE, BUFFER_STATE, HC_COUNT, HC_REGMAP_IPUT, HC_START_ADDR, HEATING_STATE, HP_COUNT, HP_REGMAP_IPUT, HP_START_ADDR, INT, PV_COUNT, PV_REGMAP_INPUT, PV_START_ADDR, SLAVE_ID, VAMPAIR_STATE
+from .const import (
+    BO_COUNT, 
+    BO_REGMAP_INPUT, 
+    BO_START_ADDR, 
+    BOILER_MODE, 
+    BOILER_STATE, 
+    BU_COUNT, 
+    BU_REGMAP_INPUT, 
+    BU_START_ADDR, 
+    BUFFER_MODE, 
+    BUFFER_STATE, 
+    HC_COUNT, 
+    HC_REGMAP_INPUT, 
+    HC_START_ADDR, 
+    HEATING_STATE, 
+    HP_COUNT, 
+    HP_REGMAP_INPUT, 
+    HP_START_ADDR, 
+    INT, 
+    PV_COUNT, 
+    PV_REGMAP_INPUT, 
+    PV_START_ADDR, 
+    SLAVE_ID, 
+    VAMPAIR_STATE
+)
 
 
 class SolarfocusAPI():
@@ -214,10 +238,10 @@ class SolarfocusAPI():
     def __init__(self, conn, update_on_read=False):
         """Initialize Solarfocus communication."""
         self._conn = conn
-        self._heating_circuit_input_regs = HC_REGMAP_IPUT
-        self._buffer_input_regs = BU_REGMAP_IPUT
-        self._boiler_input_regs = BO_REGMAP_IPUT
-        self._heatpump_input_regs = HP_REGMAP_IPUT
+        self._heating_circuit_input_regs = HC_REGMAP_INPUT
+        self._buffer_input_regs = BU_REGMAP_INPUT
+        self._boiler_input_regs = BO_REGMAP_INPUT
+        self._heatpump_input_regs = HP_REGMAP_INPUT
         self._photovoltaik_input_regs = PV_REGMAP_INPUT
         self._slave = SLAVE_ID
         self._update_on_read = update_on_read
@@ -271,23 +295,23 @@ class SolarfocusAPI():
         for i in input_reg:
             _entry = input_reg[i]
             _idx = _entry["addr"]
-            value = result_reg[_idx]
+            _value = result_reg[_idx]
 
             # Multi-register values (UINT32, INT32)
             if _entry['count'] == 2:
-                value = (result_reg[_idx] << 16) + result_reg[_idx+1]
+                _value = (result_reg[_idx] << 16) + result_reg[_idx+1]
             else:
-                value = result_reg[_idx]
+                _value = result_reg[_idx]
             
             # Datatype
             if _entry["type"] is INT:
-                value = self._unsignedToSigned(value, _entry['count']*2)
+                _value = self._unsignedToSigned(_value, _entry['count']*2)
 
             # Scale
-            value*=_entry["multiplier"]
+            _value*=_entry["multiplier"]
 
             # Store
-            input_reg[i]["value"] = value
+            input_reg[i]["value"] = _value
 
     def _unsignedToSigned(self, n, byte_count): 
         return int.from_bytes(n.to_bytes(byte_count, 'little', signed=False), 'little', signed=True)
