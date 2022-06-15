@@ -1,4 +1,4 @@
-__version__ = '0.0.5'
+__version__ = '1.0.0'
 
 
 from .const import (
@@ -203,6 +203,13 @@ class SolarfocusAPI():
     def hp_electrical_energy_cooling(self):
         """Supply temperature of heating circuit 1"""
         return self._heatpump_input_regs.get('ELECTRICAL_ENERGY_COOLING')['value']
+
+    @property
+    def hp_cop(self):
+        """Supply temperature of heating circuit 1"""
+        if self.hp_electrical_power: 
+            return self.hp_thermal_power_heating / self.hp_electrical_power
+        return 0.0
 
     @property
     def hp_vampair_state(self):
