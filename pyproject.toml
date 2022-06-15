@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "pysolarfocus"
+version = "1.0.0"
+description = "Unofficial, local Solarfocus client"
+authors = ["Jeroen Laverman <jjlaverman@web.de>"]
+license = "Apache-2.0"
+homepage = "https://github.com/lavermanjj/pysolarfocus"
+repository = "https://github.com/lavermanjj/pysolarfocus"
+keywords = ["solarfocus", "api client"]
+include = ["LICENSE"]
+readme = "README.md"
+
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pymodbus = "^2.5.3"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
