@@ -1,4 +1,4 @@
-__version__ = '1.0.0'
+__version__ = '1.0.1'
 
 
 from .const import (
@@ -32,107 +32,107 @@ class SolarfocusAPI():
     """Solarfocus Heating System"""
 
     @property
-    def hc1_supply_temp(self):
+    def hc1_supply_temp(self) -> float:
         """Supply temperature of heating circuit 1"""
         return self._heating_circuit_input_regs.get('HC_1_SUPPLY_TEMPERATURE')['value']
 
     @property
-    def hc1_room_temp(self):
+    def hc1_room_temp(self) -> float:
         """Supply temperature of heating circuit 1"""
         return self._heating_circuit_input_regs.get('HC_1_ROOM_TEMPERATURE')['value']
 
     @property
-    def hc1_humidity(self):
+    def hc1_humidity(self) -> int:
         """Supply temperature of heating circuit 1"""
         return self._heating_circuit_input_regs.get('HC_1_HUMIDITY')['value']
 
     @property
-    def hc1_limit_thermostat(self):
+    def hc1_limit_thermostat(self) -> int:
         """Supply temperature of heating circuit 1"""
         return self._heating_circuit_input_regs.get('HC_1_LIMIT_THERMOSTAT')['value']
 
     @property
-    def hc1_circulator_pump(self):
+    def hc1_circulator_pump(self) -> int:
         """Supply temperature of heating circuit 1"""
         return self._heating_circuit_input_regs.get('HC_1_CIRCULATOR_PUMP')['value']
 
     @property
-    def hc1_mixer_valve(self):
+    def hc1_mixer_valve(self) -> int:
         """Supply temperature of heating circuit 1"""
         return self._heating_circuit_input_regs.get('HC_1_MIXER_VALVE')['value']
 
     @property
-    def hc1_state(self):
+    def hc1_state(self) -> int:
         """Supply temperature of heating circuit 1"""
         return self._heating_circuit_input_regs.get('HC_1_MIXER_VALVE')['value']
         #return HEATING_STATE.get(value, "UNKOWN")
 
     @property
-    def bu1_top_temp(self):
+    def bu1_top_temp(self) -> float:
         """Supply temperature of heating circuit 1"""
         return self._buffer_input_regs.get('BU_1_TOP_TEMPERATURE')['value']
     
     @property
-    def bu1_bottom_temp(self):
+    def bu1_bottom_temp(self) -> float:
         """Supply temperature of heating circuit 1"""
         return self._buffer_input_regs.get('BU_1_BOTTOM_TEMPERATURE')['value']
     
     @property
-    def bu1_pump(self):
+    def bu1_pump(self) -> int:
         """Supply temperature of heating circuit 1"""
         return self._buffer_input_regs.get('BU_1_PUMP')['value']
     
     @property
-    def bu1_state(self):
+    def bu1_state(self) -> int:
         """Supply temperature of heating circuit 1"""
         return self._buffer_input_regs.get('BU_1_STATE')['value']
         #return BUFFER_STATE.get(value, "UNKOWN")
     
     @property
-    def bu1_mode(self):
+    def bu1_mode(self) -> int:
         """Supply temperature of heating circuit 1"""
         return self._buffer_input_regs.get('BU_1_MODE')['value']
         #return BUFFER_MODE.get(value, "UNKOWN")
 
     @property
-    def bo1_temp(self):
+    def bo1_temp(self) -> float:
         """Supply temperature of heating circuit 1"""
         return self._boiler_input_regs.get('BO_1_TEMPERATURE')['value']
 
     @property
-    def bo1_state(self):
+    def bo1_state(self) -> int:
         """Supply temperature of heating circuit 1"""
         return self._boiler_input_regs.get('BO_1_STATE')['value']
         #return BOILER_STATE.get(value, "UNKOWN")
 
     @property
-    def bo1_mode(self):
+    def bo1_mode(self) -> int:
         """Supply temperature of heating circuit 1"""
         return self._boiler_input_regs.get('BO_1_MODE')['value']
         #return BOILER_MODE.get(value, "UNKOWN")
 
     @property
-    def hp_supply_temp(self):
+    def hp_supply_temp(self) -> float:
         """Supply temperature of heating circuit 1"""
         return self._heatpump_input_regs.get('SUPPLY_TEMPERATURE')['value']
 
     @property
-    def hp_return_temp(self):
+    def hp_return_temp(self) -> float:
         """Supply temperature of heating circuit 1"""
         return self._heatpump_input_regs.get('RETURN_TEMPERATURE')['value']
 
     @property
-    def hp_flow_rate(self):
+    def hp_flow_rate(self) -> int:
         """Supply temperature of heating circuit 1"""
         return self._heatpump_input_regs.get('FLOW_RATE')['value']
 
     @property
-    def hp_compressor_speed(self):
+    def hp_compressor_speed(self) -> int:
         """Supply temperature of heating circuit 1"""
         return self._heatpump_input_regs.get('COMPRESSOR_SPEED')['value']
 
     @property
-    def hp_evu_lock_active(self):
+    def hp_evu_lock_active(self) -> int:
         """Supply temperature of heating circuit 1"""
         return self._heatpump_input_regs.get('EVU_LOCK_ACTIVE')['value']
         #return EVU_LOCK.get(value, "UNKNOWN")
@@ -144,101 +144,101 @@ class SolarfocusAPI():
         #return DEFROST.get(value, "UNKNOWN")
 
     @property
-    def hp_boiler_charge(self):
+    def hp_boiler_charge(self) -> int:
         """Supply temperature of heating circuit 1"""
         return self._heatpump_input_regs.get('BOILER_CHARGE')['value']
         #return BOILER_CHARGE.get(value, "UNKNOWN")
 
     @property
-    def hp_thermal_energy_total(self):
+    def hp_thermal_energy_total(self) -> float:
         """Supply temperature of heating circuit 1"""
         return self._heatpump_input_regs.get('THERMAL_ENERGY_TOTAL')['value']
 
     @property
-    def hp_thermal_energy_drinking_water(self):
+    def hp_thermal_energy_drinking_water(self) -> float:
         """Supply temperature of heating circuit 1"""
         return self._heatpump_input_regs.get('THERMAL_ENERGY_DRINKING_WATER')['value']
 
     @property
-    def hp_thermal_energy_heating(self):
+    def hp_thermal_energy_heating(self) -> float:
         """Supply temperature of heating circuit 1"""
         return self._heatpump_input_regs.get('THERMAL_ENERGY_HEATING')['value']
 
     @property
-    def hp_electrical_energy_total(self):
+    def hp_electrical_energy_total(self) -> float:
         """Supply temperature of heating circuit 1"""
         return self._heatpump_input_regs.get('ELECTRICAL_ENERGY_TOTAL')['value']
 
     @property
-    def hp_electrical_energy_drinking_water(self):
+    def hp_electrical_energy_drinking_water(self) -> float:
         """Supply temperature of heating circuit 1"""
         return self._heatpump_input_regs.get('ELECTRICAL_ENERGY_DRINKING_WATER')['value']
 
     @property
-    def hp_eletrical_energy_heating(self):
+    def hp_eletrical_energy_heating(self) -> float:
         """Supply temperature of heating circuit 1"""
         return self._heatpump_input_regs.get('ELECTRICAL_ENERGY_HEATING')['value']
 
     @property
-    def hp_electrical_power(self):
+    def hp_electrical_power(self) -> int:
         """Supply temperature of heating circuit 1"""
         return self._heatpump_input_regs.get('ELECTRICAL_POWER')['value']
 
     @property
-    def hp_thermal_power_cooling(self):
+    def hp_thermal_power_cooling(self) -> int:
         """Supply temperature of heating circuit 1"""
         return self._heatpump_input_regs.get('THERMAL_POWER_COOLING')['value']
 
     @property
-    def hp_thermal_power_heating(self):
+    def hp_thermal_power_heating(self) -> int:
         """Supply temperature of heating circuit 1"""
         return self._heatpump_input_regs.get('THERMAL_POWER_HEATING')['value']
 
     @property
-    def hp_thermal_energy_cooling(self):
+    def hp_thermal_energy_cooling(self) -> float:
         """Supply temperature of heating circuit 1"""
         return self._heatpump_input_regs.get('THERMAL_ENERGY_COOLING')['value']
 
     @property
-    def hp_electrical_energy_cooling(self):
+    def hp_electrical_energy_cooling(self) -> float:
         """Supply temperature of heating circuit 1"""
         return self._heatpump_input_regs.get('ELECTRICAL_ENERGY_COOLING')['value']
 
     @property
-    def hp_cop(self):
+    def hp_cop(self) -> float:
         """Supply temperature of heating circuit 1"""
         if self.hp_electrical_power: 
             return self.hp_thermal_power_heating / self.hp_electrical_power
         return 0.0
 
     @property
-    def hp_vampair_state(self):
+    def hp_vampair_state(self) -> int:
         """Supply temperature of heating circuit 1"""
         return self._heatpump_input_regs.get('VAMPAIR_STATE')['value']
         #return VAMPAIR_STATE.get(value, "UNKOWN")
 
     @property
-    def pv_power(self):
+    def pv_power(self) -> int:
         """Supply temperature of heating circuit 1"""
         return self._photovoltaik_input_regs.get('PV_POWER')['value']
 
     @property
-    def pv_house_consumption(self):
+    def pv_house_consumption(self) -> int:
         """Supply temperature of heating circuit 1"""
         return self._photovoltaik_input_regs.get('HOUSE_CONSUMPTION')['value']
 
     @property
-    def pv_heatpump_consumption(self):
+    def pv_heatpump_consumption(self) -> int:
         """Supply temperature of heating circuit 1"""
         return self._photovoltaik_input_regs.get('HEATPUMP_CONSUMPTION')['value']
 
     @property
-    def pv_grid_import(self):
+    def pv_grid_import(self) -> int:
         """Supply temperature of heating circuit 1"""
         return self._photovoltaik_input_regs.get('GRID_IMPORT')['value']
 
     @property
-    def pv_grid_export(self):
+    def pv_grid_export(self) -> int:
         """Supply temperature of heating circuit 1"""
         return self._photovoltaik_input_regs.get('GRID_EXPORT')['value']
 
