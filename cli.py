@@ -7,11 +7,19 @@ from pysolarfocus.const import PORT
 
 
 def run(host):
-    client =  ModbusClient(host, port=PORT)
+    client =  ModbusClient(host="172.16.1.17", port=PORT)
     client.connect()
 
     solarfocus = sf.SolarfocusAPI(client)
-    solarfocus.update()
+    #solarfocus.update()
+
+    if solarfocus.update_heating():
+        print(f"vorlauf: {solarfocus.hc_target_temperatur}")
+
+    #solarfocus.set_smart_grid(4)
+    #print(f"{solarfocus._heating_circuit_holding_regs}")
+
+    #print(f"vorlauf: {solarfocus.hc1_state}")
 
     #attrs = vars(solarfocus)
     #print(', '.join("%s: %s" % item for item in attrs.items()))

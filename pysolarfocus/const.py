@@ -73,6 +73,40 @@ PV_REGMAP_INPUT = {
 }
 
 
+HC_REGMAP_HOLDING = {
+    'TARGET_SUPPLY_TEMPERATURE':        {'addr': 32600, 'value': 0, 'multiplier': 10, 'count': 1, 'type': INT},
+    'COOLING':                          {'addr': 32602, 'value': 0, 'multiplier': 1, 'count': 1, 'type': INT},
+    'MODE':                             {'addr': 32603, 'value': 0, 'multiplier': 1, 'count': 1, 'type': INT},
+    'TARGET_ROOM_TEMPERATURE':          {'addr': 32605, 'value': 0, 'multiplier': 10, 'count': 1, 'type': INT},
+    'INDOOR_TEMPERATURE_EXTERNAL':      {'addr': 32606, 'value': 0, 'multiplier': 10, 'count': 1, 'type': INT},
+    'INDOOR_HUMIDITY_EXTERNAL':         {'addr': 32607, 'value': 0, 'multiplier': 10, 'count': 1, 'type': INT},
+
+}
+
+BO_REGMAP_HOLDING = {
+    'TARGET_TEMPERATURE':           {'addr': 32000, 'value': 0, 'multiplier': 10, 'count': 1, 'type': INT},
+    'SINGLE_CHARGE':                {'addr': 32001, 'value': 0, 'multiplier': 1, 'count': 1, 'type': INT},
+    'MODE':                         {'addr': 32002, 'value': 0, 'multiplier': 1, 'count': 1, 'type': INT},
+    'CIRCULATION':                  {'addr': 32003, 'value': 0, 'multiplier': 1, 'count': 1, 'type': INT},
+
+}
+
+HP_REGMAP_HOLDING = {
+    'EVU_LOCK':                         {'addr': 33404, 'value': 0, 'multiplier': 1, 'count': 1, 'type': INT},
+    'SMART_GRID':                       {'addr': 33405, 'value': 0, 'multiplier': 1, 'count': 1, 'type': INT},
+    'OUTDOOR_TEMPERATURE_EXTERNAL':     {'addr': 33406, 'value': 0, 'multiplier': 10, 'count': 1, 'type': INT},
+
+}
+
+PV_REGMAP_HOLDING = {
+    'SMART_METER':          {'addr': 33407, 'value': 0, 'multiplier': 1, 'count': 1, 'type': INT},
+    'PHOTOVOLTAIC':         {'addr': 33408, 'value': 0, 'multiplier': 1, 'count': 2, 'type': INT},
+    'GRID_IN_EXPORT':       {'addr': 33409, 'value': 0, 'multiplier': 1, 'count': 2, 'type': INT},
+
+}
+
+
+
 HEATING_STATE = {
     0: 'Heizkreis ist ausgeschaltet', 
     1: 'Absenkbetrieb',

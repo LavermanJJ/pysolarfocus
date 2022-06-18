@@ -2,29 +2,27 @@ __version__ = '1.0.1'
 
 
 from .const import (
-    BO_COUNT, 
+    BO_COUNT,
+    BO_REGMAP_HOLDING, 
     BO_REGMAP_INPUT, 
     BO_START_ADDR, 
-    BOILER_MODE, 
-    BOILER_STATE, 
     BU_COUNT, 
     BU_REGMAP_INPUT, 
     BU_START_ADDR, 
-    BUFFER_MODE, 
-    BUFFER_STATE, 
-    HC_COUNT, 
+    HC_COUNT,
+    HC_REGMAP_HOLDING, 
     HC_REGMAP_INPUT, 
-    HC_START_ADDR, 
-    HEATING_STATE, 
-    HP_COUNT, 
+    HC_START_ADDR,
+    HP_COUNT,
+    HP_REGMAP_HOLDING, 
     HP_REGMAP_INPUT, 
     HP_START_ADDR, 
     INT, 
-    PV_COUNT, 
+    PV_COUNT,
+    PV_REGMAP_HOLDING, 
     PV_REGMAP_INPUT, 
     PV_START_ADDR, 
     SLAVE_ID, 
-    VAMPAIR_STATE
 )
 
 
@@ -138,7 +136,7 @@ class SolarfocusAPI():
         #return EVU_LOCK.get(value, "UNKNOWN")
 
     @property
-    def hp_defrost_active(self):
+    def hp_defrost_active(self) -> int:
         """Supply temperature of heating circuit 1"""
         return self._heatpump_input_regs.get('DEFROST_ACTIVE')['value']
         #return DEFROST.get(value, "UNKNOWN")
@@ -242,14 +240,23 @@ class SolarfocusAPI():
         """Supply temperature of heating circuit 1"""
         return self._photovoltaik_input_regs.get('GRID_EXPORT')['value']
 
+    @property
+    def hc_target_temperatur(self) -> float:
+        """Supply temperature of heating circuit 1"""
+        return self._heating_circuit_holding_regs.get('TARGET_SUPPLY_TEMPERATURE')['value']
+
     def __init__(self, conn, update_on_read=False):
         """Initialize Solarfocus communication."""
         self._conn = conn
         self._heating_circuit_input_regs = HC_REGMAP_INPUT
+        self._heating_circuit_holding_regs = HC_REGMAP_HOLDING
         self._buffer_input_regs = BU_REGMAP_INPUT
         self._boiler_input_regs = BO_REGMAP_INPUT
+        self._boiler_holding_regs = BO_REGMAP_HOLDING
         self._heatpump_input_regs = HP_REGMAP_INPUT
+        self._heatpump_holding_regs = HP_REGMAP_HOLDING
         self._photovoltaik_input_regs = PV_REGMAP_INPUT
+        self._photovoltaik_holidng_regs = PV_REGMAP_HOLDING
         self._slave = SLAVE_ID
         self._update_on_read = update_on_read
 
@@ -259,44 +266,76 @@ class SolarfocusAPI():
 
     def update(self):
         """Read values from Heating System"""
+        if self.update_heating() and self.update_buffer and self.update_boiler and self.update_heatpump and self.update_photovoltaic:
+            return True
+        return False
+
+    def update_heating(self) -> bool:
+        """Read values from Heating System"""
+        result_input = self._update_input(HC_START_ADDR, HC_COUNT, self._heating_circuit_input_regs)
+        result_holding = self._update_holding(self._heating_circuit_holding_regs)
+        return (result_input or result_holding)
+    
+    def update_buffer(self) -> bool:
+        """Read values from Heating System"""
+        return self._update_input(BU_START_ADDR, BU_COUNT, self._buffer_input_regs)
+
+    def update_boiler(self) -> bool:
+        """Read values from Heating System"""
+        result_input = self._update_input(BO_START_ADDR, BO_COUNT, self._boiler_input_regs)
+        result_holding = self._update_holding(self._boiler_holding_regs)
+        return (result_input or result_holding)
+
+    def update_heatpump(self) -> bool:
+        """Read values from Heating System"""
+        result_input = self._update_input(HP_START_ADDR, HP_COUNT, self._heatpump_input_regs)
+        result_holding = self._update_holding(self._heatpump_holding_regs)
+        return (result_input or result_holding)
+
+    def update_photovoltaic(self) -> bool:
+        """Read values from Heating System"""
+        result_input = self._update_input(PV_START_ADDR, PV_COUNT, self._photovoltaik_input_regs)
+        result_holding = self._update_holding(self._photovoltaic_holding_regs)
+        return (result_input or result_holding)
+
+
+
+    def set_smart_grid(self, value):
+        if value in range(0,5):
+            rq = self._conn.write_registers(32602, [0], unit=SLAVE_ID)
+            rr = self._conn.read_holding_registers(32602,1)
+        print(f"rr={rq}")
+
+    def _update_holding(self, holding_reg) -> bool:
         ret = True
         try:
-            hc_result_input = self._conn.read_input_registers(
-                address=HC_START_ADDR,
-                count=HC_COUNT).registers
+            for i in holding_reg:
+                _entry = holding_reg[i]
+                results = self._conn.read_holding_registers(address=_entry["addr"]).registers
+                _entry["value"] = results[0] / _entry["multiplier"]
 
-            bu_result_input = self._conn.read_input_registers(
-                unit=self._slave,
-                address=BU_START_ADDR,
-                count=BU_COUNT).registers
-
-            bo_result_input = self._conn.read_input_registers(
-                unit=self._slave,
-                address=BO_START_ADDR,
-                count=BO_COUNT).registers
-
-            hp_result_input = self._conn.read_input_registers(
-                unit=self._slave,
-                address=HP_START_ADDR,
-                count=HP_COUNT).registers
-
-            pv_result_input = self._conn.read_input_registers(
-                unit=self._slave,
-                address=PV_START_ADDR,
-                count=PV_COUNT).registers
         except AttributeError:
             # The unit does not reply reliably
             ret = False
             print("Modbus read failed")
-
         else:
-            self._parseRegisters(self._heating_circuit_input_regs, hc_result_input)
-            self._parseRegisters(self._buffer_input_regs, bu_result_input)
-            self._parseRegisters(self._boiler_input_regs, bo_result_input)
-            self._parseRegisters(self._heatpump_input_regs, hp_result_input)
-            self._parseRegisters(self._photovoltaik_input_regs, pv_result_input)
+            return ret
 
+    def _update_input(self, start: int, count: int, input_reg) -> bool:
+        """Read values from Heating System"""
+        ret = True
+        try:
+            result_input = self._conn.read_input_registers(
+            address=start,
+            count=count).registers
+        except AttributeError:
+            # The unit does not reply reliably
+            ret = False
+            print("Modbus read failed")
+        else:
+            self._parseRegisters(input_reg, result_input)
         return ret
+
 
     def _parseRegisters(self, input_reg, result_reg):
         for i in input_reg:
