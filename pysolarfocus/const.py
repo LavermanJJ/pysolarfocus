@@ -79,7 +79,7 @@ HC_REGMAP_HOLDING = {
     'MODE':                             {'addr': 32603, 'value': 0, 'multiplier': 1, 'count': 1, 'type': INT},
     'TARGET_ROOM_TEMPERATURE':          {'addr': 32605, 'value': 0, 'multiplier': 10, 'count': 1, 'type': INT},
     'INDOOR_TEMPERATURE_EXTERNAL':      {'addr': 32606, 'value': 0, 'multiplier': 10, 'count': 1, 'type': INT},
-    'INDOOR_HUMIDITY_EXTERNAL':         {'addr': 32607, 'value': 0, 'multiplier': 10, 'count': 1, 'type': INT},
+    'INDOOR_HUMIDITY_EXTERNAL':         {'addr': 32607, 'value': 0, 'multiplier': 1, 'count': 1, 'type': INT},
 
 }
 
@@ -100,8 +100,8 @@ HP_REGMAP_HOLDING = {
 
 PV_REGMAP_HOLDING = {
     'SMART_METER':          {'addr': 33407, 'value': 0, 'multiplier': 1, 'count': 1, 'type': INT},
-    'PHOTOVOLTAIC':         {'addr': 33408, 'value': 0, 'multiplier': 1, 'count': 2, 'type': INT},
-    'GRID_IN_EXPORT':       {'addr': 33409, 'value': 0, 'multiplier': 1, 'count': 2, 'type': INT},
+    'PHOTOVOLTAIC':         {'addr': 33408, 'value': 0, 'multiplier': 1, 'count': 1, 'type': INT},
+    'GRID_IM_EXPORT':       {'addr': 33409, 'value': 0, 'multiplier': 1, 'count': 1, 'type': INT},
 
 }
 
@@ -215,3 +215,5 @@ VAMPAIR_STATE = {
     12: 'Wärmepumpe ausgeschaltet'
 }
 
+SMART_GRID_EINSCHALTUNG = 4
+SMART_GRID_NORMALBETRIEB = 2

@@ -22,7 +22,9 @@ from .const import (
     PV_REGMAP_HOLDING, 
     PV_REGMAP_INPUT, 
     PV_START_ADDR, 
-    SLAVE_ID, 
+    SLAVE_ID,
+    SMART_GRID_EINSCHALTUNG,
+    SMART_GRID_NORMALBETRIEB, 
 )
 
 
@@ -241,9 +243,84 @@ class SolarfocusAPI():
         return self._photovoltaik_input_regs.get('GRID_EXPORT')['value']
 
     @property
-    def hc_target_temperatur(self) -> float:
+    def hc1_target_temperatur(self) -> float:
         """Supply temperature of heating circuit 1"""
         return self._heating_circuit_holding_regs.get('TARGET_SUPPLY_TEMPERATURE')['value']
+
+    @property
+    def hc1_target_temperatur(self) -> float:
+        """Supply temperature of heating circuit 1"""
+        return self._heating_circuit_holding_regs.get('COOLING')['value']
+
+    @property
+    def hc1_target_temperatur(self) -> float:
+        """Supply temperature of heating circuit 1"""
+        return self._heating_circuit_holding_regs.get('MODE')['value']
+
+    @property
+    def hc1_target_temperatur(self) -> float:
+        """Supply temperature of heating circuit 1"""
+        return self._heating_circuit_holding_regs.get('TARGET_ROOM_TEMPERATURE')['value']
+
+    @property
+    def hc1_target_temperatur(self) -> float:
+        """Supply temperature of heating circuit 1"""
+        return self._heating_circuit_holding_regs.get('INDOOR_TEMPERATURE_EXTERNAL')['value']
+
+    @property
+    def hc1_target_temperatur(self) -> float:
+        """Supply temperature of heating circuit 1"""
+        return self._heating_circuit_holding_regs.get('INDOOR_HUMIDITY_EXTERNAL')['value']
+
+    @property
+    def bo1_target_temperatur(self) -> float:
+        """Supply temperature of heating circuit 1"""
+        return self._boiler_holding_regs.get('TARGET_TEMPERATURE')['value']
+
+    @property
+    def bo1_single_charge(self) -> float:
+        """Supply temperature of heating circuit 1"""
+        return self._boiler_holding_regs.get('SINGLE_CHARGE')['value']
+
+    @property
+    def bo1_mode_holding(self) -> float:
+        """Supply temperature of heating circuit 1"""
+        return self._boiler_holding_regs.get('MODE')['value']
+
+    @property
+    def bo1_ciruclation(self) -> float:
+        """Supply temperature of heating circuit 1"""
+        return self._boiler_holding_regs.get('CIRCULATION')['value']
+
+    @property
+    def hp_evu_lock(self) -> float:
+        """Supply temperature of heating circuit 1"""
+        return self._heatpump_holding_regs.get('EVU_LOCK')['value']
+
+    @property
+    def hp_smart_grid(self) -> float:
+        """Supply temperature of heating circuit 1"""
+        return self._heatpump_holding_regs.get('SMART_GRID')['value']
+
+    @property
+    def hp_outdoor_temperature_external(self) -> float:
+        """Supply temperature of heating circuit 1"""
+        return self._heatpump_holding_regs.get('OUTDOOR_TEMPERATURE_EXTERNAL')['value']
+
+    @property
+    def pv_smart_meter(self) -> float:
+        """Supply temperature of heating circuit 1"""
+        return self._photovoltaik_holidng_regs.get('SMART_METER')['value']
+
+    @property
+    def pv_photovoltaic(self) -> float:
+        """Supply temperature of heating circuit 1"""
+        return self._photovoltaik_holidng_regs.get('PHOTOVOLTAIC')['value']
+
+    @property
+    def pv_grid_import_export(self) -> float:
+        """Supply temperature of heating circuit 1"""
+        return self._photovoltaik_holidng_regs.get('GRID_IN_EXPORT')['value']
 
     def __init__(self, conn, update_on_read=False):
         """Initialize Solarfocus communication."""
@@ -298,13 +375,91 @@ class SolarfocusAPI():
         result_holding = self._update_holding(self._photovoltaic_holding_regs)
         return (result_input or result_holding)
 
+    def hc1_set_target_supply_temperature(self, temperature) -> bool:
+        """Set target supply temperature"""
+        temp_scaled = int(temperature * HC_REGMAP_HOLDING["TARGET_SUPPLY_TEMPERATURE"]["multiplier"])
+        rq = self._conn.write_registers(HC_REGMAP_HOLDING["TARGET_SUPPLY_TEMPERATURE"]["addr"], [temp_scaled], unit=SLAVE_ID)
+        return rq.isError()
 
+    def hc1_enable_cooling(self, cooling: bool) -> bool:
+        """Set target supply temperature"""
+        rq = self._conn.write_registers(HC_REGMAP_HOLDING["COOLING"]["addr"], [int(cooling)], unit=SLAVE_ID)
+        return rq.isError()
 
-    def set_smart_grid(self, value):
-        if value in range(0,5):
-            rq = self._conn.write_registers(32602, [0], unit=SLAVE_ID)
-            rr = self._conn.read_holding_registers(32602,1)
-        print(f"rr={rq}")
+    def hc1_set_mode(self, mode: int) -> bool:
+        """Set mode"""
+        rq = self._conn.write_registers(HC_REGMAP_HOLDING["MODE"]["addr"], [mode], unit=SLAVE_ID)
+        return rq.isError()
+
+    def hc1_set_target_room_temperature(self, temperature: float) -> bool:
+        """Set target room temperature"""
+        temp_scaled = int(temperature * HC_REGMAP_HOLDING["TARGET_ROOM_TEMPERATURE"]["multiplier"])
+        rq = self._conn.write_registers(HC_REGMAP_HOLDING["TARGET_ROOM_TEMPERATURE"]["addr"], [temp_scaled], unit=SLAVE_ID)
+        return rq.isError()
+
+    def hc1_set_indoor_temperature(self, temperature: float) -> bool:
+        """Set indoor temperature"""
+        temp_scaled = int(temperature * HC_REGMAP_HOLDING["INDOOR_TEMPERATURE_EXTERNAL"]["multiplier"])
+        rq = self._conn.write_registers(HC_REGMAP_HOLDING["INDOOR_TEMPERATURE_EXTERNAL"]["addr"], [temp_scaled], unit=SLAVE_ID)
+        return rq.isError()
+
+    def hc1_set_indoor_humidity(self, humidity: float) -> bool:
+        """Set indoor humidity"""
+        rq = self._conn.write_registers(HC_REGMAP_HOLDING["INDOOR_HUMIDITY_EXTERNAL"]["addr"], [int(humidity)], unit=SLAVE_ID)
+        return rq.isError()
+
+    def bo1_set_target_temperature(self, temperature: float) -> bool:
+        """Set target temperature"""
+        temp_scaled = int(temperature * BO_REGMAP_HOLDING["TARGET_TEMPERATURE"]["multiplier"])
+        rq = self._conn.write_registers(BO_REGMAP_HOLDING["TARGET_TEMPERATURE"]["addr"], [temp_scaled], unit=SLAVE_ID)
+        return rq.isError()
+
+    def bo1_enable_single_charge(self, enable: bool) -> bool:
+        """Enable single charge"""
+        rq = self._conn.write_registers(BO_REGMAP_HOLDING["SINGLE_CHARGE"]["addr"], [int(enable)], unit=SLAVE_ID)
+        return rq.isError()
+
+    def bo1_set_mode(self, mode: int) -> bool:
+        """Set mode"""
+        rq = self._conn.write_registers(BO_REGMAP_HOLDING["MODE"]["addr"], [mode], unit=SLAVE_ID)
+        return rq.isError()
+
+    def bo1_enable_circulation(self, enable: bool) -> bool:
+        """Enable circulation"""
+        rq = self._conn.write_registers(BO_REGMAP_HOLDING["CIRCULATION"]["addr"], [int(enable)], unit=SLAVE_ID)
+        return rq.isError()
+
+    def hp_smart_grid_request_operation(self, operation_request: bool) -> bool:
+        """Set Smart Grid value"""
+        if operation_request:
+            rq = self._conn.write_registers(HP_REGMAP_HOLDING["SMART_GRID"]["addr"], [SMART_GRID_EINSCHALTUNG], unit=SLAVE_ID)
+            #self._update_holding(self._heatpump_holding_regs)
+            return rq.isError()
+        else:
+            rq = self._conn.write_registers(HP_REGMAP_HOLDING["SMART_GRID"]["addr"], [SMART_GRID_NORMALBETRIEB], unit=SLAVE_ID)
+            #self._update_holding(self._heatpump_holding_regs)
+            return rq.isError()
+
+    def hp_set_outdoor_temperature(self, temperature: float) -> bool:
+        """Set outdoor temperature"""
+        temp_scaled = int(temperature * HP_REGMAP_HOLDING["OUTDOOR_TEMPERATURE_EXTERNAL"]["multiplier"])
+        rq = self._conn.write_registers(HP_REGMAP_HOLDING["OUTDOOR_TEMPERATURE_EXTERNAL"]["addr"], [temp_scaled], unit=SLAVE_ID)
+        return rq.isError()
+
+    def pv_set_smart_meter(self, value: int) -> bool:
+        """Set Smart Meter"""
+        rq = self._conn.write_registers(PV_REGMAP_HOLDING["SMART_METER"]["addr"], [value], unit=SLAVE_ID)
+        return rq.isError()
+
+    def pv_set_photovoltaic(self, value: int) -> bool:
+        """Set Photovoltaic"""
+        rq = self._conn.write_registers(PV_REGMAP_HOLDING["PHOTOVOLTAIC"]["addr"], [value], unit=SLAVE_ID)
+        return rq.isError()
+
+    def pv_set_grid_im_export(self, value: int) -> bool:
+        """Set Photovoltaic"""
+        rq = self._conn.write_registers(PV_REGMAP_HOLDING["GRID_IM_EXPORT"]["addr"], [value], unit=SLAVE_ID)
+        return rq.isError()
 
     def _update_holding(self, holding_reg) -> bool:
         ret = True

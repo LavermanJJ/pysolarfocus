@@ -13,8 +13,10 @@ def run(host):
     solarfocus = sf.SolarfocusAPI(client)
     #solarfocus.update()
 
-    if solarfocus.update_heating():
-        print(f"vorlauf: {solarfocus.hc_target_temperatur}")
+    #if solarfocus.update_heating():
+    #    print(f"vorlauf: {solarfocus.hc1_target_temperatur}")
+
+    solarfocus.smart_grid_request_operation(False)
 
     #solarfocus.set_smart_grid(4)
     #print(f"{solarfocus._heating_circuit_holding_regs}")
