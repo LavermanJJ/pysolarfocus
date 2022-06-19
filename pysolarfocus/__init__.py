@@ -253,7 +253,7 @@ class SolarfocusAPI:
         ]
 
     @property
-    def hc1_cooling(self) -> float:
+    def hc1_cooling(self) -> int:
         """Supply temperature of heating circuit 1"""
         return self._heating_circuit_holding_regs.get("COOLING")["value"]
 
@@ -289,27 +289,27 @@ class SolarfocusAPI:
         return self._boiler_holding_regs.get("TARGET_TEMPERATURE")["value"]
 
     @property
-    def bo1_single_charge(self) -> float:
+    def bo1_single_charge(self) -> int:
         """Supply temperature of heating circuit 1"""
         return self._boiler_holding_regs.get("SINGLE_CHARGE")["value"]
 
     @property
-    def bo1_mode_holding(self) -> float:
+    def bo1_mode_holding(self) -> int:
         """Supply temperature of heating circuit 1"""
         return self._boiler_holding_regs.get("MODE")["value"]
 
     @property
-    def bo1_ciruclation(self) -> float:
+    def bo1_ciruclation(self) -> int:
         """Supply temperature of heating circuit 1"""
         return self._boiler_holding_regs.get("CIRCULATION")["value"]
 
     @property
-    def hp_evu_lock(self) -> float:
+    def hp_evu_lock(self) -> int:
         """Supply temperature of heating circuit 1"""
         return self._heatpump_holding_regs.get("EVU_LOCK")["value"]
 
     @property
-    def hp_smart_grid(self) -> float:
+    def hp_smart_grid(self) -> int:
         """Supply temperature of heating circuit 1"""
         return self._heatpump_holding_regs.get("SMART_GRID")["value"]
 
