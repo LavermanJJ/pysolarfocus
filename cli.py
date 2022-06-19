@@ -13,6 +13,8 @@ def run(host):
     solarfocus = sf.SolarfocusAPI(client)
     solarfocus.update()
 
+    #print(f"vorlauf: {solarfocus.hc1_state}")
+
     #attrs = vars(solarfocus)
     #print(', '.join("%s: %s" % item for item in attrs.items()))
 
