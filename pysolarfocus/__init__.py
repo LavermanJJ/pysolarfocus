@@ -65,8 +65,8 @@ class SolarfocusAPI:
     @property
     def hc1_state(self) -> int:
         """Supply temperature of heating circuit 1"""
-        return self._heating_circuit_input_regs.get("HC_1_MIXER_VALVE")["value"]
-        # return HEATING_STATE.get(value, "UNKOWN")
+        return self._heating_circuit_input_regs.get('HC_1_STATE')['value']
+        #return HEATING_STATE.get(value, "UNKOWN")
 
     @property
     def bu1_top_temp(self) -> float:
@@ -603,3 +603,4 @@ class SolarfocusAPI:
         return int.from_bytes(
             n.to_bytes(byte_count, "little", signed=False), "little", signed=True
         )
+
