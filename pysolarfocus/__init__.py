@@ -559,7 +559,7 @@ class SolarfocusAPI:
                     _value = self._unsigned_to_signed(_value, _entry["count"] * 2)
 
                 # Scale
-                _value *= _entry["multiplier"]
+                _value /= _entry["multiplier"]
 
                 _entry["value"] = _value
         except AttributeError:
