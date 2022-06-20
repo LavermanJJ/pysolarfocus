@@ -356,10 +356,10 @@ class SolarfocusAPI:
         """Read values from Heating System"""
         if (
             self.update_heating()
-            and self.update_buffer
-            and self.update_boiler
-            and self.update_heatpump
-            and self.update_photovoltaic
+            and self.update_buffer()
+            and self.update_boiler()
+            and self.update_heatpump()
+            and self.update_photovoltaic()
         ):
             return True
         return False
