@@ -7,13 +7,13 @@ from pysolarfocus.const import PORT
 
 
 def run(host):
-    client =  ModbusClient(host, port=PORT)
+    client =  ModbusClient(host="172.16.1.17", port=PORT)
     client.connect()
 
     solarfocus = sf.SolarfocusAPI(client)
     solarfocus.update()
 
-    #print(f"vorlauf: {solarfocus.hc1_state}")
+    print(f"vorlauf: {solarfocus.hp_return_temp}")
 
     #attrs = vars(solarfocus)
     #print(', '.join("%s: %s" % item for item in attrs.items()))
