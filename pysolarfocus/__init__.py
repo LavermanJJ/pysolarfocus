@@ -1,5 +1,5 @@
 """Python client lib for Solarfocus"""
-__version__ = "1.1.1"
+__version__ = "1.1.2"
 
 
 from .const import (
@@ -45,27 +45,27 @@ class SolarfocusAPI:
     @property
     def hc1_humidity(self) -> int:
         """Supply temperature of heating circuit 1"""
-        return self._heating_circuit_input_regs.get("HC_1_HUMIDITY")["value"]
+        return int(self._heating_circuit_input_regs.get("HC_1_HUMIDITY")["value"])
 
     @property
     def hc1_limit_thermostat(self) -> int:
         """Supply temperature of heating circuit 1"""
-        return self._heating_circuit_input_regs.get("HC_1_LIMIT_THERMOSTAT")["value"]
+        return int(self._heating_circuit_input_regs.get("HC_1_LIMIT_THERMOSTAT")["value"])
 
     @property
     def hc1_circulator_pump(self) -> int:
         """Supply temperature of heating circuit 1"""
-        return self._heating_circuit_input_regs.get("HC_1_CIRCULATOR_PUMP")["value"]
+        return int(self._heating_circuit_input_regs.get("HC_1_CIRCULATOR_PUMP")["value"])
 
     @property
     def hc1_mixer_valve(self) -> int:
         """Supply temperature of heating circuit 1"""
-        return self._heating_circuit_input_regs.get("HC_1_MIXER_VALVE")["value"]
+        return int(self._heating_circuit_input_regs.get("HC_1_MIXER_VALVE")["value"])
 
     @property
     def hc1_state(self) -> int:
         """Supply temperature of heating circuit 1"""
-        return self._heating_circuit_input_regs.get('HC_1_STATE')['value']
+        return int(self._heating_circuit_input_regs.get('HC_1_STATE')['value'])
         #return HEATING_STATE.get(value, "UNKOWN")
 
     @property
@@ -86,13 +86,13 @@ class SolarfocusAPI:
     @property
     def bu1_state(self) -> int:
         """Supply temperature of heating circuit 1"""
-        return self._buffer_input_regs.get("BU_1_STATE")["value"]
+        return int(self._buffer_input_regs.get("BU_1_STATE")["value"])
         # return BUFFER_STATE.get(value, "UNKOWN")
 
     @property
     def bu1_mode(self) -> int:
         """Supply temperature of heating circuit 1"""
-        return self._buffer_input_regs.get("BU_1_MODE")["value"]
+        return int(self._buffer_input_regs.get("BU_1_MODE")["value"])
         # return BUFFER_MODE.get(value, "UNKOWN")
 
     @property
@@ -103,13 +103,13 @@ class SolarfocusAPI:
     @property
     def bo1_state(self) -> int:
         """Supply temperature of heating circuit 1"""
-        return self._boiler_input_regs.get("BO_1_STATE")["value"]
+        return int(self._boiler_input_regs.get("BO_1_STATE")["value"])
         # return BOILER_STATE.get(value, "UNKOWN")
 
     @property
     def bo1_mode(self) -> int:
         """Supply temperature of heating circuit 1"""
-        return self._boiler_input_regs.get("BO_1_MODE")["value"]
+        return int(self._boiler_input_regs.get("BO_1_MODE")["value"])
         # return BOILER_MODE.get(value, "UNKOWN")
 
     @property
@@ -125,29 +125,29 @@ class SolarfocusAPI:
     @property
     def hp_flow_rate(self) -> int:
         """Supply temperature of heating circuit 1"""
-        return self._heatpump_input_regs.get("FLOW_RATE")["value"]
+        return int(self._heatpump_input_regs.get("FLOW_RATE")["value"])
 
     @property
     def hp_compressor_speed(self) -> int:
         """Supply temperature of heating circuit 1"""
-        return self._heatpump_input_regs.get("COMPRESSOR_SPEED")["value"]
+        return int(self._heatpump_input_regs.get("COMPRESSOR_SPEED")["value"])
 
     @property
     def hp_evu_lock_active(self) -> int:
         """Supply temperature of heating circuit 1"""
-        return self._heatpump_input_regs.get("EVU_LOCK_ACTIVE")["value"]
+        return int(self._heatpump_input_regs.get("EVU_LOCK_ACTIVE")["value"])
         # return EVU_LOCK.get(value, "UNKNOWN")
 
     @property
     def hp_defrost_active(self) -> int:
         """Supply temperature of heating circuit 1"""
-        return self._heatpump_input_regs.get("DEFROST_ACTIVE")["value"]
+        return int(self._heatpump_input_regs.get("DEFROST_ACTIVE")["value"])
         # return DEFROST.get(value, "UNKNOWN")
 
     @property
     def hp_boiler_charge(self) -> int:
         """Supply temperature of heating circuit 1"""
-        return self._heatpump_input_regs.get("BOILER_CHARGE")["value"]
+        return int(self._heatpump_input_regs.get("BOILER_CHARGE")["value"])
         # return BOILER_CHARGE.get(value, "UNKNOWN")
 
     @property
@@ -255,12 +255,12 @@ class SolarfocusAPI:
     @property
     def hc1_cooling(self) -> int:
         """Supply temperature of heating circuit 1"""
-        return self._heating_circuit_holding_regs.get("COOLING")["value"]
+        return int(self._heating_circuit_holding_regs.get("COOLING")["value"])
 
     @property
-    def hc1_mode_holding(self) -> float:
+    def hc1_mode_holding(self) -> int:
         """Supply temperature of heating circuit 1"""
-        return self._heating_circuit_holding_regs.get("MODE")["value"]
+        return int(self._heating_circuit_holding_regs.get("MODE")["value"])
 
     @property
     def hc1_target_room_temperatur(self) -> float:
@@ -291,27 +291,27 @@ class SolarfocusAPI:
     @property
     def bo1_single_charge(self) -> int:
         """Supply temperature of heating circuit 1"""
-        return self._boiler_holding_regs.get("SINGLE_CHARGE")["value"]
+        return int(self._boiler_holding_regs.get("SINGLE_CHARGE")["value"])
 
     @property
     def bo1_mode_holding(self) -> int:
         """Supply temperature of heating circuit 1"""
-        return self._boiler_holding_regs.get("MODE")["value"]
+        return int(self._boiler_holding_regs.get("MODE")["value"])
 
     @property
     def bo1_ciruclation(self) -> int:
         """Supply temperature of heating circuit 1"""
-        return self._boiler_holding_regs.get("CIRCULATION")["value"]
+        return int(self._boiler_holding_regs.get("CIRCULATION")["value"])
 
     @property
     def hp_evu_lock(self) -> int:
         """Supply temperature of heating circuit 1"""
-        return self._heatpump_holding_regs.get("EVU_LOCK")["value"]
+        return int(self._heatpump_holding_regs.get("EVU_LOCK")["value"])
 
     @property
     def hp_smart_grid(self) -> int:
         """Supply temperature of heating circuit 1"""
-        return self._heatpump_holding_regs.get("SMART_GRID")["value"]
+        return int(self._heatpump_holding_regs.get("SMART_GRID")["value"])
 
     @property
     def hp_outdoor_temperature_external(self) -> float:
@@ -550,11 +550,18 @@ class SolarfocusAPI:
         try:
             for i in holding_reg:
                 _entry = holding_reg[i]
-                results = self._conn.read_holding_registers(
+                _value = self._conn.read_holding_registers(
                     address=_entry["addr"]
-                ).registers
-                _entry["value"] = results[0] / _entry["multiplier"]
+                ).registers[0]
 
+                # Datatype
+                if _entry["type"] is INT:
+                    _value = self._unsigned_to_signed(_value, _entry["count"] * 2)
+
+                # Scale
+                _value *= _entry["multiplier"]
+
+                _entry["value"] = _value
         except AttributeError:
             # The unit does not reply reliably
             ret = False
@@ -598,6 +605,7 @@ class SolarfocusAPI:
 
             # Store
             input_reg[i]["value"] = _value
+
 
     def _unsigned_to_signed(self, n, byte_count):
         return int.from_bytes(

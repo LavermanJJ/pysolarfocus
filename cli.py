@@ -7,7 +7,7 @@ from pysolarfocus.const import PORT
 
 
 def run(host):
-    client =  ModbusClient(host="172.16.1.17", port=PORT)
+    client =  ModbusClient(host, port=PORT)
     client.connect()
 
     solarfocus = sf.SolarfocusAPI(client)
