@@ -1,5 +1,5 @@
 """Python client lib for Solarfocus"""
-__version__ = "1.2.1"
+__version__ = "1.2.2"
 
 
 from .const import (
@@ -672,7 +672,6 @@ class SolarfocusAPI:
 
 
     def _unsigned_to_signed(self, n, byte_count):
-        print(f"_unsigned_to_signed: n={n}, byte_count={byte_count}")
         return int.from_bytes(
             n.to_bytes(byte_count, "little", signed=False), "little", signed=True
         )
