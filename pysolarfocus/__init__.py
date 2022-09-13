@@ -1,5 +1,5 @@
 """Python client lib for Solarfocus"""
-__version__ = "1.1.3"
+__version__ = "1.2.0"
 
 
 from .const import (
@@ -19,6 +19,9 @@ from .const import (
     HP_REGMAP_INPUT,
     HP_START_ADDR,
     INT,
+    PB_COUNT,
+    PB_REGMAP_INPUT,
+    PB_START_DDR,
     PV_COUNT,
     PV_REGMAP_HOLDING,
     PV_REGMAP_INPUT,
@@ -333,6 +336,63 @@ class SolarfocusAPI:
         """Supply temperature of heating circuit 1"""
         return self._photovoltaic_holidng_regs.get("GRID_IN_EXPORT")["value"]
 
+    @property
+    def pb_temperature(self) -> float:
+        """Supply temperature of heating circuit 1"""
+        return self._pelletsboiler_input_regs.get("PELLETSBOILER_TEMPERATURE")["value"]
+
+    @property
+    def pb_temperature(self) -> float:
+        """Supply temperature of heating circuit 1"""
+        return self._pelletsboiler_input_regs.get("PELLETSBOILER_TEMPERATURE")["value"]
+
+    @property
+    def pb_status(self) -> int:
+        """Supply temperature of heating circuit 1"""
+        return self._pelletsboiler_input_regs.get("STATUS")["value"]
+
+    @property
+    def pb_message_number(self) -> int:
+        """Supply temperature of heating circuit 1"""
+        return self._pelletsboiler_input_regs.get("MESSAGE_NUMBER")["value"]
+
+    @property
+    def pb_door_contact(self) -> int:
+        """Supply temperature of heating circuit 1"""
+        return self._pelletsboiler_input_regs.get("DOOR_CONTACT")["value"]
+
+    @property
+    def pb_cleaning(self) -> int:
+        """Supply temperature of heating circuit 1"""
+        return self._pelletsboiler_input_regs.get("CLEANING")["value"]
+
+    @property
+    def pb_ash_container(self) -> int:
+        """Supply temperature of heating circuit 1"""
+        return self._pelletsboiler_input_regs.get("ASH_CONTAINER")["value"]
+
+    @property
+    def pb_outdoor_temperature(self) -> float:
+        """Supply temperature of heating circuit 1"""
+        return self._pelletsboiler_input_regs.get("OUTDOOR_TEMPERATURE")["value"]
+
+    @property
+    def pb_mode(self) -> int:
+        """Supply temperature of heating circuit 1"""
+        return self._pelletsboiler_input_regs.get("MODE_THERMINATOR")["value"]
+
+    @property
+    def pb_octoplus_buffer_temperature_bottom(self) -> float:
+        """Supply temperature of heating circuit 1"""
+        return self._pelletsboiler_input_regs.get("OCTOPLUS_BUFFER_TEMPERATURE_BOTTOM")["value"]
+
+    @property
+    def pb_octoplus_buffer_temperature_top(self) -> float:
+        """Supply temperature of heating circuit 1"""
+        return self._pelletsboiler_input_regs.get("OCTOPLUS_BUFFER_TEMPERATURE_TOP")["value"]
+
+
+
     def __init__(self, conn, update_on_read=False):
         """Initialize Solarfocus communication."""
         self._conn = conn
@@ -345,6 +405,7 @@ class SolarfocusAPI:
         self._heatpump_holding_regs = HP_REGMAP_HOLDING
         self._photovoltaic_input_regs = PV_REGMAP_INPUT
         self._photovoltaic_holidng_regs = PV_REGMAP_HOLDING
+        self._pelletsboiler_input_regs = PB_REGMAP_INPUT
         self._slave = SLAVE_ID
         self._update_on_read = update_on_read
 
@@ -399,6 +460,13 @@ class SolarfocusAPI:
         )
         result_holding = self._update_holding(self._photovoltaic_holidng_regs)
         return result_input or result_holding
+
+    def update_pelletsboiler(self) -> bool:
+        """Read values from Pellets boiler"""
+        result_input = self._update_input(
+            PB_START_DDR, PB_COUNT, self._pelletsboiler_input_regs
+        )
+        return result_input
 
     def hc1_set_target_supply_temperature(self, temperature) -> bool:
         """Set target supply temperature"""
