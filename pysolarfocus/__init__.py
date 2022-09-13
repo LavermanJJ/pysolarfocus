@@ -342,11 +342,6 @@ class SolarfocusAPI:
         return self._pelletsboiler_input_regs.get("PELLETSBOILER_TEMPERATURE")["value"]
 
     @property
-    def pb_temperature(self) -> float:
-        """Supply temperature of heating circuit 1"""
-        return self._pelletsboiler_input_regs.get("PELLETSBOILER_TEMPERATURE")["value"]
-
-    @property
     def pb_status(self) -> int:
         """Supply temperature of heating circuit 1"""
         return self._pelletsboiler_input_regs.get("STATUS")["value"]
@@ -421,6 +416,7 @@ class SolarfocusAPI:
             and self.update_boiler()
             and self.update_heatpump()
             and self.update_photovoltaic()
+            and self.update_pelletsboiler()
         ):
             return True
         return False
@@ -676,6 +672,7 @@ class SolarfocusAPI:
 
 
     def _unsigned_to_signed(self, n, byte_count):
+        print(f"_unsigned_to_signed: n={n}, byte_count={byte_count}")
         return int.from_bytes(
             n.to_bytes(byte_count, "little", signed=False), "little", signed=True
         )

@@ -249,7 +249,7 @@ PB_REGMAP_INPUT = {
     "DOOR_CONTACT": {"addr": 3, "value": 0, "multiplier": 1, "count": 1, "type": INT},
     "CLEANING": {"addr": 4, "value": 0, "multiplier": 1, "count": 1, "type": INT},
     "ASH_CONTAINER": {"addr": 5, "value": 0, "multiplier": 1, "count": 1, "type": INT},
-    "OUTDOOR_TEMPERATURE": {"addr": 6, "value": 0, "multiplier": 1, "count": 0.1, "type": INT},
+    "OUTDOOR_TEMPERATURE": {"addr": 6, "value": 0, "multiplier": 0.1, "count": 1, "type": INT},
     "MODE_THERMINATOR": {"addr": 7, "value": 0, "multiplier": 1, "count": 1, "type": INT},
     "OCTOPLUS_BUFFER_TEMPERATURE_BOTTOM": {"addr": 8, "value": 0, "multiplier": 0.1, "count": 1, "type": INT},
     "OCTOPLUS_BUFFER_TEMPERATURE_TOP": {"addr": 9, "value": 0, "multiplier": 0.1, "count": 1, "type": INT},
