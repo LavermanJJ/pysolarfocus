@@ -1,5 +1,5 @@
 """Python client lib for Solarfocus"""
-__version__ = "1.2.2"
+__version__ = "1.2.3"
 
 
 from .const import (
@@ -372,11 +372,6 @@ class SolarfocusAPI:
         return self._pelletsboiler_input_regs.get("OUTDOOR_TEMPERATURE")["value"]
 
     @property
-    def pb_mode(self) -> int:
-        """Supply temperature of heating circuit 1"""
-        return self._pelletsboiler_input_regs.get("MODE_THERMINATOR")["value"]
-
-    @property
     def pb_octoplus_buffer_temperature_bottom(self) -> float:
         """Supply temperature of heating circuit 1"""
         return self._pelletsboiler_input_regs.get("OCTOPLUS_BUFFER_TEMPERATURE_BOTTOM")["value"]
@@ -386,6 +381,10 @@ class SolarfocusAPI:
         """Supply temperature of heating circuit 1"""
         return self._pelletsboiler_input_regs.get("OCTOPLUS_BUFFER_TEMPERATURE_TOP")["value"]
 
+    @property
+    def pb_log_wood_therminator(self) -> float:
+        """Supply temperature of heating circuit 1"""
+        return self._pelletsboiler_input_regs.get("LOG_WOOD_THERMINATOR")["value"]
 
 
     def __init__(self, conn, update_on_read=False):

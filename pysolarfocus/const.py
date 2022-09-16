@@ -241,18 +241,19 @@ PV_REGMAP_INPUT = {
 }
 
 PB_START_DDR = 2400
-PB_COUNT = 11
+PB_COUNT = 13
 PB_REGMAP_INPUT = {
     "PELLETSBOILER_TEMPERATURE": {"addr": 0, "value": 0, "multiplier": 0.1, "count": 1, "type": INT},
     "STATUS": {"addr": 1, "value": 0, "multiplier": 1, "count": 1, "type": UINT},
-    "MESSAGE_NUMBER": {"addr": 2, "value": 0, "multiplier": 1, "count": 1, "type": INT},
-    "DOOR_CONTACT": {"addr": 3, "value": 0, "multiplier": 1, "count": 1, "type": INT},
-    "CLEANING": {"addr": 4, "value": 0, "multiplier": 1, "count": 1, "type": INT},
-    "ASH_CONTAINER": {"addr": 5, "value": 0, "multiplier": 1, "count": 1, "type": INT},
-    "OUTDOOR_TEMPERATURE": {"addr": 6, "value": 0, "multiplier": 0.1, "count": 1, "type": INT},
-    "MODE_THERMINATOR": {"addr": 7, "value": 0, "multiplier": 1, "count": 1, "type": INT},
-    "OCTOPLUS_BUFFER_TEMPERATURE_BOTTOM": {"addr": 8, "value": 0, "multiplier": 0.1, "count": 1, "type": INT},
-    "OCTOPLUS_BUFFER_TEMPERATURE_TOP": {"addr": 9, "value": 0, "multiplier": 0.1, "count": 1, "type": INT},
+    "MESSAGE_NUMBER": {"addr": 4, "value": 0, "multiplier": 1, "count": 1, "type": INT},
+    "DOOR_CONTACT": {"addr": 5, "value": 0, "multiplier": 1, "count": 1, "type": INT},
+    "CLEANING": {"addr": 6, "value": 0, "multiplier": 1, "count": 1, "type": INT},
+    "ASH_CONTAINER": {"addr": 7, "value": 0, "multiplier": 1, "count": 1, "type": INT},
+    "OUTDOOR_TEMPERATURE": {"addr": 8, "value": 0, "multiplier": 0.1, "count": 1, "type": INT},
+    #"MODE_THERMINATOR": {"addr": 9, "value": 0, "multiplier": 1, "count": 1, "type": INT},
+    "OCTOPLUS_BUFFER_TEMPERATURE_BOTTOM": {"addr": 9, "value": 0, "multiplier": 0.1, "count": 1, "type": INT},
+    "OCTOPLUS_BUFFER_TEMPERATURE_TOP": {"addr": 10, "value": 0, "multiplier": 0.1, "count": 1, "type": INT},
+    "LOG_WOOD_THERMINATOR": {"addr": 11, "value": 0, "multiplier": 1, "count": 1, "type": UINT},
 }
 
 
