@@ -1,6 +1,9 @@
 """Python client lib for Solarfocus"""
 __version__ = "1.2.3"
 
+import logging
+from typing import Any, Tuple
+from pymodbus.client.sync import ModbusTcpClient
 
 from .const import (
     BO_COUNT,
@@ -387,7 +390,7 @@ class SolarfocusAPI:
         return self._pelletsboiler_input_regs.get("LOG_WOOD_THERMINATOR")["value"]
 
 
-    def __init__(self, conn, update_on_read=False):
+    def __init__(self, conn:ModbusTcpClient,slave_id:int=SLAVE_ID):
         """Initialize Solarfocus communication."""
         self._conn = conn
         self._heating_circuit_input_regs = HC_REGMAP_INPUT
@@ -400,13 +403,17 @@ class SolarfocusAPI:
         self._photovoltaic_input_regs = PV_REGMAP_INPUT
         self._photovoltaic_holidng_regs = PV_REGMAP_HOLDING
         self._pelletsboiler_input_regs = PB_REGMAP_INPUT
-        self._slave = SLAVE_ID
-        self._update_on_read = update_on_read
+        self._slave_id = slave_id
 
     def connect(self):
         """Connect to Solarfocus eco manager-touch"""
         return self._conn.connect()
 
+    @property
+    def is_connected(self)->bool:
+        """Check if connection is established"""
+        return self._conn.is_socket_open()
+    
     def update(self):
         """Read values from Heating System"""
         if (
@@ -468,111 +475,60 @@ class SolarfocusAPI:
         temp_scaled = int(
             temperature * HC_REGMAP_HOLDING["TARGET_SUPPLY_TEMPERATURE"]["multiplier"]
         )
-        request = self._conn.write_registers(
-            HC_REGMAP_HOLDING["TARGET_SUPPLY_TEMPERATURE"]["addr"],
-            [temp_scaled],
-            unit=SLAVE_ID,
-        )
-        return not request.isError()
+        return self.__write_registers(HC_REGMAP_HOLDING["TARGET_SUPPLY_TEMPERATURE"]["addr"],temp_scaled)
+
 
     def hc1_enable_cooling(self, cooling: bool) -> bool:
         """Set target supply temperature"""
-        request = self._conn.write_registers(
-            HC_REGMAP_HOLDING["COOLING"]["addr"], [int(cooling)], unit=SLAVE_ID
-        )
-        return not request.isError()
-
+        return self.__write_registers( HC_REGMAP_HOLDING["COOLING"]["addr"],int(cooling))
+    
     def hc1_set_mode(self, mode: int) -> bool:
         """Set mode"""
-        request = self._conn.write_registers(
-            HC_REGMAP_HOLDING["MODE"]["addr"], [mode], unit=SLAVE_ID
-        )
-        return not request.isError()
+        return self.__write_registers(HC_REGMAP_HOLDING["MODE"]["addr"],mode)
 
     def hc1_set_target_room_temperature(self, temperature: float) -> bool:
         """Set target room temperature"""
         temp_scaled = int(
             temperature * HC_REGMAP_HOLDING["TARGET_ROOM_TEMPERATURE"]["multiplier"]
         )
-        request = self._conn.write_registers(
-            HC_REGMAP_HOLDING["TARGET_ROOM_TEMPERATURE"]["addr"],
-            [temp_scaled],
-            unit=SLAVE_ID,
-        )
-        return not request.isError()
-
+        return self.__write_registers(HC_REGMAP_HOLDING["TARGET_ROOM_TEMPERATURE"]["addr"],temp_scaled)
+    
     def hc1_set_indoor_temperature(self, temperature: float) -> bool:
         """Set indoor temperature"""
         temp_scaled = int(
             temperature * HC_REGMAP_HOLDING["INDOOR_TEMPERATURE_EXTERNAL"]["multiplier"]
         )
-        request = self._conn.write_registers(
-            HC_REGMAP_HOLDING["INDOOR_TEMPERATURE_EXTERNAL"]["addr"],
-            [temp_scaled],
-            unit=SLAVE_ID,
-        )
-        return not request.isError()
+        return self.__write_registers(HC_REGMAP_HOLDING["INDOOR_TEMPERATURE_EXTERNAL"]["addr"],temp_scaled)
+
 
     def hc1_set_indoor_humidity(self, humidity: float) -> bool:
         """Set indoor humidity"""
-        request = self._conn.write_registers(
-            HC_REGMAP_HOLDING["INDOOR_HUMIDITY_EXTERNAL"]["addr"],
-            [int(humidity)],
-            unit=SLAVE_ID,
-        )
-        return not request.isError()
-
+        return self.__write_registers(HC_REGMAP_HOLDING["INDOOR_HUMIDITY_EXTERNAL"]["addr"],int(humidity))
+    
     def bo1_set_target_temperature(self, temperature: float) -> bool:
         """Set target temperature"""
         temp_scaled = int(
             temperature * BO_REGMAP_HOLDING["TARGET_TEMPERATURE"]["multiplier"]
         )
-        request = self._conn.write_registers(
-            BO_REGMAP_HOLDING["TARGET_TEMPERATURE"]["addr"],
-            [temp_scaled],
-            unit=SLAVE_ID,
-        )
-        return not request.isError()
-
+        return self.__write_registers(BO_REGMAP_HOLDING["TARGET_TEMPERATURE"]["addr"],temp_scaled)
+    
     def bo1_enable_single_charge(self, enable: bool) -> bool:
         """Enable single charge"""
-        request = self._conn.write_registers(
-            BO_REGMAP_HOLDING["SINGLE_CHARGE"]["addr"], [int(enable)], unit=SLAVE_ID
-        )
-        return not request.isError()
-
+        return self.__write_registers(BO_REGMAP_HOLDING["SINGLE_CHARGE"]["addr"],int(enable))
+    
     def bo1_set_mode(self, mode: int) -> bool:
         """Set mode"""
-        request = self._conn.write_registers(
-            BO_REGMAP_HOLDING["MODE"]["addr"], [mode], unit=SLAVE_ID
-        )
-        return not request.isError()
-
+        return self.__write_registers(BO_REGMAP_HOLDING["MODE"]["addr"],mode)
+    
     def bo1_enable_circulation(self, enable: bool) -> bool:
         """Enable circulation"""
-        request = self._conn.write_registers(
-            BO_REGMAP_HOLDING["CIRCULATION"]["addr"], [int(enable)], unit=SLAVE_ID
-        )
-        return not request.isError()
+        return self.__write_registers(BO_REGMAP_HOLDING["CIRCULATION"]["addr"],int(enable))
+
 
     def hp_smart_grid_request_operation(self, operation_request: bool) -> bool:
         """Set Smart Grid value"""
-        if operation_request:
-            request = self._conn.write_registers(
-                HP_REGMAP_HOLDING["SMART_GRID"]["addr"],
-                [SMART_GRID_EINSCHALTUNG],
-                unit=SLAVE_ID,
-            )
-            # self._update_holding(self._heatpump_holding_regs)
-            return not request.isError()
-        else:
-            request = self._conn.write_registers(
-                HP_REGMAP_HOLDING["SMART_GRID"]["addr"],
-                [SMART_GRID_NORMALBETRIEB],
-                unit=SLAVE_ID,
-            )
-            # self._update_holding(self._heatpump_holding_regs)
-            return not request.isError()
+        return self.__write_registers(HP_REGMAP_HOLDING["SMART_GRID"]["addr"], SMART_GRID_EINSCHALTUNG if operation_request else SMART_GRID_NORMALBETRIEB)
+
 
     def hp_set_outdoor_temperature(self, temperature: float) -> bool:
         """Set outdoor temperature"""
@@ -580,42 +536,67 @@ class SolarfocusAPI:
             temperature
             * HP_REGMAP_HOLDING["OUTDOOR_TEMPERATURE_EXTERNAL"]["multiplier"]
         )
-        request = self._conn.write_registers(
-            HP_REGMAP_HOLDING["OUTDOOR_TEMPERATURE_EXTERNAL"]["addr"],
-            [temp_scaled],
-            unit=SLAVE_ID,
-        )
-        return not request.isError()
-
+        return self.__write_registers(HP_REGMAP_HOLDING["OUTDOOR_TEMPERATURE_EXTERNAL"]["addr"],temp_scaled)
+    
     def pv_set_smart_meter(self, value: int) -> bool:
         """Set Smart Meter"""
-        request = self._conn.write_registers(
-            PV_REGMAP_HOLDING["SMART_METER"]["addr"], [value], unit=SLAVE_ID
-        )
-        return not request.isError()
+        return self.__write_registers(PV_REGMAP_HOLDING["SMART_METER"]["addr"],value)
 
     def pv_set_photovoltaic(self, value: int) -> bool:
         """Set Photovoltaic"""
-        request = self._conn.write_registers(
-            PV_REGMAP_HOLDING["PHOTOVOLTAIC"]["addr"], [value], unit=SLAVE_ID
-        )
-        return not request.isError()
+        return self.__write_registers(PV_REGMAP_HOLDING["PHOTOVOLTAIC"]["addr"], value)
+
 
     def pv_set_grid_im_export(self, value: int) -> bool:
         """Set Photovoltaic"""
-        request = self._conn.write_registers(
-            PV_REGMAP_HOLDING["GRID_IM_EXPORT"]["addr"], [value], unit=SLAVE_ID
-        )
-        return not request.isError()
+        return self.__write_registers(PV_REGMAP_HOLDING["GRID_IM_EXPORT"]["addr"],value)
 
-    def _update_holding(self, holding_reg) -> bool:
-        ret = True
+
+    def __write_registers(self,address:int, value:int, check_connection:bool = True) -> bool:
+        """Internal methode to write registers to the modbus server"""
+        if check_connection and not self.is_connected:
+            logging.error("Connection to modbus is not established!")
+            return False
         try:
-            for i in holding_reg:
+            response = self._conn.write_registers(address, [value], unit=self._slave_id)
+            if response.isError():
+                logging.error(f"Error writing value={value} to register: {address}: {response}")
+                return False
+        except Exception:
+            logging.exception(f"Eception while writing value={value} to register: {address}!")
+            return True
+        return True
+
+    def __read_holding_registers(self,address:int, check_connection:bool = True)->Tuple[bool,Any]:
+        """Internal methode to read holding registers from modbus"""
+        if check_connection and not self.is_connected:
+            logging.error("Connection to modbus is not established!")
+            return False, None
+        try:
+            result = self._conn.read_holding_registers(address=address, unit=self._slave_id)
+            if result.isError():
+                logging.error(f"Modbus read error at address={address}: {result}")
+                return False, None
+            return True, result.registers[0]
+        except Exception:
+            logging.exception(f"Exception while reading holding registers at address={address}!")
+            return False, None
+
+        
+    def _update_holding(self, holding_reg:dict) -> bool:
+        """Update holding registers"""
+        encountered_error = False
+        for i in holding_reg:
+            _address = -1 # default to -1 to indicate that the address is not set
+            
+            try:
                 _entry = holding_reg[i]
-                _value = self._conn.read_holding_registers(
-                    address=_entry["addr"]
-                ).registers[0]
+                _address = _entry["addr"]
+                _sucess, _value = self.__read_holding_registers(_address)
+                if not _sucess:
+                    #Flag as error and continue with next register
+                    encountered_error = True
+                    continue
 
                 # Datatype
                 if _entry["type"] is INT:
@@ -625,29 +606,41 @@ class SolarfocusAPI:
                 _value /= _entry["multiplier"]
 
                 _entry["value"] = _value
-        except AttributeError:
-            # The unit does not reply reliably
-            ret = False
-            print("Modbus read failed")
-        else:
-            return ret
+            except Exception:
+                encountered_error = True
+                logging.exception(f"Exception while parsing holding registers at address={_address}!")
+        return encountered_error
 
-    def _update_input(self, start: int, count: int, input_reg) -> bool:
-        """Read values from Heating System"""
-        ret = True
+
+    def __read_input_registers(self,address:int,count:int,check_connection:bool=True)->Tuple[bool,Any]:
+        """Internal methode to read input registers from modbus"""
+        if check_connection and not self.is_connected:
+            logging.error("Connection to modbus is not established!")
+            return False, None
         try:
-            result_input = self._conn.read_input_registers(
-                address=start, count=count
-            ).registers
-        except AttributeError:
-            # The unit does not reply reliably
-            ret = False
-            print("Modbus read failed")
-        else:
-            self._parse_registers(input_reg, result_input)
-        return ret
+            result = self._conn.read_input_registers(address=address, count=count,unit=self._slave_id)
+            if result.isError():
+                logging.error(f"Modbus read error at address={address}, count={count}: {result}")
+                return False, None
+            return True, result.registers
+        except Exception:
+            logging.exception(f"Exception while reading input registers at address={address}, count={count}!")
+            return False, None
+        
+    def _update_input(self, start: int, count: int, input_reg:dict) -> bool:
+        """Read values from Heating System"""
+        success, registers = self.__read_input_registers(start, count)
+        if not success:
+            return False
+        try:
+            self._parse_registers(input_reg, registers)
+        except Exception:
+            logging.exception(f"Exception while parsing input registers at address={start}, count={count}!")
+            return False
+        
+        return True
 
-    def _parse_registers(self, input_reg, result_reg):
+    def _parse_registers(self, input_reg:dict, result_reg):
         for i in input_reg:
             _entry = input_reg[i]
             _idx = _entry["addr"]
@@ -670,7 +663,7 @@ class SolarfocusAPI:
             input_reg[i]["value"] = _value
 
 
-    def _unsigned_to_signed(self, n, byte_count):
+    def _unsigned_to_signed(self, n:int, byte_count:int)->int:
         return int.from_bytes(
             n.to_bytes(byte_count, "little", signed=False), "little", signed=True
         )
