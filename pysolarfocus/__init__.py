@@ -564,7 +564,7 @@ class SolarfocusAPI:
                 return False
         except Exception:
             logging.exception(f"Eception while writing value={value} to register: {address}!")
-            return True
+            return False
         return True
 
     def __read_holding_registers(self,address:int, check_connection:bool = True)->Tuple[bool,Any]:
