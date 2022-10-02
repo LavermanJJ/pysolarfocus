@@ -1,5 +1,5 @@
 """Python client lib for Solarfocus"""
-__version__ = "1.2.3"
+__version__ = "1.3.0"
 
 import logging
 from typing import Any, Tuple
