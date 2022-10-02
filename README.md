@@ -15,6 +15,6 @@ This integration has been tested with Solarfocus eco<sup>manager-touch</sup> ver
 | Solar (_Solar_)| :x:|
 | Boiler 1 (_Boiler_) | :white_check_mark: |
 | Heatpump (_Wärmepumpe_) | :white_check_mark: |
-| Pelletsboiler (_Kessel_) | :x: | 
+| Biomassboiler (_Kessel_) | :white_check_mark: | 
 
 _Note: The number of supported Heating Circuits, Buffers, and Boilers could be extended in the future_
