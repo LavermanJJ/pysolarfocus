@@ -1,8 +1,7 @@
 import argparse
 import pysolarfocus as sf
-
+import logging
 from pymodbus.client.sync import ModbusTcpClient as ModbusClient
-
 from pysolarfocus.const import PORT
 
 

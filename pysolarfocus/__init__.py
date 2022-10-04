@@ -5,6 +5,7 @@ import logging
 from typing import Any, Tuple
 from pymodbus.client.sync import ModbusTcpClient
 
+from .const import (Boiler, HeatingCircuit, Buffer, HeatPump, PelletsBoiler, Photovoltaic, DataValue, Component, RegisterTypes)
 from .const import (
     BO_COUNT,
     BO_REGMAP_HOLDING,
@@ -382,27 +383,23 @@ class SolarfocusAPI:
     @property
     def pb_octoplus_buffer_temperature_top(self) -> float:
         """Supply temperature of heating circuit 1"""
-        return self._pelletsboiler_input_regs.get("OCTOPLUS_BUFFER_TEMPERATURE_TOP")["value"]
+        return  self.pelletsboiler.octoplus_buffer_temperature_top.scaled_value
 
     @property
     def pb_log_wood_therminator(self) -> float:
         """Supply temperature of heating circuit 1"""
-        return self._pelletsboiler_input_regs.get("LOG_WOOD_THERMINATOR")["value"]
+        return self.pelletsboiler.log_wood.scaled_value
 
 
     def __init__(self, conn:ModbusTcpClient,slave_id:int=SLAVE_ID):
         """Initialize Solarfocus communication."""
         self._conn = conn
-        self._heating_circuit_input_regs = HC_REGMAP_INPUT
-        self._heating_circuit_holding_regs = HC_REGMAP_HOLDING
-        self._buffer_input_regs = BU_REGMAP_INPUT
-        self._boiler_input_regs = BO_REGMAP_INPUT
-        self._boiler_holding_regs = BO_REGMAP_HOLDING
-        self._heatpump_input_regs = HP_REGMAP_INPUT
-        self._heatpump_holding_regs = HP_REGMAP_HOLDING
-        self._photovoltaic_input_regs = PV_REGMAP_INPUT
-        self._photovoltaic_holidng_regs = PV_REGMAP_HOLDING
-        self._pelletsboiler_input_regs = PB_REGMAP_INPUT
+        self.heating_circuit = HeatingCircuit()
+        self.boiler = Boiler()
+        self.heatpump = HeatPump()
+        self.photovoltaic = Photovoltaic()
+        self.pelletsboiler = PelletsBoiler()
+        self.buffer = Buffer()
         self._slave_id = slave_id
 
     def connect(self):
@@ -427,48 +424,48 @@ class SolarfocusAPI:
             return True
         return False
 
+    def __update(self,component:Component)->bool:
+        """Read values for the given component from Heating System"""
+        failed=False
+        if component.has_input_address:
+            read_success, registers = self.__read_input_registers(component.input_address, component.input_count)
+            parsing_success = False
+            if read_success:
+                parsing_success = component.parse(registers, RegisterTypes.Input) and read_success
+            failed = not parsing_success and read_success or failed
+             
+        if component.has_holding_address:
+            read_success, registers = self.__read_holding_registers(component.holding_address, component.holding_count)
+            parsing_success = False
+            if read_success:
+                parsing_success = component.parse(registers, RegisterTypes.Holding) and read_success
+            failed = not (parsing_success and read_success) or failed
+        return not failed
+    
     def update_heating(self) -> bool:
         """Read values from Heating System"""
-        result_input = self._update_input(
-            HC_START_ADDR, HC_COUNT, self._heating_circuit_input_regs
-        )
-        result_holding = self._update_holding(self._heating_circuit_holding_regs)
-        return result_input or result_holding
-
+        return self.__update(self.heating_circuit)
+    
     def update_buffer(self) -> bool:
         """Read values from Heating System"""
-        return self._update_input(BU_START_ADDR, BU_COUNT, self._buffer_input_regs)
+        return self.__update(self.buffer)
+    
 
     def update_boiler(self) -> bool:
         """Read values from Heating System"""
-        result_input = self._update_input(
-            BO_START_ADDR, BO_COUNT, self._boiler_input_regs
-        )
-        result_holding = self._update_holding(self._boiler_holding_regs)
-        return result_input or result_holding
+        return self.__update(self.boiler)
 
     def update_heatpump(self) -> bool:
         """Read values from Heating System"""
-        result_input = self._update_input(
-            HP_START_ADDR, HP_COUNT, self._heatpump_input_regs
-        )
-        result_holding = self._update_holding(self._heatpump_holding_regs)
-        return result_input or result_holding
+        return self.__update(self.heatpump)
 
     def update_photovoltaic(self) -> bool:
         """Read values from Heating System"""
-        result_input = self._update_input(
-            PV_START_ADDR, PV_COUNT, self._photovoltaic_input_regs
-        )
-        result_holding = self._update_holding(self._photovoltaic_holidng_regs)
-        return result_input or result_holding
+        return self.__update(self.photovoltaic)
 
     def update_pelletsboiler(self) -> bool:
         """Read values from Pellets boiler"""
-        result_input = self._update_input(
-            PB_START_DDR, PB_COUNT, self._pelletsboiler_input_regs
-        )
-        return result_input
+        return self.__update(self.pelletsboiler)
 
     def hc1_set_target_supply_temperature(self, temperature) -> bool:
         """Set target supply temperature"""
@@ -567,51 +564,21 @@ class SolarfocusAPI:
             return False
         return True
 
-    def __read_holding_registers(self,address:int, check_connection:bool = True)->Tuple[bool,Any]:
+    def __read_holding_registers(self,address:int, count:int, check_connection:bool = True)->Tuple[bool,Any]:
         """Internal methode to read holding registers from modbus"""
         if check_connection and not self.is_connected:
             logging.error("Connection to modbus is not established!")
             return False, None
         try:
-            result = self._conn.read_holding_registers(address=address, unit=self._slave_id)
+            result = self._conn.read_holding_registers(address=address,count=count ,unit=self._slave_id)
             if result.isError():
                 logging.error(f"Modbus read error at address={address}: {result}")
                 return False, None
-            return True, result.registers[0]
+            return True, result.registers
         except Exception:
             logging.exception(f"Exception while reading holding registers at address={address}!")
             return False, None
-
         
-    def _update_holding(self, holding_reg:dict) -> bool:
-        """Update holding registers"""
-        encountered_error = False
-        for i in holding_reg:
-            _address = -1 # default to -1 to indicate that the address is not set
-            
-            try:
-                _entry = holding_reg[i]
-                _address = _entry["addr"]
-                _sucess, _value = self.__read_holding_registers(_address)
-                if not _sucess:
-                    #Flag as error and continue with next register
-                    encountered_error = True
-                    continue
-
-                # Datatype
-                if _entry["type"] is INT:
-                    _value = self._unsigned_to_signed(_value, _entry["count"] * 2)
-
-                # Scale
-                _value /= _entry["multiplier"]
-
-                _entry["value"] = _value
-            except Exception:
-                encountered_error = True
-                logging.exception(f"Exception while parsing holding registers at address={_address}!")
-        return encountered_error
-
-
     def __read_input_registers(self,address:int,count:int,check_connection:bool=True)->Tuple[bool,Any]:
         """Internal methode to read input registers from modbus"""
         if check_connection and not self.is_connected:
@@ -626,45 +593,3 @@ class SolarfocusAPI:
         except Exception:
             logging.exception(f"Exception while reading input registers at address={address}, count={count}!")
             return False, None
-        
-    def _update_input(self, start: int, count: int, input_reg:dict) -> bool:
-        """Read values from Heating System"""
-        success, registers = self.__read_input_registers(start, count)
-        if not success:
-            return False
-        try:
-            self._parse_registers(input_reg, registers)
-        except Exception:
-            logging.exception(f"Exception while parsing input registers at address={start}, count={count}!")
-            return False
-        
-        return True
-
-    def _parse_registers(self, input_reg:dict, result_reg):
-        for i in input_reg:
-            _entry = input_reg[i]
-            _idx = _entry["addr"]
-            _value = result_reg[_idx]
-
-            # Multi-register values (UINT32, INT32)
-            if _entry["count"] == 2:
-                _value = (result_reg[_idx] << 16) + result_reg[_idx + 1]
-            else:
-                _value = result_reg[_idx]
-
-            # Datatype
-            if _entry["type"] is INT:
-                _value = self._unsigned_to_signed(_value, _entry["count"] * 2)
-
-            # Scale
-            _value *= _entry["multiplier"]
-
-            # Store
-            input_reg[i]["value"] = _value
-
-
-    def _unsigned_to_signed(self, n:int, byte_count:int)->int:
-        return int.from_bytes(
-            n.to_bytes(byte_count, "little", signed=False), "little", signed=True
-        )
-
