@@ -11,7 +11,7 @@ class Boiler(Component):
         
         self.target_temperature = DataValue(address=0,multiplier=10,register_type=RegisterTypes.Holding)
         self.single_charge = DataValue(address=1,register_type=RegisterTypes.Holding)
-        self.mode= DataValue(address=2,register_type=RegisterTypes.Holding)
+        self.holding_mode= DataValue(address=2,register_type=RegisterTypes.Holding)
         self.circulation = DataValue(address=3,register_type=RegisterTypes.Holding)
         
         self._initialize_addresses()

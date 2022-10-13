@@ -41,12 +41,18 @@ class DataValue(object):
             return self.value * self.multiplier
         else:
             return self.value
+       
+    def reverse_scale(self,value:float)->float:
+        """
+        Applies the scaler in the reverse direction
+        """
+        if self.has_scaler:
+            return value / self.multiplier
+        else:
+            return value
         
     def set_unscaled_value(self,value:float)->None:
         """
         Applies the scaler to the value and sets the value
         """
-        if self.has_scaler:
-            self.value = int(value/self.multiplier)
-        else:
-            self.value = value
+        self.value = self.reverse_scale(value)
