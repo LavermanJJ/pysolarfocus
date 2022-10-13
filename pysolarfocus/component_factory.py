@@ -10,6 +10,8 @@ from .const import Systems
 class ComponentFactory:
     @staticmethod
     def heating_circuit(system:Systems)->HeatingCircuit:
+        if system == Systems.Therminator:
+            return TherminatorHeatingCircuit()
         return HeatingCircuit()
     
     @staticmethod
@@ -30,4 +32,7 @@ class ComponentFactory:
     
     @staticmethod
     def buffer(system:Systems)->Buffer:
-        return Buffer()
+        if system == Systems.Therminator:
+            return TherminatorBuffer()
+        else:
+            return Buffer()

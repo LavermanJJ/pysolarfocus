@@ -4,7 +4,7 @@ from .base.data_value import DataValue
 
 class HeatPump(Component):
     def __init__(self) -> None:
-        super().__init__(input_address=2300, input_count=27,holding_address=33404, holding_count=3)
+        super().__init__(input_address=2300,holding_address=33404)
         self.supply_temperature = DataValue(address=0,multiplier=0.1)
         self.return_temperatur = DataValue(address=1,multiplier=0.1)
         self.flow_rate = DataValue(address=2)
@@ -28,4 +28,4 @@ class HeatPump(Component):
         self.evu_lock = DataValue(address=0,register_type=RegisterTypes.Holding)
         self.smart_grid = DataValue(address=1,register_type=RegisterTypes.Holding)
         self.outdoor_temperature_external = DataValue(address=2,multiplier=10,register_type=RegisterTypes.Holding)
-        self._initialize_addresses()
+        self._initialize()

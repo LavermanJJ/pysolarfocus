@@ -4,7 +4,7 @@ from .base.data_value import DataValue
 
 class Photovoltaic(Component):
     def __init__(self) -> None:
-        super().__init__(input_address=2500, input_count=10, holding_address=33407,holding_count=3)
+        super().__init__(input_address=2500, holding_address=33407)
         self.power = DataValue(address=0,count=2)
         self.house_consumption = DataValue(address=2,count=2)
         self.heatpump_consumption = DataValue(address=4,count=2)
@@ -15,4 +15,4 @@ class Photovoltaic(Component):
         self.photovoltaic = DataValue(address=1,register_type=RegisterTypes.Holding)
         self.grid_im_export = DataValue(address=2,register_type=RegisterTypes.Holding)
         
-        self._initialize_addresses()
+        self._initialize()

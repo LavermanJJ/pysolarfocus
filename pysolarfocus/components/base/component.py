@@ -1,23 +1,33 @@
 from .enums import RegisterTypes,DataTypes
 from .data_value import DataValue
+import logging
 
 class Component(object):
-    def __init__(self,input_address:int,input_count:int,holding_address:int=-1,holding_count:int=-1)->None:
+    def __init__(self,input_address:int,holding_address:int=-1)->None:
         self.input_address = input_address
-        self.input_count = input_count
+        self.input_count = 0
         self.holding_address = holding_address
-        self.holding_count = holding_count
+        self.holding_count = 0
         self.__data_values = None
         
-    def _initialize_addresses(self)->None:
+    def _initialize(self)->None:
         """
-        Initializes the absolute addresses of the DataValues
+        Initializes the absolute addresses of the DataValues and the count of the Component
         """
         for _,value in self.__get_data_values():
             if value.register_type == RegisterTypes.Input:
                 value._absolut_address = self.input_address
             else:
                 value._absolut_address = self.holding_address
+          
+        #Dynamically calcuate how many registers have to be read  
+        if len(self.__get_input_values()) > 0:    
+            last_input_value = max([v for _,v in self.__get_input_values()],key=lambda item: item.address)
+            self.input_count = last_input_value.address+last_input_value.count
+        
+        if len(self.__get_holding_values()) > 0:
+            last_holding_value = max([v for _,v in self.__get_holding_values()],key=lambda item: item.address)
+            self.holding_count = last_holding_value.address+last_holding_value.count
                 
     @property
     def has_input_address(self)->bool:
@@ -26,7 +36,13 @@ class Component(object):
     @property
     def has_holding_address(self)->bool:
         return self.holding_address >= 0 and self.holding_count > 0
-        
+       
+    def _reset(self):
+        """
+        Resets the DataValues of this Component
+        """
+        self.__data_values = None
+            
     def __get_data_values(self)->list[tuple[str,DataValue]]:
         """
         Returns all DataValues of this Component
