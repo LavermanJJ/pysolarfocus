@@ -4,36 +4,17 @@ __version__ = "1.3.0"
 import logging
 from typing import Any, Tuple
 from pymodbus.client.sync import ModbusTcpClient
+from .component_factory import ComponentFactory
 
-from .const import (Boiler, HeatingCircuit, Buffer, HeatPump, PelletsBoiler, Photovoltaic, DataValue, Component, RegisterTypes)
 from .const import (
-    BO_COUNT,
-    BO_REGMAP_HOLDING,
-    BO_REGMAP_INPUT,
-    BO_START_ADDR,
-    BU_COUNT,
-    BU_REGMAP_INPUT,
-    BU_START_ADDR,
-    HC_COUNT,
-    HC_REGMAP_HOLDING,
-    HC_REGMAP_INPUT,
-    HC_START_ADDR,
-    HP_COUNT,
-    HP_REGMAP_HOLDING,
-    HP_REGMAP_INPUT,
-    HP_START_ADDR,
-    INT,
-    PB_COUNT,
-    PB_REGMAP_INPUT,
-    PB_START_DDR,
-    PV_COUNT,
-    PV_REGMAP_HOLDING,
-    PV_REGMAP_INPUT,
-    PV_START_ADDR,
+    Systems,
     SLAVE_ID,
     SMART_GRID_EINSCHALTUNG,
     SMART_GRID_NORMALBETRIEB,
 )
+
+from .components.base.component import Component
+from .components.base.enums import DataTypes, RegisterTypes
 
 
 class SolarfocusAPI:
@@ -42,7 +23,7 @@ class SolarfocusAPI:
     @property
     def hc1_supply_temp(self) -> float:
         """Supply temperature of heating circuit 1"""
-        return self._heating_circuit_input_regs.get("HC_1_SUPPLY_TEMPERATURE")["value"]
+        return self.heating_circuit.supply_temperature.scaled_value
 
     @property
     def hc1_room_temp(self) -> float:
@@ -391,15 +372,15 @@ class SolarfocusAPI:
         return self.pelletsboiler.log_wood.scaled_value
 
 
-    def __init__(self, conn:ModbusTcpClient,slave_id:int=SLAVE_ID):
+    def __init__(self, conn:ModbusTcpClient,system:Systems=Systems.Vampair,slave_id:int=SLAVE_ID):
         """Initialize Solarfocus communication."""
         self._conn = conn
-        self.heating_circuit = HeatingCircuit()
-        self.boiler = Boiler()
-        self.heatpump = HeatPump()
-        self.photovoltaic = Photovoltaic()
-        self.pelletsboiler = PelletsBoiler()
-        self.buffer = Buffer()
+        self.heating_circuit = ComponentFactory.heating_circuit(system)
+        self.boiler = ComponentFactory.boiler(system)
+        self.heatpump = ComponentFactory.heatpump(system)
+        self.photovoltaic = ComponentFactory.photovoltaic(system)
+        self.pelletsboiler = ComponentFactory.pelletsboiler(system)
+        self.buffer = ComponentFactory.buffer(system)
         self._slave_id = slave_id
 
     def connect(self):
@@ -450,7 +431,6 @@ class SolarfocusAPI:
         """Read values from Heating System"""
         return self.__update(self.buffer)
     
-
     def update_boiler(self) -> bool:
         """Read values from Heating System"""
         return self.__update(self.boiler)
