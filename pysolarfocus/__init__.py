@@ -448,7 +448,7 @@ class SolarfocusAPI:
             logging.error("Connection to modbus is not established!")
             return False, None
         try:
-            result = self._conn.read_holding_registers(address=address,count=count ,unit=self._slave_id)
+            result = self._conn.read_holding_registers(address=address,count=count ,slave=self._slave_id)
             if result.isError():
                 logging.error(f"Modbus read error at address={address}: {result}")
                 return False, None
