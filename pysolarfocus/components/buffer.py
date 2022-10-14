@@ -1,5 +1,5 @@
 from .base.component import Component
-from .base.enums import DataTypes,RegisterTypes
+from .base.enums import DataTypes
 from .base.data_value import DataValue
 
 class Buffer(Component):
