@@ -93,7 +93,11 @@ class Component(object):
     
     def __repr__(self) -> str:
         s = [f"{self.__class__.__name__}"]
+        s.append("---Input:")
         for name,value in self.__get_input_values():
             s.append(f"{name}| raw:{value.value} scaled:{value.scaled_value}")
+        s.append("---Holding:")
+        for name,value in self.__get_holding_values():
+            s.append(f"{name} | raw:{value.value}")
             
         return "\n".join(s)
