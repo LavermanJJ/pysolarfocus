@@ -22,7 +22,7 @@ _Note: The number of supported Heating Circuits, Buffers, and Boilers could be e
 ## Usage
 
 ```python
-from pymodbus.client.sync import ModbusTcpClient as ModbusClient
+from pymodbus.client import ModbusTcpClient as ModbusClient
 from pysolarfocus import SolarfocusAPI
 from pysolarfocus.const import PORT,Systems
 

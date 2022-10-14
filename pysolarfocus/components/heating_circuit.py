@@ -25,7 +25,7 @@ class TherminatorHeatingCircuit(HeatingCircuit):
     def __init__(self, input_address=1100, holding_address=32600) -> None:
         super().__init__(input_address, holding_address)
         self._reset()
-        #Why the fuck is this offset by 1 ........
+        # No idea, why this is offset by 1 ... 
         self.circulator_pump = DataValue(address=5,type=DataTypes.UINT)
         self.mixer_valve = DataValue(address=6,type=DataTypes.UINT)
         self.state = DataValue(address=7,type=DataTypes.UINT)
