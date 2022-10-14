@@ -1,5 +1,4 @@
 """Constants for pysolarfocs"""
-import logging
 from enum import Enum
 
 class Systems(str, Enum):
