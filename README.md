@@ -31,7 +31,7 @@ client = ModbusClient(IP, port=PORT)
 client.connect()
 
 # Create the Solarfocus API client
-api = SolarfocusAPI(client, Systems.Vampair)
+solarfocus = SolarfocusAPI(client, Systems.Vampair)
 
 # Fetch the values
 solarfocus.update()
