@@ -2,17 +2,26 @@
 __version__ = "1.3.0"
 
 import logging
-from typing import Any, Tuple
+from enum import Enum
 
-from pymodbus.client.sync import ModbusTcpClient
+from pymodbus.client import ModbusTcpClient
 
+#Default port for modbus
+PORT = 502
+
+#This needs to be defined before the imports because of circular dependencies
+class Systems(str, Enum):
+    """
+    Supported systems by this library
+    """
+    Vampair = "Vampair"
+    Therminator = "Therminator" 
+    
 from .component_factory import ComponentFactory
 from .components.base.component import Component
 from .components.base.data_value import DataValue
 from .components.base.enums import RegisterTypes
-from .const import (SLAVE_ID, SMART_GRID_EINSCHALTUNG,
-                    SMART_GRID_NORMALBETRIEB, Systems)
-
+from .const import SLAVE_ID, SMART_GRID_EINSCHALTUNG, SMART_GRID_NORMALBETRIEB
 
 class SolarfocusAPI:
     """Solarfocus Heating System"""
@@ -433,7 +442,7 @@ class SolarfocusAPI:
             return False
         try:
             scaled = int(data_value.reverse_scale(value))
-            response = self._conn.write_registers(data_value._absolut_address, [scaled], unit=self._slave_id)
+            response = self._conn.write_registers(data_value._absolut_address, [scaled], slave=self._slave_id)
             if response.isError():
                 logging.error(f"Error writing value={value} to register: {data_value._absolut_address}: {response}")
                 return False
@@ -442,7 +451,7 @@ class SolarfocusAPI:
             return False
         return True
 
-    def __read_holding_registers(self,address:int, count:int, check_connection:bool = True)->Tuple[bool,Any]:
+    def __read_holding_registers(self,address:int, count:int, check_connection:bool = True)->tuple[bool,list[int]|None]:
         """Internal methode to read holding registers from modbus"""
         if check_connection and not self.is_connected:
             logging.error("Connection to modbus is not established!")
@@ -457,13 +466,13 @@ class SolarfocusAPI:
             logging.exception(f"Exception while reading holding registers at address={address}!")
             return False, None
         
-    def __read_input_registers(self,address:int,count:int,check_connection:bool=True)->Tuple[bool,Any]:
+    def __read_input_registers(self,address:int,count:int,check_connection:bool=True)->tuple[bool,list[int]|None]:
         """Internal methode to read input registers from modbus"""
         if check_connection and not self.is_connected:
             logging.error("Connection to modbus is not established!")
             return False, None
         try:
-            result = self._conn.read_input_registers(address=address, count=count,unit=self._slave_id)
+            result = self._conn.read_input_registers(address=address, count=count,slave=self._slave_id)
             if result.isError():
                 logging.error(f"Modbus read error at address={address}, count={count}: {result}")
                 return False, None

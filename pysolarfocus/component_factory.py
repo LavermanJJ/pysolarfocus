@@ -4,7 +4,7 @@ from .components.heat_pump import *
 from .components.buffer import *
 from .components.pellets_boiler import *
 from .components.photovoltaic import *
-from .const import Systems
+from . import Systems
 
 
 class ComponentFactory:

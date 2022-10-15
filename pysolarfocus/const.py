@@ -1,14 +1,8 @@
 """Constants for pysolarfocs"""
-from enum import Enum
 
-class Systems(str, Enum):
-    Vampair = "Vampair"
-    Therminator = "Therminator" 
-    
 # Values provided by Solarfocus manual
-PORT = 502
 SLAVE_ID = 1
-   
+
 HEATING_STATE = {
     0: "Heizkreis ist ausgeschaltet",
     1: "Absenkbetrieb",
