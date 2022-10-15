@@ -11,28 +11,28 @@ class ComponentFactory:
     @staticmethod
     def heating_circuit(system:Systems)->HeatingCircuit:
         if system == Systems.Therminator:
-            return TherminatorHeatingCircuit()
-        return HeatingCircuit()
+            return TherminatorHeatingCircuit()._initialize()
+        return HeatingCircuit()._initialize()
     
     @staticmethod
     def boiler(system:Systems)->Boiler:
-        return Boiler()
+        return Boiler()._initialize()
     
     @staticmethod
     def heatpump(system:Systems)->HeatPump:
-        return HeatPump()
+        return HeatPump()._initialize()
     
     @staticmethod
     def photovoltaic(system:Systems)->Photovoltaic:
-        return Photovoltaic()
+        return Photovoltaic()._initialize()
     
     @staticmethod
     def pelletsboiler(system:Systems)->PelletsBoiler:
-        return PelletsBoiler()
+        return PelletsBoiler()._initialize()
     
     @staticmethod
     def buffer(system:Systems)->Buffer:
         if system == Systems.Therminator:
-            return TherminatorBuffer()
+            return TherminatorBuffer()._initialize()
         else:
-            return Buffer()
+            return Buffer()._initialize()

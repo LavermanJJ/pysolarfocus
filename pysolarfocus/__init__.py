@@ -358,14 +358,14 @@ class SolarfocusAPI:
         """Read values for the given component from Heating System"""
         failed=False
         if component.has_input_address:
-            read_success, registers = self.__read_input_registers(component.input_address, component.input_count)
+            read_success, registers = self.__read_input_registers(component)
             parsing_success = False
             if read_success:
                 parsing_success = component.parse(registers, RegisterTypes.Input) and read_success
             failed = not parsing_success and read_success or failed
              
         if component.has_holding_address:
-            read_success, registers = self.__read_holding_registers(component.holding_address, component.holding_count)
+            read_success, registers = self.__read_holding_registers(component)
             parsing_success = False
             if read_success:
                 parsing_success = component.parse(registers, RegisterTypes.Holding) and read_success
@@ -442,41 +442,49 @@ class SolarfocusAPI:
             return False
         try:
             scaled = int(data_value.reverse_scale(value))
-            response = self._conn.write_registers(data_value._absolut_address, [scaled], slave=self._slave_id)
+            response = self._conn.write_registers(data_value.get_absolute_address(), [scaled], slave=self._slave_id)
             if response.isError():
-                logging.error(f"Error writing value={value} to register: {data_value._absolut_address}: {response}")
+                logging.error(f"Error writing value={value} to register: {data_value.get_absolute_address()}: {response}")
                 return False
         except Exception:
-            logging.exception(f"Eception while writing value={value} to register: {data_value._absolut_address}!")
+            logging.exception(f"Eception while writing value={value} to register: {data_value.get_absolute_address()}!")
             return False
         return True
 
-    def __read_holding_registers(self,address:int, count:int, check_connection:bool = True)->tuple[bool,list[int]|None]:
+    def __read_holding_registers(self,component:Component, check_connection:bool = True)->tuple[bool,list[int]|None]:
         """Internal methode to read holding registers from modbus"""
         if check_connection and not self.is_connected:
             logging.error("Connection to modbus is not established!")
             return False, None
         try:
-            result = self._conn.read_holding_registers(address=address,count=count ,slave=self._slave_id)
-            if result.isError():
-                logging.error(f"Modbus read error at address={address}: {result}")
-                return False, None
-            return True, result.registers
+            combined_result = [None] * component.holding_count
+            for registerSlice in component.holding_slices:
+                result = self._conn.read_holding_registers(address=registerSlice.absolute_address,count=registerSlice.count ,slave=self._slave_id)
+                if result.isError():
+                    logging.error(f"Modbus read error at address={registerSlice.absolute_address}: {result}")
+                    return False, None
+                slice_data = result.registers
+                combined_result[registerSlice.relative_address:registerSlice.relative_address+registerSlice.count] = slice_data
+            return True, combined_result
         except Exception:
-            logging.exception(f"Exception while reading holding registers at address={address}!")
+            logging.exception(f"Exception while reading holding registers for component: '{component.__class__.__name__}'!")
             return False, None
         
-    def __read_input_registers(self,address:int,count:int,check_connection:bool=True)->tuple[bool,list[int]|None]:
+    def __read_input_registers(self,component:Component,check_connection:bool=True)->tuple[bool,list[int]|None]:
         """Internal methode to read input registers from modbus"""
         if check_connection and not self.is_connected:
             logging.error("Connection to modbus is not established!")
             return False, None
         try:
-            result = self._conn.read_input_registers(address=address, count=count,slave=self._slave_id)
-            if result.isError():
-                logging.error(f"Modbus read error at address={address}, count={count}: {result}")
-                return False, None
-            return True, result.registers
+            combined_result = [None] * component.input_count
+            for registerSlice in component.input_slices:
+                result = self._conn.read_input_registers(address=registerSlice.absolute_address,count=registerSlice.count,slave=self._slave_id)
+                if result.isError():
+                    logging.error(f"Modbus read error at address={registerSlice.absolute_address}, count={registerSlice.count}: {result}")
+                    return False, None
+                slice_data = result.registers
+                combined_result[registerSlice.relative_address:registerSlice.relative_address+registerSlice.count] = slice_data
+            return True, combined_result
         except Exception:
-            logging.exception(f"Exception while reading input registers at address={address}, count={count}!")
+            logging.exception(f"Exception while reading input registers for component: '{component.__class__.__name__}'!")
             return False, None

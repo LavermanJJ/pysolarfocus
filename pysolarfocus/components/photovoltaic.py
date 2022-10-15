@@ -14,5 +14,3 @@ class Photovoltaic(Component):
         self.smart_meter = DataValue(address=0,register_type=RegisterTypes.Holding)
         self.photovoltaic = DataValue(address=1,register_type=RegisterTypes.Holding)
         self.grid_im_export = DataValue(address=2,register_type=RegisterTypes.Holding)
-        
-        self._initialize()

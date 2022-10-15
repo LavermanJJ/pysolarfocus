@@ -10,16 +10,13 @@ class Buffer(Component):
         self.pump = DataValue(address=2)
         self.state = DataValue(address=3,type=DataTypes.UINT)
         self.mode = DataValue(address=4,type=DataTypes.UINT)
-        self._initialize()
         
         
 class TherminatorBuffer(Buffer):
     def __init__(self) -> None:
         super().__init__(1900)
-        self._reset()
         self.x35_temperature = DataValue(address=2,multiplier=0.1)
         self.pump = DataValue(address=3)
         self.state = DataValue(address=4,type=DataTypes.UINT)
         self.mode = DataValue(address=5,type=DataTypes.UINT)
-        self._initialize()
         

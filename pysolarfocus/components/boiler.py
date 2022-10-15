@@ -13,5 +13,3 @@ class Boiler(Component):
         self.single_charge = DataValue(address=1,register_type=RegisterTypes.Holding)
         self.holding_mode= DataValue(address=2,register_type=RegisterTypes.Holding)
         self.circulation = DataValue(address=3,register_type=RegisterTypes.Holding)
-        
-        self._initialize()

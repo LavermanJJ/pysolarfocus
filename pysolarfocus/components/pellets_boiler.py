@@ -16,4 +16,3 @@ class PelletsBoiler(Component):
         self.octoplus_buffer_temperature_bottom = DataValue(address=10,multiplier=0.1)
         self.octoplus_buffer_temperature_top = DataValue(address=11,multiplier=0.1)
         self.log_wood = DataValue(address=12,type=DataTypes.UINT)
-        self._initialize()

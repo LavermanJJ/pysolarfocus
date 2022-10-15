@@ -28,4 +28,3 @@ class HeatPump(Component):
         self.evu_lock = DataValue(address=0,register_type=RegisterTypes.Holding)
         self.smart_grid = DataValue(address=1,register_type=RegisterTypes.Holding)
         self.outdoor_temperature_external = DataValue(address=2,multiplier=10,register_type=RegisterTypes.Holding)
-        self._initialize()
