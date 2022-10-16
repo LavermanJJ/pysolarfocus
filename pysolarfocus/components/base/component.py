@@ -61,7 +61,8 @@ class Component(object):
         current_slice = RegisterSlice(datavalues[0].get_absolute_address(),datavalues[0].address,datavalues[-1].address+datavalues[-1].count)
         for i,datavalue in enumerate(datavalues[:-1]):
             if datavalue.address+datavalue.count != datavalues[i+1].address:
-                current_slice.count = datavalue.address+datavalue.count
+                #A gap was found => define the range from the start of the current slice to the end of the current address+count
+                current_slice.count = (datavalue.address+datavalue.count)-current_slice.relative_address
                 slices.append(current_slice)
                 #the new count is the distance between the next address and the last address
                 new_count = (datavalues[-1].address+datavalues[-1].count)-datavalues[i+1].address
