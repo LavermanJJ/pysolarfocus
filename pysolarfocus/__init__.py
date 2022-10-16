@@ -1,10 +1,10 @@
 """Python client lib for Solarfocus"""
-__version__ = "2.0.0"
+__version__ = "2.0.1"
 
 import logging
 from enum import Enum
 
-from pymodbus.client import ModbusTcpClient
+from pymodbus.client.sync import ModbusTcpClient
 
 #Default port for modbus
 PORT = 502

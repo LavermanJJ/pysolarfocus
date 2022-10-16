@@ -1,6 +1,5 @@
-from pymodbus.client import ModbusTcpClient as ModbusClient
-from pysolarfocus import SolarfocusAPI
-from pysolarfocus import PORT,Systems
+from pymodbus.client.sync import ModbusTcpClient as ModbusClient
+from pysolarfocus import SolarfocusAPI, PORT,Systems
 
 # Create a Modbus client 
 # TODO: Adapt IP-Address
