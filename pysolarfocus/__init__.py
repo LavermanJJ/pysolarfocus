@@ -1,5 +1,5 @@
 """Python client lib for Solarfocus"""
-__version__ = "2.0.1"
+__version__ = "2.0.2"
 
 import logging
 from enum import Enum
