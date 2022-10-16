@@ -18,3 +18,24 @@ This integration has been tested with Solarfocus eco<sup>manager-touch</sup> ver
 | Biomassboiler (_Kessel_) | :white_check_mark: | 
 
 _Note: The number of supported Heating Circuits, Buffers, and Boilers could be extended in the future_
+
+## Usage
+
+```python
+from pymodbus.client import ModbusTcpClient as ModbusClient
+from pysolarfocus import SolarfocusAPI,PORT,Systems
+
+# Create a Modbus client
+client = ModbusClient(IP, port=PORT)
+client.connect()
+
+# Create the Solarfocus API client
+solarfocus = SolarfocusAPI(client, Systems.Vampair)
+
+# Fetch the values
+solarfocus.update()
+
+# Print the values
+print(solarfocus.buffer)
+print(solarfocus.heating_circuit)
+```
