@@ -8,7 +8,7 @@ class DataValue(object):
     address:int
     count:int
     value:int
-    multiplier:float|None
+    multiplier:float
     _absolut_address:int
     register_type:RegisterTypes
     def __init__(self,address:int,count:int=1,default_value:int=0,multiplier:float=None,type:DataTypes=DataTypes.INT,register_type:RegisterTypes=RegisterTypes.Input) -> None:

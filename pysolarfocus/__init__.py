@@ -451,7 +451,7 @@ class SolarfocusAPI:
             return False
         return True
 
-    def __read_holding_registers(self,component:Component, check_connection:bool = True)->tuple[bool,list[int]|None]:
+    def __read_holding_registers(self,component:Component, check_connection:bool = True)->tuple[bool,list[int]]:
         """Internal methode to read holding registers from modbus"""
         if check_connection and not self.is_connected:
             logging.error("Connection to modbus is not established!")
@@ -470,7 +470,7 @@ class SolarfocusAPI:
             logging.exception(f"Exception while reading holding registers for component: '{component.__class__.__name__}'!")
             return False, None
         
-    def __read_input_registers(self,component:Component,check_connection:bool=True)->tuple[bool,list[int]|None]:
+    def __read_input_registers(self,component:Component,check_connection:bool=True)->tuple[bool,list[int]]:
         """Internal methode to read input registers from modbus"""
         if check_connection and not self.is_connected:
             logging.error("Connection to modbus is not established!")
