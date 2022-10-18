@@ -1,5 +1,5 @@
 """Python client lib for Solarfocus"""
-__version__ = "2.0.3"
+__version__ = "2.0.4"
 
 import logging
 from enum import Enum
@@ -435,13 +435,14 @@ class SolarfocusAPI:
         """Set Photovoltaic"""
         return self.__write_register(self.photovoltaic.grid_im_export,value)
     
-    def __write_register(self,data_value:DataValue, value:int, check_connection:bool = True) -> bool:
+    def __write_register(self,data_value:DataValue, value:float, check_connection:bool = True) -> bool:
         """Internal methode to write a value to the modbus server"""
         if check_connection and not self.is_connected:
             logging.error("Connection to modbus is not established!")
             return False
         try:
-            scaled = int(data_value.reverse_scale(value))
+            scaled = int(data_value.scale(value))
+            logging.info(f"Scaled Value={scaled}")
             response = self._conn.write_registers(data_value.get_absolute_address(), [scaled], unit=self._slave_id)
             if response.isError():
                 logging.error(f"Error writing value={value} to register: {data_value.get_absolute_address()}: {response}")
