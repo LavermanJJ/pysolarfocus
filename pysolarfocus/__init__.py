@@ -61,7 +61,7 @@ class SolarfocusAPI:
 
     @property
     def hc1_target_temperatur(self) -> float:
-        return self.heating_circuit.target_supply_temperature.scaled_value
+        return self.heating_circuit.target_supply_temperature.reverse_scaled_value
 
     @property
     def hc1_cooling(self) -> int:
@@ -73,7 +73,7 @@ class SolarfocusAPI:
 
     @property
     def hc1_target_room_temperatur(self) -> float:
-        return self.heating_circuit.target_room_temperatur.scaled_value
+        return self.heating_circuit.target_room_temperatur.reverse_scaled_value
 
     @property
     def hc1_indoor_temperature_external(self) -> float:
@@ -117,7 +117,7 @@ class SolarfocusAPI:
 
     @property
     def bo1_target_temperatur(self) -> float:
-        return self.boiler.target_temperature.scaled_value
+        return self.boiler.target_temperature.reverse_scaled_value
 
     @property
     def bo1_single_charge(self) -> int:
@@ -222,7 +222,7 @@ class SolarfocusAPI:
 
     @property
     def hp_outdoor_temperature_external(self) -> float:
-        return self.heatpump.outdoor_temperature_external.scaled_value
+        return self.heatpump.outdoor_temperature_external.reverse_scaled_value
     
     @property
     def pv_power(self) -> int:

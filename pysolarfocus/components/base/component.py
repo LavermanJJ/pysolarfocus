@@ -148,5 +148,5 @@ class Component(object):
         if self.has_holding_address:
             s.append("---Holding:")
             for name,value in self.__get_holding_values():
-                s.append(f"{name} | raw:{value.value}")     
+                s.append(f"{name} | raw:{value.value} scaled:{value.reverse_scaled_value}")     
         return "\n".join(s)

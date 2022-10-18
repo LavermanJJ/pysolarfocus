@@ -41,6 +41,16 @@ class DataValue(object):
             return self.value * self.multiplier
         else:
             return self.value
+        
+    @property
+    def reverse_scaled_value(self)->float:
+        """
+        Scaled value of this register
+        """
+        if self.has_scaler:
+            return self.value / self.multiplier
+        else:
+            return self.value
        
     def reverse_scale(self,value:float)->float:
         """
