@@ -442,7 +442,7 @@ class SolarfocusAPI:
             return False
         try:
             scaled = int(data_value.reverse_scale(value))
-            response = self._conn.write_registers(data_value.get_absolute_address(), [scaled], slave=self._slave_id)
+            response = self._conn.write_registers(data_value.get_absolute_address(), [scaled], unit=self._slave_id)
             if response.isError():
                 logging.error(f"Error writing value={value} to register: {data_value.get_absolute_address()}: {response}")
                 return False
@@ -459,7 +459,7 @@ class SolarfocusAPI:
         try:
             combined_result = [None] * component.holding_count
             for registerSlice in component.holding_slices:
-                result = self._conn.read_holding_registers(address=registerSlice.absolute_address,count=registerSlice.count ,slave=self._slave_id)
+                result = self._conn.read_holding_registers(address=registerSlice.absolute_address,count=registerSlice.count ,unit=self._slave_id)
                 if result.isError():
                     logging.error(f"Modbus read error at address={registerSlice.absolute_address}: {result}")
                     return False, None
@@ -478,7 +478,7 @@ class SolarfocusAPI:
         try:
             combined_result = [None] * component.input_count
             for registerSlice in component.input_slices:
-                result = self._conn.read_input_registers(address=registerSlice.absolute_address,count=registerSlice.count,slave=self._slave_id)
+                result = self._conn.read_input_registers(address=registerSlice.absolute_address,count=registerSlice.count,unit=self._slave_id)
                 if result.isError():
                     logging.error(f"Modbus read error at address={registerSlice.absolute_address}, count={registerSlice.count}: {result}")
                     return False, None
