@@ -297,8 +297,8 @@ class SolarfocusAPI:
         return self.pelletsboiler.log_wood.scaled_value
     
     @property
-    def solarfocus_system(self): 
-        return self.system
+    def system(self): 
+        return self._system
 
 
     def __init__(self, conn:ModbusTcpClient,system:Systems=Systems.Vampair,slave_id:int=SLAVE_ID):
@@ -311,7 +311,7 @@ class SolarfocusAPI:
         self.pelletsboiler = ComponentFactory.pelletsboiler(system)
         self.buffer = ComponentFactory.buffer(system)
         self._slave_id = slave_id
-        self.system = system
+        self._system = system
 
     def connect(self):
         """Connect to Solarfocus eco manager-touch"""
