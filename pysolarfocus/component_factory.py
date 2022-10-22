@@ -4,35 +4,33 @@ from .components.heat_pump import *
 from .components.buffer import *
 from .components.pellets_boiler import *
 from .components.photovoltaic import *
+from .modbus_wrapper import ModbusConnector
 from . import Systems
 
 
 class ComponentFactory:
-    @staticmethod
-    def heating_circuit(system:Systems)->HeatingCircuit:
+    def __init__(self,modbus_connector:ModbusConnector) -> None:
+        self.__modbus_connector = modbus_connector
+        
+    def heating_circuit(self, system:Systems)->HeatingCircuit:
         if system == Systems.Therminator:
-            return TherminatorHeatingCircuit()._initialize()
-        return HeatingCircuit()._initialize()
+            return TherminatorHeatingCircuit()._initialize(self.__modbus_connector)
+        return HeatingCircuit()._initialize(self.__modbus_connector)
     
-    @staticmethod
-    def boiler(system:Systems)->Boiler:
-        return Boiler()._initialize()
+    def boiler(self, system:Systems)->Boiler:
+        return Boiler()._initialize(self.__modbus_connector)
     
-    @staticmethod
-    def heatpump(system:Systems)->HeatPump:
-        return HeatPump()._initialize()
+    def heatpump(self, system:Systems)->HeatPump:
+        return HeatPump()._initialize(self.__modbus_connector)
     
-    @staticmethod
-    def photovoltaic(system:Systems)->Photovoltaic:
-        return Photovoltaic()._initialize()
+    def photovoltaic(self, system:Systems)->Photovoltaic:
+        return Photovoltaic()._initialize(self.__modbus_connector)
     
-    @staticmethod
-    def pelletsboiler(system:Systems)->PelletsBoiler:
-        return PelletsBoiler()._initialize()
+    def pelletsboiler(self, system:Systems)->PelletsBoiler:
+        return PelletsBoiler()._initialize(self.__modbus_connector)
     
-    @staticmethod
-    def buffer(system:Systems)->Buffer:
+    def buffer(self, system:Systems)->Buffer:
         if system == Systems.Therminator:
-            return TherminatorBuffer()._initialize()
+            return TherminatorBuffer()._initialize(self.__modbus_connector)
         else:
-            return Buffer()._initialize()
+            return Buffer()._initialize(self.__modbus_connector)
