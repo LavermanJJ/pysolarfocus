@@ -298,21 +298,46 @@ class SolarfocusAPI:
     @property
     def system(self): 
         return self._system
-
-
-    def __init__(self,ip:str,system:Systems=Systems.Vampair,port:int=PORT,slave_id:int=SLAVE_ID):
+    
+    def __init__(self,
+                 ip:str,
+                 heating_circuit_count:int = 1,
+                 buffer_count:int = 1,
+                 boiler_count:int = 1,
+                 system:Systems=Systems.Vampair,
+                 port:int=PORT,
+                 slave_id:int=SLAVE_ID):
         """Initialize Solarfocus communication."""
+        assert heating_circuit_count >= 1 and heating_circuit_count < 9, "Heating circuit count must be between 1 and 8"
+        assert buffer_count >= 1 and buffer_count < 5, "Buffer count must be between 1 and 4"
+        assert boiler_count >= 1 and boiler_count < 5, "Boiler count must be between 1 and 4"
+        
         self.__conn = ModbusConnector(ip,port,slave_id)
         self.__factory = ComponentFactory(self.__conn)
-        self.heating_circuit = self.__factory.heating_circuit(system)
-        self.boiler = self.__factory.boiler(system)
+        #Lists of components
+        self.heating_circuits = self.__factory.heating_circuit(system,heating_circuit_count)
+        self.boilers = self.__factory.boiler(system,boiler_count)
+        self.buffers = self.__factory.buffer(system,buffer_count)
+        #Single components
         self.heatpump = self.__factory.heatpump(system)
         self.photovoltaic = self.__factory.photovoltaic(system)
         self.pelletsboiler = self.__factory.pelletsboiler(system)
-        self.buffer = self.__factory.buffer(system)
         self._slave_id = slave_id
         self._system = system
 
+    #These are needed to keep compatability with the old getter Api
+    @property
+    def heating_circuit(self):
+        return self.heating_circuits[0]
+    
+    @property
+    def boiler(self):
+        return self.boilers[0]
+    
+    @property
+    def buffer(self):
+        return self.buffers[0]
+    
     def connect(self):
         """Connect to Solarfocus eco manager-touch"""
         return self.__conn.connect()
@@ -337,15 +362,24 @@ class SolarfocusAPI:
 
     def update_heating(self) -> bool:
         """Read values from Heating System"""
-        return self.heating_circuit.update()
+        for heating_circuit in self.heating_circuits:
+            if not heating_circuit.update():
+                return False
+        return True
     
     def update_buffer(self) -> bool:
         """Read values from Heating System"""
-        return self.buffer.update()
+        for buffer in self.buffers:
+            if not buffer.update():
+                return False
+        return True
     
     def update_boiler(self) -> bool:
         """Read values from Heating System"""
-        return self.boiler.update()
+        for boiler in self.boilers:
+            if not boiler.update():
+                return False
+        return True
 
     def update_heatpump(self) -> bool:
         """Read values from Heating System"""

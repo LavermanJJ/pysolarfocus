@@ -3,8 +3,8 @@ from .base.enums import DataTypes,RegisterTypes
 from .base.data_value import DataValue
 
 class Boiler(Component):
-    def __init__(self) -> None:
-        super().__init__(input_address=500, holding_address=32000)
+    def __init__(self,input_address:int=500, holding_address:int=32000) -> None:
+        super().__init__(input_address=input_address, holding_address=holding_address)
         self.temperature = DataValue(address=0,multiplier=0.1)
         self.state = DataValue(address=1,type=DataTypes.UINT)
         self.mode = DataValue(address=2,type=DataTypes.UINT)
