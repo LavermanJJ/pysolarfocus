@@ -2,7 +2,7 @@ from pysolarfocus import SolarfocusAPI, PORT,Systems
 
 # Create the Solarfocus API client
 # TODO: Adapt IP-Address
-solarfocus = SolarfocusAPI("IP-Address", Systems.Therminator)
+solarfocus = SolarfocusAPI(ip="IP-Address", system=Systems.Vampair)
 solarfocus.connect()
 # Fetch the values
 solarfocus.update()
