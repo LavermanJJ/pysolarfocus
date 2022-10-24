@@ -1,7 +1,10 @@
-from .enums import RegisterTypes,DataTypes
-from .data_value import DataValue
-from .register_slice import RegisterSlice
 import logging
+
+from ...modbus_wrapper import ModbusConnector
+from .data_value import DataValue
+from .enums import DataTypes, RegisterTypes
+from .register_slice import RegisterSlice
+
 
 class Component(object):
     def __init__(self,input_address:int,holding_address:int=-1)->None:
@@ -12,16 +15,23 @@ class Component(object):
         self.__data_values = None
         self.__input_values = None
         self.__holding_values = None
+        self.__modbus = None
         
-    def _initialize(self):
+    def _initialize(self,modbus:ModbusConnector):
         """
         Initializes the absolute addresses of the DataValues and the count of the Component
         """
+        
+        self.__modbus = modbus
+        
         for _,value in self.__get_data_values():
+            
             if value.register_type == RegisterTypes.Input:
                 value._absolut_address = self.input_address
             else:
                 value._absolut_address = self.holding_address
+                # Holding registers can write to the heating system
+                value._modbus = modbus
           
         #Dynamically calcuate how many registers have to be read  
         if len(self.__get_input_values()) > 0:    
@@ -109,7 +119,31 @@ class Component(object):
             n.to_bytes(byte_count, "little", signed=False), "little", signed=True
         )
         
-    def parse(self,data:list[int],type:RegisterTypes)->bool:
+    def update(self)->bool:
+        """
+        Retrieve current values from the heating system
+        """
+        failed=False
+        if self.has_input_address:
+            read_success, registers = self.__modbus.read_input_registers(self.input_slices,self.input_count)
+            parsing_success = False
+            if read_success:
+                parsing_success = self._parse(registers, RegisterTypes.Input) and read_success
+            failed = not parsing_success and read_success or failed
+            if failed:
+                logging.error(f"Failed to read input registers of {self.__class__.__name__}")
+             
+        if self.has_holding_address:
+            read_success, registers = self.__modbus.read_holding_registers(self.holding_slices,self.holding_count)
+            parsing_success = False
+            if read_success:
+                parsing_success = self._parse(registers, RegisterTypes.Holding) and read_success
+            failed = not (parsing_success and read_success) or failed
+            if failed:
+                logging.error(f"Failed to read holding registers of {self.__class__.__name__}")
+        return not failed
+    
+    def _parse(self,data:list[int],type:RegisterTypes)->bool:
         """
         Dynamically assignes the values to the DataValues of this Component
         """
@@ -148,5 +182,5 @@ class Component(object):
         if self.has_holding_address:
             s.append("---Holding:")
             for name,value in self.__get_holding_values():
-                s.append(f"{name} | raw:{value.value} scaled:{value.reverse_scaled_value}")     
+                s.append(f"{name} | raw:{value.value} scaled:{value.scaled_value}")     
         return "\n".join(s)

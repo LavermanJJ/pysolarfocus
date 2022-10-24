@@ -4,8 +4,6 @@ __version__ = "2.0.5"
 import logging
 from enum import Enum
 
-from pymodbus.client.sync import ModbusTcpClient
-
 #Default port for modbus
 PORT = 502
 
@@ -17,6 +15,7 @@ class Systems(str, Enum):
     Vampair = "Vampair"
     Therminator = "Therminator" 
     
+from .modbus_wrapper import ModbusConnector
 from .component_factory import ComponentFactory
 from .components.base.component import Component
 from .components.base.data_value import DataValue
@@ -61,7 +60,7 @@ class SolarfocusAPI:
 
     @property
     def hc1_target_temperatur(self) -> float:
-        return self.heating_circuit.target_supply_temperature.reverse_scaled_value
+        return self.heating_circuit.target_supply_temperature.scaled_value
 
     @property
     def hc1_cooling(self) -> int:
@@ -73,7 +72,7 @@ class SolarfocusAPI:
 
     @property
     def hc1_target_room_temperatur(self) -> float:
-        return self.heating_circuit.target_room_temperatur.reverse_scaled_value
+        return self.heating_circuit.target_room_temperatur.scaled_value
 
     @property
     def hc1_indoor_temperature_external(self) -> float:
@@ -117,7 +116,7 @@ class SolarfocusAPI:
 
     @property
     def bo1_target_temperatur(self) -> float:
-        return self.boiler.target_temperature.reverse_scaled_value
+        return self.boiler.target_temperature.scaled_value
 
     @property
     def bo1_single_charge(self) -> int:
@@ -222,7 +221,7 @@ class SolarfocusAPI:
 
     @property
     def hp_outdoor_temperature_external(self) -> float:
-        return self.heatpump.outdoor_temperature_external.reverse_scaled_value
+        return self.heatpump.outdoor_temperature_external.scaled_value
     
     @property
     def pv_power(self) -> int:
@@ -299,28 +298,54 @@ class SolarfocusAPI:
     @property
     def system(self): 
         return self._system
-
-
-    def __init__(self, conn:ModbusTcpClient,system:Systems=Systems.Vampair,slave_id:int=SLAVE_ID):
+    
+    def __init__(self,
+                 ip:str,
+                 heating_circuit_count:int = 1,
+                 buffer_count:int = 1,
+                 boiler_count:int = 1,
+                 system:Systems=Systems.Vampair,
+                 port:int=PORT,
+                 slave_id:int=SLAVE_ID):
         """Initialize Solarfocus communication."""
-        self._conn = conn
-        self.heating_circuit = ComponentFactory.heating_circuit(system)
-        self.boiler = ComponentFactory.boiler(system)
-        self.heatpump = ComponentFactory.heatpump(system)
-        self.photovoltaic = ComponentFactory.photovoltaic(system)
-        self.pelletsboiler = ComponentFactory.pelletsboiler(system)
-        self.buffer = ComponentFactory.buffer(system)
+        assert heating_circuit_count >= 1 and heating_circuit_count < 9, "Heating circuit count must be between 1 and 8"
+        assert buffer_count >= 1 and buffer_count < 5, "Buffer count must be between 1 and 4"
+        assert boiler_count >= 1 and boiler_count < 5, "Boiler count must be between 1 and 4"
+        
+        self.__conn = ModbusConnector(ip,port,slave_id)
+        self.__factory = ComponentFactory(self.__conn)
+        #Lists of components
+        self.heating_circuits = self.__factory.heating_circuit(system,heating_circuit_count)
+        self.boilers = self.__factory.boiler(system,boiler_count)
+        self.buffers = self.__factory.buffer(system,buffer_count)
+        #Single components
+        self.heatpump = self.__factory.heatpump(system)
+        self.photovoltaic = self.__factory.photovoltaic(system)
+        self.pelletsboiler = self.__factory.pelletsboiler(system)
         self._slave_id = slave_id
         self._system = system
 
+    #These are needed to keep compatability with the old getter Api
+    @property
+    def heating_circuit(self):
+        return self.heating_circuits[0]
+    
+    @property
+    def boiler(self):
+        return self.boilers[0]
+    
+    @property
+    def buffer(self):
+        return self.buffers[0]
+    
     def connect(self):
         """Connect to Solarfocus eco manager-touch"""
-        return self._conn.connect()
+        return self.__conn.connect()
 
     @property
     def is_connected(self)->bool:
         """Check if connection is established"""
-        return self._conn.is_socket_open()
+        return self.__conn.is_connected
     
     def update(self):
         """Read values from Heating System"""
@@ -337,160 +362,108 @@ class SolarfocusAPI:
 
     def update_heating(self) -> bool:
         """Read values from Heating System"""
-        return self.__update(self.heating_circuit)
+        for heating_circuit in self.heating_circuits:
+            if not heating_circuit.update():
+                return False
+        return True
     
     def update_buffer(self) -> bool:
         """Read values from Heating System"""
-        return self.__update(self.buffer)
+        for buffer in self.buffers:
+            if not buffer.update():
+                return False
+        return True
     
     def update_boiler(self) -> bool:
         """Read values from Heating System"""
-        return self.__update(self.boiler)
+        for boiler in self.boilers:
+            if not boiler.update():
+                return False
+        return True
 
     def update_heatpump(self) -> bool:
         """Read values from Heating System"""
-        return self.__update(self.heatpump)
+        return self.heatpump.update()
 
     def update_photovoltaic(self) -> bool:
         """Read values from Heating System"""
-        return self.__update(self.photovoltaic)
+        return self.photovoltaic.update()
 
     def update_pelletsboiler(self) -> bool:
         """Read values from Pellets boiler"""
-        return self.__update(self.pelletsboiler)
-    
-    def __update(self,component:Component)->bool:
-        """Read values for the given component from Heating System"""
-        failed=False
-        if component.has_input_address:
-            read_success, registers = self.__read_input_registers(component)
-            parsing_success = False
-            if read_success:
-                parsing_success = component.parse(registers, RegisterTypes.Input) and read_success
-            failed = not parsing_success and read_success or failed
-             
-        if component.has_holding_address:
-            read_success, registers = self.__read_holding_registers(component)
-            parsing_success = False
-            if read_success:
-                parsing_success = component.parse(registers, RegisterTypes.Holding) and read_success
-            failed = not (parsing_success and read_success) or failed
-        return not failed
-    
+        return self.pelletsboiler.update()
     
     def hc1_set_target_supply_temperature(self, temperature) -> bool:
         """Set target supply temperature"""
-        return self.__write_register(self.heating_circuit.target_supply_temperature,temperature)
-
-
+        self.heating_circuit.target_supply_temperature.set_unscaled_value(temperature)
+        return self.heating_circuit.target_supply_temperature.commit()
+    
     def hc1_enable_cooling(self, cooling: bool) -> bool:
         """Set target supply temperature"""
-        return self.__write_register(self.heating_circuit.cooling,cooling)
+        self.heating_circuit.cooling.set_unscaled_value(cooling)
+        return self.heating_circuit.cooling.commit()
     
     def hc1_set_mode(self, mode: int) -> bool:
         """Set mode"""
-        return self.__write_register(self.heating_circuit.mode,mode)
-
+        self.heating_circuit.mode.set_unscaled_value(mode)
+        return self.heating_circuit.mode.commit()
+    
     def hc1_set_target_room_temperature(self, temperature: float) -> bool:
         """Set target room temperature"""
-        return self.__write_register(self.heating_circuit.target_room_temperatur,temperature)
+        self.heating_circuit.target_room_temperatur.set_unscaled_value(temperature)
+        return self.heating_circuit.target_room_temperatur.commit()
     
     def hc1_set_indoor_temperature(self, temperature: float) -> bool:
         """Set indoor temperature"""
-        return self.__write_register(self.heating_circuit.indoor_temperatur_external,temperature)
+        self.heating_circuit.indoor_temperatur_external.set_unscaled_value(temperature)
+        return self.heating_circuit.indoor_temperatur_external.commit()
     
     def hc1_set_indoor_humidity(self, humidity: float) -> bool:
         """Set indoor humidity"""
-        return self.__write_register(self.heating_circuit.indoor_humidity_external,int(humidity))
+        self.heating_circuit.indoor_humidity_external.set_unscaled_value(humidity)
+        return self.heating_circuit.indoor_humidity_external.commit()
     
     def bo1_set_target_temperature(self, temperature: float) -> bool:
         """Set target temperature"""
-        return self.__write_register(self.boiler.target_temperature,temperature)
+        self.boiler.target_temperature.set_unscaled_value(temperature)
+        return self.boiler.target_temperature.commit()
     
     def bo1_enable_single_charge(self, enable: bool) -> bool:
         """Enable single charge"""
-        return self.__write_register(self.boiler.single_charge,int(enable))
+        self.boiler.single_charge.set_unscaled_value(enable)
+        return self.boiler.single_charge.commit()
     
     def bo1_set_mode(self, mode: int) -> bool:
         """Set mode"""
-        return self.__write_register(self.boiler.mode,mode)
+        self.boiler.mode.set_unscaled_value(mode)
+        return self.boiler.mode.commit()
     
     def bo1_enable_circulation(self, enable: bool) -> bool:
         """Enable circulation"""
-        return self.__write_register(self.boiler.circulation,int(enable))
+        self.boiler.circulation.set_unscaled_value(enable)
+        return self.boiler.circulation.commit()
 
     def hp_smart_grid_request_operation(self, operation_request: bool) -> bool:
         """Set Smart Grid value"""
-        return self.__write_register(self.heatpump.smart_grid, SMART_GRID_EINSCHALTUNG if operation_request else SMART_GRID_NORMALBETRIEB)
+        self.heatpump.smart_grid.set_unscaled_value(SMART_GRID_EINSCHALTUNG if operation_request else SMART_GRID_NORMALBETRIEB)
+        return self.heatpump.smart_grid.commit()
 
     def hp_set_outdoor_temperature(self, temperature: float) -> bool:
         """Set outdoor temperature"""
-        return self.__write_register(self.heatpump.outdoor_temperature_external,temperature)
+        self.heatpump.outdoor_temperature_external.set_unscaled_value(temperature)
+        return self.heatpump.outdoor_temperature_external.commit()
     
     def pv_set_smart_meter(self, value: int) -> bool:
         """Set Smart Meter"""
-        return self.__write_register(self.photovoltaic.smart_meter,value)
+        self.photovoltaic.smart_meter.set_unscaled_value(value)
+        return self.photovoltaic.smart_meter.commit()
 
     def pv_set_photovoltaic(self, value: int) -> bool:
         """Set Photovoltaic"""
-        return self.__write_register(self.photovoltaic.photovoltaic, value)
-
-
+        self.photovoltaic.photovoltaic.set_unscaled_value(value)
+        return self.photovoltaic.photovoltaic.commit()
+        
     def pv_set_grid_im_export(self, value: int) -> bool:
         """Set Photovoltaic"""
-        return self.__write_register(self.photovoltaic.grid_im_export,value)
-    
-    def __write_register(self,data_value:DataValue, value:float, check_connection:bool = True) -> bool:
-        """Internal methode to write a value to the modbus server"""
-        if check_connection and not self.is_connected:
-            logging.error("Connection to modbus is not established!")
-            return False
-        try:
-            scaled = int(data_value.scale(value))
-            logging.info(f"Scaled Value={scaled}")
-            response = self._conn.write_registers(data_value.get_absolute_address(), [scaled], unit=self._slave_id)
-            if response.isError():
-                logging.error(f"Error writing value={value} to register: {data_value.get_absolute_address()}: {response}")
-                return False
-        except Exception:
-            logging.exception(f"Eception while writing value={value} to register: {data_value.get_absolute_address()}!")
-            return False
-        return True
-
-    def __read_holding_registers(self,component:Component, check_connection:bool = True)->tuple[bool,list[int]]:
-        """Internal methode to read holding registers from modbus"""
-        if check_connection and not self.is_connected:
-            logging.error("Connection to modbus is not established!")
-            return False, None
-        try:
-            combined_result = [None] * component.holding_count
-            for registerSlice in component.holding_slices:
-                result = self._conn.read_holding_registers(address=registerSlice.absolute_address,count=registerSlice.count ,unit=self._slave_id)
-                if result.isError():
-                    logging.error(f"Modbus read error at address={registerSlice.absolute_address}: {result}")
-                    return False, None
-                slice_data = result.registers
-                combined_result[registerSlice.relative_address:registerSlice.relative_address+registerSlice.count] = slice_data
-            return True, combined_result
-        except Exception:
-            logging.exception(f"Exception while reading holding registers for component: '{component.__class__.__name__}'!")
-            return False, None
-        
-    def __read_input_registers(self,component:Component,check_connection:bool=True)->tuple[bool,list[int]]:
-        """Internal methode to read input registers from modbus"""
-        if check_connection and not self.is_connected:
-            logging.error("Connection to modbus is not established!")
-            return False, None
-        try:
-            combined_result = [None] * component.input_count
-            for registerSlice in component.input_slices:
-                result = self._conn.read_input_registers(address=registerSlice.absolute_address,count=registerSlice.count,unit=self._slave_id)
-                if result.isError():
-                    logging.error(f"Modbus read error at address={registerSlice.absolute_address}, count={registerSlice.count}: {result}")
-                    return False, None
-                slice_data = result.registers
-                combined_result[registerSlice.relative_address:registerSlice.relative_address+registerSlice.count] = slice_data
-            return True, combined_result
-        except Exception:
-            logging.exception(f"Exception while reading input registers for component: '{component.__class__.__name__}'!")
-            return False, None
+        self.photovoltaic.grid_im_export.set_unscaled_value(value)
+        return self.photovoltaic.grid_im_export.commit()
