@@ -6,18 +6,21 @@
 
 This integration has been tested with Solarfocus eco<sup>manager-touch</sup> version `21.040`.
 
+### Systems
+
+* Heat pump vamp<sup>air</sup> with eco<sup>_manager-touch_</sup>
+* Biomass boiler thermi<sup>nator</sup> II
+
 ### Solarfocus Components
 
 | Components | Supported |
 |---|---|
-| Heating Circuits (_Heizkreis_)| :white_check_mark: |
-| Buffers (_Puffer_) | :white_check_mark: |
-| Solar (_Solar_)| :x:|
-| Boilers (_Boiler_) | :white_check_mark: |
+| Heating Circuits (_Heizkreis_) 1-8 | :white_check_mark: |
+| Buffers (_Puffer_) 1-4 | :white_check_mark: |
+| Solar (_Solar_)| :white_check_mark:|
+| Boilers (_Boiler_) 1-4 | :white_check_mark: |
 | Heatpump (_Wärmepumpe_) | :white_check_mark: |
 | Biomassboiler (_Kessel_) | :white_check_mark: | 
-
-_Note: Different components or heating systems could be supported in the future_
 
 ## Usage
 
@@ -25,7 +28,7 @@ _Note: Different components or heating systems could be supported in the future_
 from pysolarfocus import SolarfocusAPI,Systems
 
 # Create the Solarfocus API client
-solarfocus = SolarfocusAPI(ip=[Your-IP],system=Systems.Vampair)
+solarfocus = SolarfocusAPI(ip="[Your-IP]",system=Systems.Vampair)
 # Connect to the heating system
 solarfocus.connect() 
 # Fetch the values
@@ -37,12 +40,12 @@ print(solarfocus.heating_circuit)
 ```
 
 ### Handling multiple components e.g. heating circuits
-_Solarfocus systems allow the use of multiple heating circuits, buffers and boilers. The api can be configured to interact with multiple components._
+Solarfocus systems allow the use of multiple heating circuits, buffers and boilers. The api can be configured to interact with multiple components.
 
 ```python 
 
 # Create the Solarfocus API client with 2 Heating Circuits
-solarfocus = SolarfocusAPI(ip=[Your-IP],heating_circuit_count=2,system=Systems.Vampair)
+solarfocus = SolarfocusAPI(ip="[Your-IP]",heating_circuit_count=2,system=Systems.Vampair)
 # Connect to the heating system
 solarfocus.connect()
 
