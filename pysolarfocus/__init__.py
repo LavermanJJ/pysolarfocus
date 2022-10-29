@@ -322,7 +322,7 @@ class SolarfocusAPI:
         self.heatpump = self.__factory.heatpump(system)
         self.photovoltaic = self.__factory.photovoltaic(system)
         self.pelletsboiler = self.__factory.pelletsboiler(system)
-        self.solar = ComponentFactory.solar(system)
+        self.solar = self.__factory.solar(system)
 
         self._slave_id = slave_id
         self._system = system
@@ -396,9 +396,9 @@ class SolarfocusAPI:
         """Read values from Pellets boiler"""
         return self.pelletsboiler.update()
         
-     def update_solar(self) -> bool:
+    def update_solar(self) -> bool:
         """Read values from Heating System"""
-        return self.__update(self.solar)
+        return self.solar.update()
 
     
     def hc1_set_target_supply_temperature(self, temperature) -> bool:
