@@ -13,8 +13,8 @@ class Buffer(Component):
         
         
 class TherminatorBuffer(Buffer):
-    def __init__(self) -> None:
-        super().__init__(1900)
+    def __init__(self,address:int=1900) -> None:
+        super().__init__(address=address)
         self.x35_temperature = DataValue(address=2,multiplier=0.1)
         self.pump = DataValue(address=3)
         self.state = DataValue(address=4,type=DataTypes.UINT)
