@@ -1,3 +1,4 @@
+from pysolarfocus.components.solar import Solar
 from .components.heating_circuit import *
 from .components.boiler import *
 from .components.heat_pump import *
@@ -29,6 +30,10 @@ class ComponentFactory:
     @staticmethod
     def pelletsboiler(system:Systems)->PelletsBoiler:
         return PelletsBoiler()._initialize()
+    
+    @staticmethod
+    def solar(system:Systems)->Solar:
+        return Solar()._initialize()
     
     @staticmethod
     def buffer(system:Systems)->Buffer:
