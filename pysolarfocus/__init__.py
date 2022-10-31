@@ -1,7 +1,6 @@
 """Python client lib for Solarfocus"""
-__version__ = "3.0.0"
+__version__ = "0.99.0"
 
-import logging
 from enum import Enum
 
 #Default port for modbus

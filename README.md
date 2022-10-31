@@ -32,8 +32,8 @@ solarfocus.connect()
 solarfocus.update()
 
 # Print the values
-print(solarfocus.buffer)
-print(solarfocus.heating_circuit)
+print(solarfocus.buffers[0])
+print(solarfocus.heating_circuit[0])
 ```
 
 ### Handling multiple components e.g. heating circuits
