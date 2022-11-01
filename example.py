@@ -1,4 +1,4 @@
-from pysolarfocus import SolarfocusAPI ,Systems
+from pysolarfocus import SolarfocusAPI,Systems
 
 # Create the Solarfocus API client
 # TODO: Adapt IP-Address

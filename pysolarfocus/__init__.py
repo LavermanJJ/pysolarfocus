@@ -1,5 +1,5 @@
 """Python client lib for Solarfocus"""
-__version__ = "0.99.0"
+__version__ = "3.1.0"
 
 from enum import Enum
 
@@ -41,9 +41,9 @@ class SolarfocusAPI:
         self.__conn = ModbusConnector(ip,port,slave_id)
         self.__factory = ComponentFactory(self.__conn)
         #Lists of components
-        self.heating_circuits = self.__factory.heating_circuit(system,heating_circuit_count) if heating_circuit_count > 0 else []
-        self.boilers = self.__factory.boiler(system,boiler_count) if boiler_count > 0 else []
-        self.buffers = self.__factory.buffer(system,buffer_count) if buffer_count > 0 else []
+        self.heating_circuits = self.__factory.heating_circuit(system,heating_circuit_count)
+        self.boilers = self.__factory.boiler(system,boiler_count)
+        self.buffers = self.__factory.buffer(system,buffer_count)
         #Single components
         self.heatpump = self.__factory.heatpump(system)
         self.photovoltaic = self.__factory.photovoltaic(system)
