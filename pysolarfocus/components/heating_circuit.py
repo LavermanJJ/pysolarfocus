@@ -8,7 +8,7 @@ class HeatingCircuit(Component):
         self.supply_temperature = DataValue(address=0,multiplier=0.1)
         self.room_temperature = DataValue(address=1,multiplier=0.1)
         self.humidity = DataValue(address=2,multiplier=0.1)
-        self.limit_temperature = DataValue(address=3,type=DataTypes.UINT)
+        self.limit_thermostat = DataValue(address=3,type=DataTypes.UINT)
         self.circulator_pump = DataValue(address=4,type=DataTypes.UINT)
         self.mixer_valve = DataValue(address=5,type=DataTypes.UINT)
         self.state = DataValue(address=6,type=DataTypes.UINT)
