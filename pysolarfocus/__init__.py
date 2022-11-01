@@ -48,6 +48,7 @@ class SolarfocusAPI:
         self.heatpump = self.__factory.heatpump(system)
         self.photovoltaic = self.__factory.photovoltaic(system)
         self.pelletsboiler = self.__factory.pelletsboiler(system)
+        self.solar = self.__factory.solar(system)
         self._slave_id = slave_id
         self._system = system
     
@@ -69,6 +70,7 @@ class SolarfocusAPI:
             and self.update_heatpump()
             and self.update_photovoltaic()
             and self.update_pelletsboiler()
+            and self.update_solar()
         ):
             return True
         return False
@@ -105,3 +107,7 @@ class SolarfocusAPI:
     def update_pelletsboiler(self) -> bool:
         """Read values from Pellets boiler"""
         return self.pelletsboiler.update()
+    
+    def update_solar(self) -> bool:
+        """Read values from Solar"""
+        return self.solar.update()
