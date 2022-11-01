@@ -4,6 +4,7 @@ from .components.heat_pump import *
 from .components.buffer import *
 from .components.pellets_boiler import *
 from .components.photovoltaic import *
+from .components.solar import *
 from .modbus_wrapper import ModbusConnector
 from . import Systems
 
@@ -54,4 +55,7 @@ class ComponentFactory:
     
     def pelletsboiler(self, system:Systems)->PelletsBoiler:
         return PelletsBoiler()._initialize(self.__modbus_connector)
+    
+    def solar(self, system:Systems)->Solar:
+        return Solar()._initialize(self.__modbus_connector)
     
