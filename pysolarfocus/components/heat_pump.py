@@ -1,3 +1,4 @@
+from pysolarfocus.components.base.performance_calculator import PerformanceCalculator
 from .base.component import Component
 from .base.enums import DataTypes,RegisterTypes
 from .base.data_value import DataValue
@@ -29,28 +30,8 @@ class HeatPump(Component):
         self.smart_grid = DataValue(address=1,register_type=RegisterTypes.Holding)
         self.outdoor_temperature_external = DataValue(address=2,multiplier=10,register_type=RegisterTypes.Holding)
 
-
-    @property
-    def cop_heating(self) -> float:
-        if self.electrical_power.scaled_value:
-            return self.thermal_power_heating.scaled_value / self.electrical_power.scaled_value
-        return 0.0
-
-    @property
-    def cop_cooling(self) -> float:
-        if self.electrical_power.scaled_value:
-            return self.thermal_power_cooling.scaled_value / self.electrical_power.scaled_value
-        return 0.0
-
-    @property
-    def performance_overall_heating(self) -> float:
-        if self.electrical_energy_heating.scaled_value:
-            return self.thermal_energy_heating.scaled_value / self.electrical_energy_heating.scaled_value
-        return 0.0
-
-    @property
-    def performance_overall_drinking_water(self) -> float:
-        if self.electrical_energy_drinking_water.scaled_value:
-            return self.thermal_energy_drinking_water.scaled_value / self.electrical_energy_drinking_water.scaled_value
-        return 0.0
-
+        self.cop_heating = PerformanceCalculator(self.thermal_power_heating, self.electrical_power)
+        self.cop_cooling = PerformanceCalculator(self.thermal_power_cooling, self.electrical_power)
+        self.performance_overall = PerformanceCalculator(self.thermal_energy_total, self.electrical_energy_total)
+        self.performance_overall_heating = PerformanceCalculator(self.thermal_energy_heating, self.electrical_energy_heating)
+        self.performance_overall_drinking_water = PerformanceCalculator(self.thermal_energy_drinking_water, self.electrical_energy_drinking_water)

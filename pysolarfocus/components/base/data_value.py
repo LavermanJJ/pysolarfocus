@@ -2,10 +2,12 @@ import logging
 
 
 import logging
+
+from .part import Part
 from ...modbus_wrapper import ModbusConnector
 from .enums import DataTypes, RegisterTypes
 
-class DataValue(object):
+class DataValue(Part):
     """
     Abstraction of a certain relative address in the modbus register
     """
