@@ -50,6 +50,10 @@ class Component(object):
         #=> if one of these registers is between the start and end address of the read/write we need to skip it
         self.__input_slices = Component._calculate_ranges([v for (n,v) in self.__get_input_values()])
         self.__holding_slices = Component._calculate_ranges([v for (n,v) in self.__get_holding_values()])
+        
+        # Initialize has_performance_calculators
+        self.__get_performance_calculators()
+        
         return self
     
     @property
@@ -92,7 +96,7 @@ class Component(object):
     
     @property
     def has_performance_calculators(self)->bool:
-        return  self.__get_performance_calculators()
+        return len(self.__get_performance_calculators()) > 0
     
     def __get_data_values(self)->list[tuple[str,DataValue]]:
         """

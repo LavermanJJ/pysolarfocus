@@ -3,7 +3,7 @@ from abc import abstractmethod
 
 class Part(object):
     """
-    Performing performance calculations
+    Abstraction of a metric of the heating system
     """
     
     @property
