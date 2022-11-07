@@ -1,5 +1,7 @@
 import logging
 
+from pysolarfocus.components.base.performance_calculator import PerformanceCalculator
+
 from ...modbus_wrapper import ModbusConnector
 from .data_value import DataValue
 from .enums import DataTypes, RegisterTypes
@@ -15,6 +17,7 @@ class Component(object):
         self.__data_values = None
         self.__input_values = None
         self.__holding_values = None
+        self.__performance_calculators = None
         self.__modbus = None
         
     def _initialize(self,modbus:ModbusConnector):
@@ -86,7 +89,11 @@ class Component(object):
     @property
     def has_holding_address(self)->bool:
         return self.holding_address >= 0 and self.holding_count > 0
-      
+    
+    @property
+    def has_performance_calculators(self)->bool:
+        return  self.__get_performance_calculators()
+    
     def __get_data_values(self)->list[tuple[str,DataValue]]:
         """
         Returns all DataValues of this Component
@@ -112,6 +119,14 @@ class Component(object):
             self.__holding_values = [(k,v) for k,v in self.__get_data_values() if v.register_type == RegisterTypes.Holding]
             self.__holding_values = sorted(self.__holding_values,key=lambda item: item[1].address)
         return self.__holding_values
+    
+    def __get_performance_calculators(self)->list[tuple[str,PerformanceCalculator]]:
+        """
+        Returns all PerformanceCalculators of this Component
+        """
+        if self.__performance_calculators is None:
+            self.__performance_calculators = [(k,v) for k,v in self.__dict__.items() if isinstance(v,PerformanceCalculator)]
+        return self.__performance_calculators
     
     @staticmethod
     def __unsigned_to_signed(n:int, byte_count:int)->int:
@@ -183,4 +198,8 @@ class Component(object):
             s.append("---Holding:")
             for name,value in self.__get_holding_values():
                 s.append(f"{name} | raw:{value.value} scaled:{value.scaled_value}")     
+        if self.has_performance_calculators:
+            s.append("---Calculations:")
+            for name,value in self.__get_performance_calculators():
+                s.append(f"{name} | raw:{value.value} scaled:{value.scaled_value}")   
         return "\n".join(s)
