@@ -28,3 +28,29 @@ class HeatPump(Component):
         self.evu_lock = DataValue(address=0,register_type=RegisterTypes.Holding)
         self.smart_grid = DataValue(address=1,register_type=RegisterTypes.Holding)
         self.outdoor_temperature_external = DataValue(address=2,multiplier=10,register_type=RegisterTypes.Holding)
+
+
+    @property
+    def cop_heating(self) -> float:
+        if self.electrical_power.scaled_value:
+            return self.heatpump.thermal_power_heating.scaled_value / self.heatpump.electrical_power.scaled_value
+        return 0.0
+
+    @property
+    def cop_cooling(self) -> float:
+        if self.electrical_power.scaled_value:
+            return self.heatpump.thermal_power_cooling.scaled_value / self.heatpump.electrical_power.scaled_value
+        return 0.0
+
+    @property
+    def performance_overall_heating(self) -> float:
+        if self.electrical_energy_heating.scaled_value:
+            return self.heatpump.thermal_energy_heating.scaled_value / self.heatpump.electrical_energy_heating.scaled_value
+        return 0.0
+
+    @property
+    def performance_overall_drinking_water(self) -> float:
+        if self.electrical_energy_drinking_water.scaled_value:
+            return self.heatpump.thermal_energy_drinking_water.scaled_value / self.heatpump.electrical_energy_drinking_water.scaled_value
+        return 0.0
+
