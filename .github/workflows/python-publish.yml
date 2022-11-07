@@ -6,11 +6,11 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Upload Python Package
+name: Upload Released Python Package
 
 on:
   release:
-    types: [published]
+    types: [released]
 
 permissions:
   contents: read
