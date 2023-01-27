@@ -6,6 +6,8 @@
 
 This integration has been tested with Solarfocus eco<sup>manager-touch</sup> version `21.040`.
 
+Added biomass boiler pellet statistics (available since version 23.010)
+
 ### Systems
 
 * Heat pump vamp<sup>air</sup> with eco<sup>_manager-touch_</sup>
