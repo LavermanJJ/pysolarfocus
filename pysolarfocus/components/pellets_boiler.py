@@ -4,7 +4,7 @@ from .base.data_value import DataValue
 
 class PelletsBoiler(Component):
     def __init__(self,input_address=2400,holding_address=33400) -> None:
-        super().__init__(self,input_address, holding_address)
+        super().__init__(input_address, holding_address)
         self.temperature = DataValue(address=0,multiplier=0.1)
         self.status  = DataValue(address=1,type=DataTypes.UINT)
         self.message_number = DataValue(address=4)
