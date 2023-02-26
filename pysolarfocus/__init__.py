@@ -32,7 +32,7 @@ class SolarfocusAPI:
     
     @property
     def api_version(self) -> ApiVersions: 
-        return self.api_version
+        return self._api_version
     
     def __init__(self,
                  ip:str,
@@ -61,7 +61,7 @@ class SolarfocusAPI:
         self.solar = self.__factory.solar(system)
         self._slave_id = slave_id
         self._system = system
-        self._api_vesion = api_version
+        self._api_version = api_version
     
     def connect(self):
         """Connect to Solarfocus eco manager-touch"""
