@@ -1,8 +1,9 @@
-from pysolarfocus import SolarfocusAPI,Systems
+from pysolarfocus import SolarfocusAPI,Systems,ApiVersions
 
 # Create the Solarfocus API client
-# TODO: Adapt IP-Address
-solarfocus = SolarfocusAPI(ip="IP-Address", system=Systems.Therminator)
+# TODO: Choose either Vampair or Therminator and adapt IP-Address and version
+solarfocus = SolarfocusAPI(ip="IP-Address", system=Systems.Vampair, api_version=ApiVersions.V_21_140)
+
 solarfocus.connect()
 # Fetch the values
 solarfocus.update()
@@ -14,9 +15,10 @@ print(solarfocus.boilers[0])
 print("\n")
 print(solarfocus.buffers[0])
 print("\n")
-print(solarfocus.pelletsboiler)
-print("\n")
-print(solarfocus.heatpump)
+if solarfocus.system is Systems.Therminator:
+    print(solarfocus.pelletsboiler)
+if solarfocus.system is Systems.Vampair:
+    print(solarfocus.heatpump)
 print("\n")
 print(solarfocus.photovoltaic)
 print("\n")

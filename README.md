@@ -6,7 +6,11 @@
 
 This integration has been tested with Solarfocus eco<sup>manager-touch</sup> version `21.040`.
 
-Added biomass boiler pellet statistics (available since version 23.010)
+Added biomass boiler pellet statistics (available since version 23.010). To have them available, choose the respective API version when instantiating the client:
+
+```python
+solarfocus = SolarfocusAPI(ip="[Your-IP]", system=Systems.Vampair, api_version=ApiVersions.V_23_010)
+```
 
 ### Systems
 

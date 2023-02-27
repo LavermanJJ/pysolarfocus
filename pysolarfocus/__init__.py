@@ -1,7 +1,8 @@
 """Python client lib for Solarfocus"""
-__version__ = "3.4.0"
+__version__ = "3.5.0"
 
 from enum import Enum
+from packaging import version
 
 #Default port for modbus
 PORT = 502
@@ -14,6 +15,10 @@ class Systems(str, Enum):
     Vampair = "Vampair"
     Therminator = "Therminator" 
     
+class ApiVersions(Enum):
+    V_21_140 = version.parse("21.140")
+    V_23_010 = version.parse("23.010")
+    
 from .modbus_wrapper import ModbusConnector
 from .component_factory import ComponentFactory
 from .const import SLAVE_ID
@@ -22,8 +27,12 @@ class SolarfocusAPI:
     """Solarfocus Heating System"""
     
     @property
-    def system(self): 
+    def system(self) -> Systems: 
         return self._system
+    
+    @property
+    def api_version(self) -> ApiVersions: 
+        return self._api_version
     
     def __init__(self,
                  ip:str,
@@ -32,7 +41,8 @@ class SolarfocusAPI:
                  boiler_count:int = 1,
                  system:Systems=Systems.Vampair,
                  port:int=PORT,
-                 slave_id:int=SLAVE_ID):
+                 slave_id:int=SLAVE_ID,
+                 api_version:ApiVersions=ApiVersions.V_21_140):
         """Initialize Solarfocus communication."""
         assert heating_circuit_count >= 0 and heating_circuit_count < 9, "Heating circuit count must be between 0 and 8"
         assert buffer_count >= 0 and buffer_count < 5, "Buffer count must be between 0 and 4"
@@ -47,10 +57,11 @@ class SolarfocusAPI:
         #Single components
         self.heatpump = self.__factory.heatpump(system)
         self.photovoltaic = self.__factory.photovoltaic(system)
-        self.pelletsboiler = self.__factory.pelletsboiler(system)
+        self.pelletsboiler = self.__factory.pelletsboiler(system,api_version)
         self.solar = self.__factory.solar(system)
         self._slave_id = slave_id
         self._system = system
+        self._api_version = api_version
     
     def connect(self):
         """Connect to Solarfocus eco manager-touch"""

@@ -6,7 +6,7 @@ from .components.pellets_boiler import *
 from .components.photovoltaic import *
 from .components.solar import *
 from .modbus_wrapper import ModbusConnector
-from . import Systems
+from . import Systems, ApiVersions
 
 
 class ComponentFactory:
@@ -53,8 +53,8 @@ class ComponentFactory:
     def photovoltaic(self, system:Systems)->Photovoltaic:
         return Photovoltaic()._initialize(self.__modbus_connector)
     
-    def pelletsboiler(self, system:Systems)->PelletsBoiler:
-        return PelletsBoiler()._initialize(self.__modbus_connector)
+    def pelletsboiler(self, system:Systems, api_version:ApiVersions)->PelletsBoiler:
+        return PelletsBoiler(api_version=api_version)._initialize(self.__modbus_connector)
     
     def solar(self, system:Systems)->Solar:
         return Solar()._initialize(self.__modbus_connector)
