@@ -70,7 +70,8 @@ class SolarfocusAPI:
         self.photovoltaic = self.__factory.photovoltaic(system)
         self.pelletsboiler = self.__factory.pelletsboiler(system,api_version)
         self.solar = self.__factory.solar(system)
-        
+
+       
     
     def connect(self):
         """Connect to Solarfocus eco manager-touch"""

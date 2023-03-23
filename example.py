@@ -2,7 +2,7 @@ from pysolarfocus import SolarfocusAPI,Systems,ApiVersions
 
 # Create the Solarfocus API client
 # TODO: Choose either Vampair or Therminator and adapt IP-Address and version
-solarfocus = SolarfocusAPI(ip="solarfocus", system=Systems.Vampair, api_version=ApiVersions.V_23_010)
+solarfocus = SolarfocusAPI(ip="IP-Address", system=Systems.Vampair, api_version=ApiVersions.V_21_140)
 
 solarfocus.connect()
 # Fetch the values
