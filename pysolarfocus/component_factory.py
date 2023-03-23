@@ -1,3 +1,4 @@
+from .components.fresh_water_module import *
 from .components.heating_circuit import *
 from .components.boiler import *
 from .components.heat_pump import *
@@ -46,6 +47,15 @@ class ComponentFactory:
                 buffer = Buffer(input)._initialize(self.__modbus_connector)
             buffers.append(buffer)
         return buffers
+    
+    def fresh_water_modules(self, system:Systems,count:int)->list[FreshWaterModule]:
+        input_addresses = list(range(700,700+(25*count),25))
+        holding_addresses = list(range(32003,32003+(50*count),50))
+        fresh_water_modules = []
+        for i in range(count):
+            input,holding = input_addresses[i],holding_addresses[i]
+            fresh_water_modules.append(FreshWaterModule(input, holding)._initialize(self.__modbus_connector))
+        return fresh_water_modules
         
     def heatpump(self, system:Systems)->HeatPump:
         return HeatPump()._initialize(self.__modbus_connector)
