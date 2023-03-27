@@ -83,10 +83,11 @@ solarfocus = SolarfocusAPI(ip="[Your-IP]", system=Systems.Vampair, api_version=A
 
 
 #### 23.040
-Add fresh water module state.
+* Add fresh water module state.
 
 #### 23.010
-Add biomass boiler pellet statistics.
+* Add biomass boiler pellet statistics.
 
 #### 22.090
-Add biomass boiler sweep function control.
+* Add biomass boiler sweep function control.
+* Allow input of external buffer values

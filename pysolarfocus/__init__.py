@@ -61,7 +61,7 @@ class SolarfocusAPI:
         #Lists of components
         self.heating_circuits = self.__factory.heating_circuit(system,heating_circuit_count)
         self.boilers = self.__factory.boiler(system,boiler_count)
-        self.buffers = self.__factory.buffer(system,buffer_count)
+        self.buffers = self.__factory.buffer(system,buffer_count,api_version)
         if self._api_version.value >= ApiVersions.V_23_020.value:
             self.fresh_water_modules = self.__factory.fresh_water_modules(system,fresh_water_module_count)
         

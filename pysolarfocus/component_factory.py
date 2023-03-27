@@ -36,25 +36,27 @@ class ComponentFactory:
             boilers.append(Boiler(input,holding)._initialize(self.__modbus_connector))
         return boilers
     
-    def buffer(self, system:Systems,count:int)->list[Buffer]:
+    def buffer(self, system:Systems,count:int, api_version:ApiVersions)->list[Buffer]:
         input_addresses = list(range(1900,1900+(20*count),20))
+        holding_addresses = -1
+        if api_version.value >= ApiVersions.V_22_090.value:
+            holding_addresses = list(range(34000,34000+(50*count),50))
         buffers = []
         for i in range(count):
-            input = input_addresses[i]
+            input,holding = input_addresses[i],holding_addresses[i]
             if system == Systems.Therminator:
                 buffer = TherminatorBuffer(input)._initialize(self.__modbus_connector)
             else:
-                buffer = Buffer(input)._initialize(self.__modbus_connector)
+                buffer = Buffer(input,holding)._initialize(self.__modbus_connector)
             buffers.append(buffer)
         return buffers
     
     def fresh_water_modules(self, system:Systems,count:int)->list[FreshWaterModule]:
         input_addresses = list(range(700,700+(25*count),25))
-        holding_addresses = list(range(32003,32003+(50*count),50))
         fresh_water_modules = []
         for i in range(count):
-            input,holding = input_addresses[i],holding_addresses[i]
-            fresh_water_modules.append(FreshWaterModule(input, holding)._initialize(self.__modbus_connector))
+            input = input_addresses[i]
+            fresh_water_modules.append(FreshWaterModule(input)._initialize(self.__modbus_connector))
         return fresh_water_modules
         
     def heatpump(self, system:Systems)->HeatPump:
