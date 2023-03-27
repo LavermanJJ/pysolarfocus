@@ -1,10 +1,12 @@
 # pysolarfocus: Python Client for Solarfocus eco<sup>_manager-touch_</sup>
 
+Python client library to interact with heating systems of [Solarfocus](https://www.solarfocus.com/) (eco<sup>_manager-touch_</sup> and thermi<sup>nator</sup> II) via Modbus TCP. This library has been developed for the integration into [Home-Assistant](https://www.home-assistant.io/) via a [custom integration](https://github.com/LavermanJJ/home-assistant-solarfocus), but can be used indepdently.
+
 ## What's Supported 
 
 ### Software Version
 
-This integration has been tested with Solarfocus eco<sup>manager-touch</sup> version `21.040`.
+This integration has been tested with Solarfocus eco<sup>manager-touch</sup> version `23.020`.
 
 ### Systems
 
@@ -85,3 +87,6 @@ Add fresh water module state.
 
 #### 23.010
 Add biomass boiler pellet statistics.
+
+#### 22.090
+Add biomass boiler sweep function control.
