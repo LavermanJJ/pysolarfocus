@@ -21,7 +21,7 @@ This integration has been tested with Solarfocus eco<sup>manager-touch</sup> ver
 | Boilers (_Boiler_) 1-4 | :white_check_mark: |
 | Heatpump (_Wärmepumpe_) | :white_check_mark: |
 | Biomassboiler (_Kessel_) | :white_check_mark: | 
-| Fresh Water Module (_Frishwasser Modul_) | :white_check_mark: | 
+| Fresh Water Module (_Frishwasser Modul_) 1-4 | :white_check_mark: | 
 
 ## How To
 

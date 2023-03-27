@@ -50,7 +50,7 @@ class SolarfocusAPI:
         assert heating_circuit_count >= 0 and heating_circuit_count < 9, "Heating circuit count must be between 0 and 8"
         assert buffer_count >= 0 and buffer_count < 5, "Buffer count must be between 0 and 4"
         assert boiler_count >= 0 and boiler_count < 5, "Boiler count must be between 0 and 4"
-        assert fresh_water_module_count >= 0 and fresh_water_module_count < 5, "Boiler count must be between 0 and 4"
+        assert fresh_water_module_count >= 0 and fresh_water_module_count < 5, "Fresh water module count must be between 0 and 4"
         
         self.__conn = ModbusConnector(ip,port,slave_id)
         self.__factory = ComponentFactory(self.__conn)
