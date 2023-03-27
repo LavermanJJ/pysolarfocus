@@ -90,4 +90,4 @@ solarfocus = SolarfocusAPI(ip="[Your-IP]", system=Systems.Vampair, api_version=A
 
 #### 22.090
 * Add biomass boiler sweep function control.
-* Allow input of external buffer values
+* Allow input of external buffer values.
