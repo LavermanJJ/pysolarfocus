@@ -1,6 +1,7 @@
 from .base.component import Component
-from .base.enums import DataTypes
+from .base.enums import DataTypes, RegisterTypes
 from .base.data_value import DataValue
+from .. import ApiVersions
 
 class Buffer(Component):
     def __init__(self,input_address:int=1900, holding_address=-1, api_version:ApiVersions=ApiVersions.V_21_140) -> None:

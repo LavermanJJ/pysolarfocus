@@ -47,7 +47,7 @@ class ComponentFactory:
             if system == Systems.Therminator:
                 buffer = TherminatorBuffer(input)._initialize(self.__modbus_connector)
             else:
-                buffer = Buffer(input,holding)._initialize(self.__modbus_connector)
+                buffer = Buffer(input,holding,api_version=api_version)._initialize(self.__modbus_connector)
             buffers.append(buffer)
         return buffers
     
