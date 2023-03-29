@@ -1,5 +1,5 @@
 """Python client lib for Solarfocus"""
-__version__ = "3.6.0"
+__version__ = "3.6.1"
 
 from enum import Enum
 from packaging import version
@@ -15,11 +15,18 @@ class Systems(str, Enum):
     Vampair = "Vampair"
     Therminator = "Therminator" 
     
-class ApiVersions(Enum):
-    V_21_140 = version.parse("21.140")
-    V_22_090 = version.parse("22.090")
-    V_23_010 = version.parse("23.010")
-    V_23_020 = version.parse("23.020")
+class ApiVersions(str, Enum):
+    """
+    Supported Solarfocus API versions by this library
+    """
+    V_21_140 = "21.140"
+    V_22_090 = "22.090"
+    V_23_010 = "23.010"
+    V_23_020 = "23.020"
+    
+    def greater_or_equal(self, api_version)->bool:
+        return version.parse(self.value) >= version.parse(api_version)
+    
     
 from .modbus_wrapper import ModbusConnector
 from .component_factory import ComponentFactory
@@ -41,7 +48,7 @@ class SolarfocusAPI:
                  heating_circuit_count:int = 1,
                  buffer_count:int = 1,
                  boiler_count:int = 1,
-                 fresh_water_module_count:int =1,
+                 fresh_water_module_count:int = 1,
                  system:Systems=Systems.Vampair,
                  port:int=PORT,
                  slave_id:int=SLAVE_ID,
@@ -62,7 +69,7 @@ class SolarfocusAPI:
         self.heating_circuits = self.__factory.heating_circuit(system,heating_circuit_count)
         self.boilers = self.__factory.boiler(system,boiler_count)
         self.buffers = self.__factory.buffer(system,buffer_count,api_version)
-        if self._api_version.value >= ApiVersions.V_23_020.value:
+        if self._api_version.greater_or_equal(ApiVersions.V_23_020.value):
             self.fresh_water_modules = self.__factory.fresh_water_modules(system,fresh_water_module_count)
         
         #Single components
@@ -120,7 +127,7 @@ class SolarfocusAPI:
     
     def update_fresh_water_modules(self) -> bool:
         """Read values from Heating System"""
-        if self.api_version.value >= ApiVersions.V_23_020.value:
+        if self._api_version.greater_or_equal(ApiVersions.V_23_020.value):
             for fresh_water_module in self.fresh_water_modules:
                 if not fresh_water_module.update():
                     return False
@@ -128,7 +135,9 @@ class SolarfocusAPI:
 
     def update_heatpump(self) -> bool:
         """Read values from Heating System"""
-        return self.heatpump.update()
+        if self._system is Systems.Vampair:
+            return self.heatpump.update()
+        return True
 
     def update_photovoltaic(self) -> bool:
         """Read values from Heating System"""
@@ -136,8 +145,20 @@ class SolarfocusAPI:
 
     def update_pelletsboiler(self) -> bool:
         """Read values from Pellets boiler"""
-        return self.pelletsboiler.update()
+        if self._system is Systems.Therminator:
+            return self.pelletsboiler.update()
+        return True
     
     def update_solar(self) -> bool:
         """Read values from Solar"""
         return self.solar.update()
+    
+    
+    def __repr__(self) -> str:
+        s = ["-"*50]
+        s.append(f"{self.__class__.__name__}, v{__version__}")
+        s.append("-"*50)
+        s.append(f"+ System: {self.system.name}")
+        s.append(f"+ Version: {self._api_version}")
+        s.append("-"*50)
+        return "\n".join(s)
