@@ -14,7 +14,7 @@ class Buffer(Component):
         self.state = DataValue(address=3,type=DataTypes.UINT)
         self.mode = DataValue(address=4,type=DataTypes.UINT)
 
-        if api_version.value >= ApiVersions.V_22_090.value:
+        if api_version.greater_or_equal(ApiVersions.V_22_090.value):
             self.external_top_temperature_x44 = DataValue(address=0,multiplier=10,register_type=RegisterTypes.Holding)
             self.external_middle_temperature_x36 = DataValue(address=1,multiplier=10,register_type=RegisterTypes.Holding)
             self.external_bottom_temperature_x35 = DataValue(address=2,multiplier=10,register_type=RegisterTypes.Holding)

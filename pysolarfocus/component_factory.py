@@ -39,7 +39,7 @@ class ComponentFactory:
     def buffer(self, system:Systems,count:int, api_version:ApiVersions)->list[Buffer]:
         input_addresses = list(range(1900,1900+(20*count),20))
         holding_addresses = -1
-        if api_version.value >= ApiVersions.V_22_090.value:
+        if api_version.greater_or_equal(ApiVersions.V_22_090.value):
             holding_addresses = list(range(34000,34000+(50*count),50))
         buffers = []
         for i in range(count):

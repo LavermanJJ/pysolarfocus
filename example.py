@@ -1,15 +1,17 @@
 from pysolarfocus import SolarfocusAPI,Systems,ApiVersions
 
 # Create the Solarfocus API client
-# TODO: Choose either Vampair or Therminator and adapt IP-Address and version
-solarfocus = SolarfocusAPI(ip="solarfocus", system=Systems.Vampair, api_version=ApiVersions.V_23_020)
+solarfocus = SolarfocusAPI(
+    ip="solarfocus",                    # adapt IP-Address 
+    system=Systems.Vampair,             # change to Systems.Therminator
+    api_version=ApiVersions.V_23_020)   # select Solarfocus version
 
 solarfocus.connect()
 # Fetch the values
 solarfocus.update()
 
 # Print the values
-print("Solarfocus "+ solarfocus.system.name +", version " + str(solarfocus.api_version.value))
+print(solarfocus)
 print(solarfocus.heating_circuits[0])
 print("\n")
 print(solarfocus.boilers[0])
@@ -24,3 +26,4 @@ print("\n")
 print(solarfocus.photovoltaic)
 print("\n")
 print(solarfocus.solar)
+print("\n")
