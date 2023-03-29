@@ -82,7 +82,7 @@ solarfocus = SolarfocusAPI(ip="[Your-IP]", system=Systems.Vampair, api_version=A
 > of this library.
 
 
-#### 23.040
+#### 23.020
 * Add fresh water module state.
 
 #### 23.010
