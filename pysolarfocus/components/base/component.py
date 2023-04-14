@@ -1,10 +1,10 @@
 import logging
 
-from pysolarfocus.components.base.performance_calculator import PerformanceCalculator
 
 from ...modbus_wrapper import ModbusConnector
 from .data_value import DataValue
 from .enums import DataTypes, RegisterTypes
+from .performance_calculator import PerformanceCalculator
 from .register_slice import RegisterSlice
 
 
