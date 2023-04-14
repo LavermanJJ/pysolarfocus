@@ -43,7 +43,11 @@ class ComponentFactory:
             holding_addresses = list(range(34000,34000+(50*count),50))
         buffers = []
         for i in range(count):
-            input,holding = input_addresses[i],holding_addresses[i]
+            input = input_addresses[i]
+            if api_version.greater_or_equal(ApiVersions.V_22_090.value):
+                holding = holding_addresses[i]
+            else:
+                holding = -1 
             if system == Systems.Therminator:
                 buffer = TherminatorBuffer(input)._initialize(self.__modbus_connector)
             else:
