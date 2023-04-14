@@ -1,5 +1,5 @@
 """Python client lib for Solarfocus"""
-__version__ = "3.6.2"
+__version__ = "3.6.3"
 
 from enum import Enum
 from packaging import version
@@ -89,7 +89,7 @@ class SolarfocusAPI:
         """Check if connection is established"""
         return self.__conn.is_connected
     
-    def update(self):
+    def update(self) -> bool:
         """Read values from Heating System"""
         if (
             self.update_heating()
@@ -135,9 +135,7 @@ class SolarfocusAPI:
 
     def update_heatpump(self) -> bool:
         """Read values from Heating System"""
-        if self._system is Systems.Vampair:
-            return self.heatpump.update()
-        return True
+        return self.heatpump.update()
 
     def update_photovoltaic(self) -> bool:
         """Read values from Heating System"""
@@ -145,9 +143,7 @@ class SolarfocusAPI:
 
     def update_pelletsboiler(self) -> bool:
         """Read values from Pellets boiler"""
-        if self._system is Systems.Therminator:
-            return self.pelletsboiler.update()
-        return True
+        return self.pelletsboiler.update()
     
     def update_solar(self) -> bool:
         """Read values from Solar"""
