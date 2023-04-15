@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pysolarfocus"
-version = "3.6.3"
+version = "3.6.4"
 description = "Unofficial, local Solarfocus client"
 authors = ["Jeroen Laverman <jjlaverman@web.de>"]
 license = "Apache-2.0"
