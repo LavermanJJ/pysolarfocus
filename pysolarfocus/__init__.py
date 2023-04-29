@@ -14,6 +14,7 @@ class Systems(str, Enum):
     """
     Vampair = "Vampair"
     Therminator = "Therminator" 
+    EcoTop = "EcoTop"
     
 class ApiVersions(str, Enum):
     """
