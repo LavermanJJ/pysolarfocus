@@ -1,5 +1,6 @@
 """Python client lib for Solarfocus"""
-__version__ = "3.7.0"
+import importlib.metadata
+__version__= importlib.metadata.version('pysolarfocus')
 
 from enum import Enum
 from packaging import version
