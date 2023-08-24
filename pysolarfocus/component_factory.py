@@ -20,7 +20,7 @@ class ComponentFactory:
         heating_circuits = []
         for i in range(count):
             input,holding = input_addresses[i],holding_addresses[i]
-            if system == Systems.Therminator:
+            if system == Systems.Therminator or system == Systems.EcoTop:
                 heating_circuit = TherminatorHeatingCircuit(input,holding)._initialize(self.__modbus_connector)
             else:
                 heating_circuit = HeatingCircuit(input,holding)._initialize(self.__modbus_connector)
@@ -48,7 +48,7 @@ class ComponentFactory:
                 holding = holding_addresses[i]
             else:
                 holding = -1 
-            if system == Systems.Therminator:
+            if system == Systems.Therminator or system == Systems.EcoTop:
                 buffer = TherminatorBuffer(input)._initialize(self.__modbus_connector)
             else:
                 buffer = Buffer(input,holding,api_version=api_version)._initialize(self.__modbus_connector)
@@ -70,7 +70,7 @@ class ComponentFactory:
         return Photovoltaic()._initialize(self.__modbus_connector)
     
     def pelletsboiler(self, system:Systems, api_version:ApiVersions)->PelletsBoiler:
-        return PelletsBoiler(api_version=api_version)._initialize(self.__modbus_connector)
+        return PelletsBoiler(api_version=api_version,system=system)._initialize(self.__modbus_connector)
     
     def solar(self, system:Systems)->Solar:
         return Solar()._initialize(self.__modbus_connector)
