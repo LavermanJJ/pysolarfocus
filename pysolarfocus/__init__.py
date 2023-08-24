@@ -1,9 +1,10 @@
 """Python client lib for Solarfocus"""
 import importlib.metadata
-__version__= importlib.metadata.version('pysolarfocus')
 
 from enum import Enum
 from packaging import version
+
+__version__ = importlib.metadata.version("pysolarfocus")
 
 #Default port for modbus
 PORT = 502

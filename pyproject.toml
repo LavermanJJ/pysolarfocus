@@ -12,10 +12,11 @@ readme = "README.md"
 
 
 [tool.poetry.dependencies]
-python = "^3.9"
-pymodbus = "3.2.2"
+python = "^3.11"
+pymodbus = "^3.4.1"
 importlib = "^1.0.4"
 packaging = "^23.1"
+setuptools = "^68.1.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
