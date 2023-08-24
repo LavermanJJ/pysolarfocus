@@ -1,5 +1,5 @@
 """Python client lib for Solarfocus"""
-__version__ = "3.6.5"
+__version__ = "3.7.0"
 
 from enum import Enum
 from packaging import version
@@ -14,7 +14,7 @@ class Systems(str, Enum):
     """
     Vampair = "Vampair"
     Therminator = "Therminator" 
-    EcoTop = "EcoTop"
+    Ecotop = "Ecotop"
     
 class ApiVersions(str, Enum):
     """

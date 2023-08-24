@@ -5,7 +5,7 @@ from .. import ApiVersions
 from .. import Systems
 
 class PelletsBoiler(Component):
-    def __init__(self,input_address=2400,holding_address=-1,api_version:ApiVersions=ApiVersions.V_23_010,system=Systems.EcoTop) -> None:
+    def __init__(self,input_address=2400,holding_address=-1,api_version:ApiVersions=ApiVersions.V_23_010,system=Systems.Ecotop) -> None:
         
         if api_version.greater_or_equal(ApiVersions.V_22_090.value):
             holding_address=33400
@@ -23,7 +23,7 @@ class PelletsBoiler(Component):
         self.octoplus_buffer_temperature_top = DataValue(address=11,multiplier=0.1)
         self.log_wood = DataValue(address=12,type=DataTypes.UINT)
         
-        if api_version.greater_or_equal(ApiVersions.V_22_090.value) and  system is not Systems.EcoTop:
+        if api_version.greater_or_equal(ApiVersions.V_22_090.value) and  system is not Systems.Ecotop:
             self.sweep_function_start_stop = DataValue(address=10,register_type=RegisterTypes.Holding)
             self.sweep_function_extend = DataValue(address=11,register_type=RegisterTypes.Holding)
 

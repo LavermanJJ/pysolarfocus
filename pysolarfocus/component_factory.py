@@ -20,7 +20,7 @@ class ComponentFactory:
         heating_circuits = []
         for i in range(count):
             input,holding = input_addresses[i],holding_addresses[i]
-            if system == Systems.Therminator or system == Systems.EcoTop:
+            if system == Systems.Therminator or system == Systems.Ecotop:
                 heating_circuit = TherminatorHeatingCircuit(input,holding)._initialize(self.__modbus_connector)
             else:
                 heating_circuit = HeatingCircuit(input,holding)._initialize(self.__modbus_connector)
@@ -48,7 +48,7 @@ class ComponentFactory:
                 holding = holding_addresses[i]
             else:
                 holding = -1 
-            if system == Systems.Therminator or system == Systems.EcoTop:
+            if system == Systems.Therminator or system == Systems.Ecotop:
                 buffer = TherminatorBuffer(input)._initialize(self.__modbus_connector)
             else:
                 buffer = Buffer(input,holding,api_version=api_version)._initialize(self.__modbus_connector)
