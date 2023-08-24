@@ -20,6 +20,6 @@ jobs:
         pip install poetry
     - name: Publish distribution 📦 to PyPI
       run: |
-        poetry config repositories.pypi https://pypi.org/p/pysolarfocus/
         poetry version ${{ github.ref_name }}
-        poetry publish --build -r pypi -u __token__ -p ${{ secrets.PYPI_API_TOKEN }}
+        poetry config pypi-token.pypi ${{ secrets.PYPI_API_TOKEN }}
+        poetry publish --build
