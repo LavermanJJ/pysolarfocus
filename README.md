@@ -1,30 +1,69 @@
-# pysolarfocus: Python Client for Solarfocus eco<sup>_manager-touch_</sup> via Modbus TCP
+[![License](https://img.shields.io/github/license/lavermanjj/home-assistant-solarfocus?style=for-the-badge)](https://img.shields.io/github/license/lavermanjj/home-assistant-solarfocus?style=for-the-badge)
 
-Python client library to interact with heating systems of [Solarfocus](https://www.solarfocus.com/) (eco<sup>_manager-touch_</sup> and thermi<sup>nator</sup> II) via Modbus TCP. This library has been developed for the integration into [Home-Assistant](https://www.home-assistant.io/) via a [custom integration](https://github.com/LavermanJJ/home-assistant-solarfocus), but can be used indepdently.
 
-## What's Supported 
+<p align="center">
+  <a href="https://github.com/lavermanjj/home-assistant-solarfocus">
+    <img src="https://brands.home-assistant.io/solarfocus/logo.png" alt="Logo" height="80">
+  </a>
+</p>
 
-### Software Version
+<h3 align="center">pysolarfocus</h3>
 
-This integration has been tested with Solarfocus eco<sup>manager-touch</sup> version `23.020`.
+<p align="center">
+  Python client for <a href="https://www.solarfocus.com/">Solarfocus</a> eco<sup>manager-touch</sup>  via Modbus TCP
+</p>
 
-### Systems
 
-* Heat pump vamp<sup>air</sup> with eco<sup>_manager-touch_</sup>
-* Biomass boiler thermi<sup>nator</sup> II
+<details open="open">
+  <summary>Table of Contents</summary>
 
-### Components
+1. [About](#about)
+2. [Supported Solarfocus Software and Hardware](#supported-solarfocus-software-and-hardware)
+3. [How To](#how-to)
+   - [Basic Example](#basic-example)
+   - [Handling multiple components](#handling-multiple-components)
+   - [API-Version specification](api-version-specification)
+4. [Changelog of API-Versions](#changelog-of-api-versions)
+
+   
+</details>
+
+
+## About
+
+Python client library to interact with heating systems of [Solarfocus](https://www.solarfocus.com/) (eco<sup>_manager-touch_</sup>) via Modbus TCP. This library has been developed for the integration into [Home-Assistant](https://www.home-assistant.io/) via a [custom integration](https://github.com/LavermanJJ/home-assistant-solarfocus), but can be used indepdently.
+
+> **Warning**
+> Use with caution, in case of doubt check with Solarfocus or your installer if a feature / functionality (e.g. cooling) is supported by your installation to avoid damages to your heating system or the building.
+
+
+## Supported Solarfocus Software and Hardware
+
+### Software
+
+> **Important**
+> This integration has been tested with Solarfocus eco<sup>manager-touch</sup> version `23.020`.
+
+Supported versions: `21.140` - `23.020`. Features added in later versions are not yet supported.
+
+The eco<sup>manager-touch</sup> Modbus TCP specification can be found [here](https://www.solarfocus.com/de/partnerportal/pdf/open/UGFydG5lcmJlcmVpY2gtREUvUmVnZWx1bmdfZWNvbWFuYWdlci10b3VjaC9BbmxlaXR1bmdlbi9lY29tYW5hZ2VyLXRvdWNoX01vZGJ1cy1UQ1AtUmVnaXN0ZXJkYXRlbl9BbmxlaXR1bmcucGRm/117920/0/Lng_YSxpM245S30zMTc4W2Y8cVRRXWlJVWRQJDsv?serialNumber=21010).
+
+### Hardware
+
+The eco<sup>manager-touch</sup> can integrate the following heating systems
+- [Vamp<sup>air</sup>](https://www.solarfocus.com/en/products/air-source-heat-pump-vampair) heat pumps
+- [Thermin<sup>nator</sup>](https://www.solarfocus.com/en/products/biomassheating) biomass boilers
+- [Ecotop<sup>light</sup> / Ecotop<sup>zero</sup>](https://www.solarfocus.com/de/produkte/biomasseheizung/pelletkessel/ecotop) biomass boilers
 
 | Components | Supported |
 |---|---|
-| Heating Circuits (_Heizkreis_) 1-8 | :white_check_mark: |
-| Buffers (_Puffer_) 1-4 | :white_check_mark: |
-| Solar (_Solar_)| :white_check_mark:|
-| Boilers (_Boiler_) 1-4 | :white_check_mark: |
-| Heatpump (_Wärmepumpe_) | :white_check_mark: |
-| Biomassboiler (_Kessel_) | :white_check_mark: | 
-| Photvoltaic (_Photovoltaik_) | :white_check_mark: | 
-| Fresh Water Module (_Frischwasser Modul_) 1-4 | :white_check_mark: | 
+| Heating Circuit 1 - 8 (_Heizkreis_)| :white_check_mark: |
+| Buffer 1 - 4 (_Puffer_) | :white_check_mark: |
+| Solar (_Solar_)| :white_check_mark: |
+| Boiler 1 - 4 (_Boiler_) | :white_check_mark: |
+| Heat Pump (_Wärmepumpe_) | :white_check_mark: |
+| Biomass Boiler (_Kessel_) | :white_check_mark: | 
+| Fresh Water Module 1 - 4 (_Frischwassermodul_) | :white_check_mark: |
 
 ## How To
 
@@ -36,7 +75,7 @@ from pysolarfocus import SolarfocusAPI,Systems,ApiVersions
 # Create the Solarfocus API client
 solarfocus = SolarfocusAPI(
     ip="solarfocus",                    # adapt IP-Address 
-    system=Systems.Vampair,             # for biomass boiler change to Systems.Therminator 
+    system=Systems.VAMPAIR,             # for biomass boiler change to Systems.Therminator 
     api_version=ApiVersions.V_23_020)   # select Solarfocus version
 
 solarfocus.connect()
@@ -88,12 +127,12 @@ indoor_temperatur_external | raw:222 scaled:22.2
 indoor_humidity_external | raw:480 scaled:48.0
 ```
 
-### Handling multiple components e.g. heating circuits
+### Handling multiple components
 Solarfocus systems allow the use of multiple heating circuits, buffers, boilers, and fresh water modules. The api can be configured to interact with multiple components.
 
 ```python 
 # Create the Solarfocus API client with 2 Heating Circuits
-solarfocus = SolarfocusAPI(ip="[Your-IP]",heating_circuit_count=2,system=Systems.Vampair)
+solarfocus = SolarfocusAPI(ip="[Your-IP]",heating_circuit_count=2,system=Systems.VAMPAIR)
 # Connect to the heating system
 solarfocus.connect()
 
@@ -116,7 +155,7 @@ By default, the integration uses API-Version`21.140`. If your system is newer, y
 the version by using the `api_version` parameter. 
 
 ```python
-solarfocus = SolarfocusAPI(ip="[Your-IP]", system=Systems.Vampair, api_version=ApiVersions.V_23_020)
+solarfocus = SolarfocusAPI(ip="[Your-IP]", system=Systems.VAMPAIR, api_version=ApiVersions.V_23_020)
 ```
 
 You can find the API-Version displayed in the header of the screen of your Solarfocus system:
