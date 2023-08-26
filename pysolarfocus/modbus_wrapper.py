@@ -1,3 +1,5 @@
+
+"""Solarfocus modbus wrapper"""
 import logging
 
 try:
@@ -39,13 +41,13 @@ class ModbusConnector:
             return False, None
         try:
             combined_result = [None] * count
-            for registerSlice in slices:
-                result = self.client.read_input_registers(address=registerSlice.absolute_address, count=registerSlice.count, **self.__slave_args)
+            for register_slice in slices:
+                result = self.client.read_input_registers(address=register_slice.absolute_address, count=register_slice.count, **self.__slave_args)
                 if result.isError():
-                    logging.error(f"Modbus read error at address={registerSlice.absolute_address}, count={registerSlice.count}: {result}")
+                    logging.error(f"Modbus read error at address={register_slice.absolute_address}, count={register_slice.count}: {result}")
                     return False, None
                 slice_data = result.registers
-                combined_result[registerSlice.relative_address : registerSlice.relative_address + registerSlice.count] = slice_data
+                combined_result[register_slice.relative_address : register_slice.relative_address + register_slice.count] = slice_data
             return True, combined_result
         except Exception:
             logging.exception(f"Exception while reading input registers for address: '{slices[0].absolute_address}'!")
@@ -58,13 +60,13 @@ class ModbusConnector:
             return False, None
         try:
             combined_result = [None] * count
-            for registerSlice in slices:
-                result = self.client.read_holding_registers(address=registerSlice.absolute_address, count=registerSlice.count, **self.__slave_args)
+            for register_slice in slices:
+                result = self.client.read_holding_registers(address=register_slice.absolute_address, count=register_slice.count, **self.__slave_args)
                 if result.isError():
-                    logging.error(f"Modbus read error at address={registerSlice.absolute_address}: {result}")
+                    logging.error(f"Modbus read error at address={register_slice.absolute_address}: {result}")
                     return False, None
                 slice_data = result.registers
-                combined_result[registerSlice.relative_address : registerSlice.relative_address + registerSlice.count] = slice_data
+                combined_result[register_slice.relative_address : register_slice.relative_address + register_slice.count] = slice_data
             return True, combined_result
         except Exception:
             logging.exception(f"Exception while reading holding registers for address: '{slices[0].absolute_address}'!")

@@ -1,12 +1,13 @@
+"""Solarfocus component factory"""
 from . import ApiVersions, Systems
-from .components.boiler import *
-from .components.buffer import *
-from .components.fresh_water_module import *
-from .components.heat_pump import *
-from .components.heating_circuit import *
-from .components.pellets_boiler import *
-from .components.photovoltaic import *
-from .components.solar import *
+from .components.boiler import Boiler
+from .components.buffer import Buffer, TherminatorBuffer
+from .components.fresh_water_module import FreshWaterModule
+from .components.heat_pump import HeatPump
+from .components.heating_circuit import HeatingCircuit, TherminatorHeatingCircuit
+from .components.biomass_boiler import BiomassBoiler
+from .components.photovoltaic import Photovoltaic
+from .components.solar import Solar
 from .modbus_wrapper import ModbusConnector
 
 
@@ -20,10 +21,10 @@ class ComponentFactory:
         heating_circuits = []
         for i in range(count):
             input, holding = input_addresses[i], holding_addresses[i]
-            if system == Systems.Therminator or system == Systems.Ecotop:
-                heating_circuit = TherminatorHeatingCircuit(input, holding)._initialize(self.__modbus_connector)
+            if system in [Systems.THERMINATOR, Systems.ECOTOP]:
+                heating_circuit = TherminatorHeatingCircuit(input, holding).initialize(self.__modbus_connector)
             else:
-                heating_circuit = HeatingCircuit(input, holding)._initialize(self.__modbus_connector)
+                heating_circuit = HeatingCircuit(input, holding).initialize(self.__modbus_connector)
             heating_circuits.append(heating_circuit)
         return heating_circuits
 
@@ -33,7 +34,7 @@ class ComponentFactory:
         boilers = []
         for i in range(count):
             input, holding = input_addresses[i], holding_addresses[i]
-            boilers.append(Boiler(input, holding)._initialize(self.__modbus_connector))
+            boilers.append(Boiler(input, holding).initialize(self.__modbus_connector))
         return boilers
 
     def buffer(self, system: Systems, count: int, api_version: ApiVersions) -> list[Buffer]:
@@ -48,10 +49,10 @@ class ComponentFactory:
                 holding = holding_addresses[i]
             else:
                 holding = -1
-            if system == Systems.Therminator or system == Systems.Ecotop:
-                buffer = TherminatorBuffer(input)._initialize(self.__modbus_connector)
+            if system in [Systems.THERMINATOR, Systems.ECOTOP]:
+                buffer = TherminatorBuffer(input).initialize(self.__modbus_connector)
             else:
-                buffer = Buffer(input, holding, api_version=api_version)._initialize(self.__modbus_connector)
+                buffer = Buffer(input, holding, api_version=api_version).initialize(self.__modbus_connector)
             buffers.append(buffer)
         return buffers
 
@@ -60,17 +61,17 @@ class ComponentFactory:
         fresh_water_modules = []
         for i in range(count):
             input = input_addresses[i]
-            fresh_water_modules.append(FreshWaterModule(input)._initialize(self.__modbus_connector))
+            fresh_water_modules.append(FreshWaterModule(input).initialize(self.__modbus_connector))
         return fresh_water_modules
 
     def heatpump(self, system: Systems) -> HeatPump:
-        return HeatPump()._initialize(self.__modbus_connector)
+        return HeatPump().initialize(self.__modbus_connector)
 
     def photovoltaic(self, system: Systems) -> Photovoltaic:
-        return Photovoltaic()._initialize(self.__modbus_connector)
+        return Photovoltaic().initialize(self.__modbus_connector)
 
-    def pelletsboiler(self, system: Systems, api_version: ApiVersions) -> PelletsBoiler:
-        return PelletsBoiler(api_version=api_version, system=system)._initialize(self.__modbus_connector)
+    def pelletsboiler(self, system: Systems, api_version: ApiVersions) -> BiomassBoiler:
+        return BiomassBoiler(api_version=api_version, system=system).initialize(self.__modbus_connector)
 
     def solar(self, system: Systems) -> Solar:
-        return Solar()._initialize(self.__modbus_connector)
+        return Solar().initialize(self.__modbus_connector)

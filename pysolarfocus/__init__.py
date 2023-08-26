@@ -15,9 +15,9 @@ class Systems(str, Enum):
     Supported systems by this library
     """
 
-    Vampair = "Vampair"
-    Therminator = "Therminator"
-    Ecotop = "Ecotop"
+    VAMPAIR = "Vampair"
+    THERMINATOR = "Therminator"
+    ECOTOP = "Ecotop"
 
 
 class ApiVersions(str, Enum):
@@ -31,6 +31,7 @@ class ApiVersions(str, Enum):
     V_23_020 = "23.020"
 
     def greater_or_equal(self, api_version) -> bool:
+        """Compare given version with own version."""
         return version.parse(self.value) >= version.parse(api_version)
 
 
@@ -57,7 +58,7 @@ class SolarfocusAPI:
         buffer_count: int = 1,
         boiler_count: int = 1,
         fresh_water_module_count: int = 1,
-        system: Systems = Systems.Vampair,
+        system: Systems = Systems.VAMPAIR,
         port: int = PORT,
         slave_id: int = SLAVE_ID,
         api_version: ApiVersions = ApiVersions.V_21_140,
@@ -84,7 +85,7 @@ class SolarfocusAPI:
         # Single components
         self.heatpump = self.__factory.heatpump(system)
         self.photovoltaic = self.__factory.photovoltaic(system)
-        self.pelletsboiler = self.__factory.pelletsboiler(system, api_version)
+        self.biomassboiler = self.__factory.pelletsboiler(system, api_version)
         self.solar = self.__factory.solar(system)
 
     def connect(self):
@@ -104,7 +105,7 @@ class SolarfocusAPI:
             and self.update_boiler()
             and self.update_heatpump()
             and self.update_photovoltaic()
-            and self.update_pelletsboiler()
+            and self.update_biomassboiler()
             and self.update_solar()
             and self.update_fresh_water_modules()
         ):
@@ -148,19 +149,19 @@ class SolarfocusAPI:
         """Read values from Heating System"""
         return self.photovoltaic.update()
 
-    def update_pelletsboiler(self) -> bool:
-        """Read values from Pellets boiler"""
-        return self.pelletsboiler.update()
+    def update_biomassboiler(self) -> bool:
+        """Read values from biomass boiler"""
+        return self.biomassboiler.update()
 
     def update_solar(self) -> bool:
         """Read values from Solar"""
         return self.solar.update()
 
     def __repr__(self) -> str:
-        s = ["-" * 50]
-        s.append(f"{self.__class__.__name__}, v{__version__}")
-        s.append("-" * 50)
-        s.append(f"+ System: {self.system.name}")
-        s.append(f"+ Version: {self._api_version}")
-        s.append("-" * 50)
-        return "\n".join(s)
+        message = ["-" * 50]
+        message.append(f"{self.__class__.__name__}, v{__version__}")
+        message.append("-" * 50)
+        message.append(f"+ System: {self.system.value}")
+        message.append(f"+ Version: {self._api_version.value}")
+        message.append("-" * 50)
+        return "\n".join(message)

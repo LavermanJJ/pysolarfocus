@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pysolarfocus"
-version = "3.7.0.1"
+version = "4.0.0"
 description = "Unofficial, local Solarfocus client"
 authors = ["Jeroen Laverman <jjlaverman@web.de>"]
 license = "Apache-2.0"
@@ -77,6 +77,9 @@ disable = [
     "too-many-boolean-expressions",
     "unused-argument",
     "wrong-import-order",
+    "missing-class-docstring",
+    "missing-function-docstring",
+    "logging-fstring-interpolation"
 ]
 enable = [
     #"useless-suppression",  # temporarily every now and then to clean them up
