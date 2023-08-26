@@ -1,4 +1,3 @@
-
 """Solarfocus modbus wrapper"""
 import logging
 

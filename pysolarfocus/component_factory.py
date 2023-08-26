@@ -1,11 +1,11 @@
 """Solarfocus component factory"""
 from . import ApiVersions, Systems
+from .components.biomass_boiler import BiomassBoiler
 from .components.boiler import Boiler
 from .components.buffer import Buffer, TherminatorBuffer
 from .components.fresh_water_module import FreshWaterModule
 from .components.heat_pump import HeatPump
 from .components.heating_circuit import HeatingCircuit, TherminatorHeatingCircuit
-from .components.biomass_boiler import BiomassBoiler
 from .components.photovoltaic import Photovoltaic
 from .components.solar import Solar
 from .modbus_wrapper import ModbusConnector

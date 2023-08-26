@@ -22,7 +22,13 @@ class DataValue(Part):
     register_type: RegisterTypes
 
     def __init__(
-        self, address: int, count: int = 1, default_value: int = 0, multiplier: float = None, data_type: DataTypes = DataTypes.INT, register_type: RegisterTypes = RegisterTypes.INPUT
+        self,
+        address: int,
+        count: int = 1,
+        default_value: int = 0,
+        multiplier: float = None,
+        data_type: DataTypes = DataTypes.INT,
+        register_type: RegisterTypes = RegisterTypes.INPUT,
     ) -> None:
         self.address = address
         self.count = count
