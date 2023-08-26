@@ -1,6 +1,7 @@
 name: CI
 
 on:
+  workflow-dispatch:
   # Run action when pushed to master, or for commits in a pull request.
   push:
     branches:
