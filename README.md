@@ -72,7 +72,7 @@ The eco<sup>manager-touch</sup> can integrate the following heating systems
 ### Installation
 
 ```
-pip3 install pysolarfocus
+$ pip3 install pysolarfocus
 ```
 
 ### Basic Example 
