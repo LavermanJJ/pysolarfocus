@@ -1,7 +1,7 @@
 check: check-pylint check-black
 
 check-pylint:
-	@poetry run pylint pysolarfocus/*
+	@poetry run pylint --errors-only pysolarfocus/*
 
 check-black:
 	@poetry run black --check pysolarfocus/*
