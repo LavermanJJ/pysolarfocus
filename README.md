@@ -1,4 +1,5 @@
-[![License](https://img.shields.io/github/license/lavermanjj/home-assistant-solarfocus?style=for-the-badge)](https://img.shields.io/github/license/lavermanjj/home-assistant-solarfocus?style=for-the-badge)
+[![Version](https://img.shields.io/github/v/tag/lavermanjj/pysolarfocus?style=for-the-badge&label=Version&color=orange)](https://img.shields.io/github/v/tag/lavermanjj/pysolarfocus?style=for-the-badge&label=Version&color=orange)
+[![License](https://img.shields.io/github/license/lavermanjj/pysolarfocus?style=for-the-badge)](https://img.shields.io/github/license/lavermanjj/pysolarfocus?style=for-the-badge)
 
 
 <p align="center">
@@ -20,9 +21,10 @@
 1. [About](#about)
 2. [Supported Solarfocus Software and Hardware](#supported-solarfocus-software-and-hardware)
 3. [How To](#how-to)
+   - [Installation](#installation)
    - [Basic Example](#basic-example)
    - [Handling multiple components](#handling-multiple-components)
-   - [API-Version specification](api-version-specification)
+   - [API-Version specification](#api-version-specification)
 4. [Changelog of API-Versions](#changelog-of-api-versions)
 
    
@@ -67,6 +69,12 @@ The eco<sup>manager-touch</sup> can integrate the following heating systems
 
 ## How To
 
+### Installation
+
+```
+$ pip3 install pysolarfocus
+```
+
 ### Basic Example 
 
 ```python
@@ -75,7 +83,7 @@ from pysolarfocus import SolarfocusAPI,Systems,ApiVersions
 # Create the Solarfocus API client
 solarfocus = SolarfocusAPI(
     ip="solarfocus",                    # adapt IP-Address 
-    system=Systems.VAMPAIR,             # for biomass boiler change to Systems.Therminator 
+    system=Systems.VAMPAIR,             # for biomass boiler change to Systems.THERMINATOR / ECOTOP 
     api_version=ApiVersions.V_23_020)   # select Solarfocus version
 
 solarfocus.connect()
