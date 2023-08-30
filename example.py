@@ -1,4 +1,4 @@
-from pysolarfocus import SolarfocusAPI, Systems, ApiVersions
+from pysolarfocus import ApiVersions, SolarfocusAPI, Systems
 
 # Create the Solarfocus API client
 solarfocus = SolarfocusAPI(
@@ -17,7 +17,7 @@ print(solarfocus.boilers[0])
 print("\n")
 print(solarfocus.buffers[0])
 print("\n")
-if solarfocus.system is Systems.THERMINATOR:
+if solarfocus.system in  [Systems.THERMINATOR, Systems.ECOTOP]:
     print(solarfocus.biomassboiler)
 if solarfocus.system is Systems.VAMPAIR:
     print(solarfocus.heatpump)

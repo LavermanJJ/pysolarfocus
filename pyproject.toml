@@ -17,10 +17,12 @@ pymodbus = "3.2.2"
 packaging = "^23.1"
 
 [tool.poetry.dev-dependencies]
+ruff = "^0.0.286"
 black = "^22.10.0"
 isort = "^5.10.1"
 pylint = "^2.15.9"
 pytest = "^5.2.0"
+
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -29,8 +31,17 @@ build-backend = "poetry.core.masonry.api"
 [tool.isort]
 profile = "black"
 
+[tool.ruff]
+# Decrease the maximum line length to 79 characters.
+line-length = 180
+select = [
+  "E",   # pycodestyle
+  "F",   # pyflakes
+  "I",  # pyupgrade
+]
+
 [tool.black]
-target-version = ["py39", "py310"]
+target-version = ["py311"]
 line-length = 180
 
 [tool.pylint.MAIN]

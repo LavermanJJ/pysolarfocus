@@ -45,7 +45,7 @@ class DataValue(Part):
         Returns the absolute address of the register
         """
         if not self.absolut_address:
-            raise Exception("Absolute address not set!")
+            raise ValueError("Absolute address not set!")
         return self.absolut_address + self.address
 
     @property

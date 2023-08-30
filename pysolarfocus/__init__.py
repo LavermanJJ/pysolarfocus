@@ -143,7 +143,9 @@ class SolarfocusAPI:
 
     def update_heatpump(self) -> bool:
         """Read values from Heating System"""
-        return self.heatpump.update()
+        if self._system is Systems.VAMPAIR:
+            return self.heatpump.update()
+        return True
 
     def update_photovoltaic(self) -> bool:
         """Read values from Heating System"""
@@ -151,7 +153,9 @@ class SolarfocusAPI:
 
     def update_biomassboiler(self) -> bool:
         """Read values from biomass boiler"""
-        return self.biomassboiler.update()
+        if self._system in [Systems.THERMINATOR, Systems.ECOTOP]:
+            return self.biomassboiler.update()
+        return True
 
     def update_solar(self) -> bool:
         """Read values from Solar"""

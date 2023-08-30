@@ -1,7 +1,7 @@
 check: check-pylint check-black
 
 check-pylint:
-	@poetry run pylint pysolarfocus/*
+	@poetry run pylint --errors-only pysolarfocus/*
 
 check-black:
 	@poetry run black --check pysolarfocus/*
@@ -13,4 +13,7 @@ codefix:
 test:
 	@poetry run pytest
 
-.PHONY: check codefix test
+run: 
+	@poetry run python3 example.py
+
+.PHONY: check codefix test run
