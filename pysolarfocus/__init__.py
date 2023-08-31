@@ -68,6 +68,9 @@ class SolarfocusAPI:
         assert buffer_count >= 0 and buffer_count < 5, "Buffer count must be between 0 and 4"
         assert boiler_count >= 0 and boiler_count < 5, "Boiler count must be between 0 and 4"
         assert fresh_water_module_count >= 0 and fresh_water_module_count < 5, "Fresh water module count must be between 0 and 4"
+        assert isinstance(system, Systems), "system not of type Systems"
+        assert isinstance(api_version, ApiVersions), "api_version not of type ApiVersions"
+
 
         self.__conn = ModbusConnector(ip, port, slave_id)
         self.__factory = ComponentFactory(self.__conn)
