@@ -24,7 +24,7 @@
    - [Installation](#installation)
    - [Basic Example](#basic-example)
    - [Handling multiple components](#handling-multiple-components)
-   - [Conveniently set modes](convenitently-set-modes)
+   - [Conveniently set modes](#convenitently-set-modes)
    - [API-Version specification](#api-version-specification)
 4. [Changelog of API-Versions](#changelog-of-api-versions)
 
