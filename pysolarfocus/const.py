@@ -1,5 +1,59 @@
 """Constants for pysolarfocs"""
 
+
+from enum import IntEnum
+
+
+class HeatingCircuitMode(IntEnum):
+    """Heating circuit modes."""
+
+    ALWAYS_ON = 0
+    REDUCED_OPERATION = 1
+    AUTOMATIC = 2
+    OFF = 3
+
+
+class HeatingCircuitCooling(IntEnum):
+    """Heating circuit cooling"""
+
+    HEATING = 0
+    COOLING = 1
+
+
+class DomesticHotWaterMode(IntEnum):
+    """Domestic hot water modes."""
+
+    ALWAYS_OFF = 0
+    ALWAYS_ON = 1
+    MONDAY_SUNDAY = 2
+    BLOCKWISE = 3
+    DAYIWSE = 4
+
+
+class DomesticHotWaterSingleCharge(IntEnum):
+    """Domestic hot water single charge."""
+
+    DEACTIVATE = 0
+    ACTIVATE = 1
+
+
+class HeatPumpEvuLock(IntEnum):
+    """Heat pump evu lock."""
+
+    DEACTIVATE = 0
+    ACTIVATE = 1
+
+
+class HeatPumpSgReadyMode(IntEnum):
+    """Heat pump SG Ready modes."""
+
+    DEACTIVATE = 0
+    EVU_LOCK = 1
+    NORMAL_OPERATION = 2
+    RECOMMENDED = 3
+    FORCED = 4
+
+
 # Values provided by Solarfocus manual
 SLAVE_ID = 1
 

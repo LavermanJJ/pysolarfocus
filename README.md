@@ -158,6 +158,18 @@ solarfocus.heating_circuits[0].indoor_temperatur_external.set_unscaled_value(30)
 solarfocus.heating_circuits[0].indoor_temperatur_external.commit()
 ```
 
+### Convenitently set modes
+Control the heating system by setting modes using the provided classes
+
+```python
+# Without convenience method
+solarfocus.heating_circuits[0].mode.set_unscaled_value(0)
+solarfocus.heating_circuits[0].mode.commit()
+
+# RECOMMENDED: Uitilizing convenience methods for modes
+solarfocus.set_heating_circuit_mode(0, HeatingCircuitMode.ALWAYS_ON)
+```
+
 ### API-Version specification
 By default, the integration uses API-Version`21.140`. If your system is newer, you can specify
 the version by using the `api_version` parameter. 

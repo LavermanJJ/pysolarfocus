@@ -36,7 +36,13 @@ class ApiVersions(str, Enum):
 
 
 from .component_factory import ComponentFactory
-from .const import SLAVE_ID
+from .const import (
+    SLAVE_ID,
+    DomesticHotWaterMode,
+    HeatingCircuitCooling,
+    HeatingCircuitMode,
+    HeatPumpSgReadyMode,
+)
 from .modbus_wrapper import ModbusConnector
 
 
@@ -70,7 +76,6 @@ class SolarfocusAPI:
         assert fresh_water_module_count >= 0 and fresh_water_module_count < 5, "Fresh water module count must be between 0 and 4"
         assert isinstance(system, Systems), "system not of type Systems"
         assert isinstance(api_version, ApiVersions), "api_version not of type ApiVersions"
-
 
         self.__conn = ModbusConnector(ip, port, slave_id)
         self.__factory = ComponentFactory(self.__conn)
@@ -163,6 +168,54 @@ class SolarfocusAPI:
     def update_solar(self) -> bool:
         """Read values from Solar"""
         return self.solar.update()
+
+    def set_heating_circuit_mode(self, index, mode: HeatingCircuitMode) -> bool:
+        """Set mode of heating circuit"""
+        if 0 <= index < len(self.heating_circuits):
+            _mode = self.heating_circuits[index].mode
+            _mode.set_unscaled_value(mode)
+            return _mode.commit()
+        return False
+
+    def set_heating_circuit_cooling(self, index, cooling: HeatingCircuitCooling) -> bool:
+        """Set cooling of heating circuit"""
+        if 0 <= index < len(self.heating_circuits):
+            _cooling = self.heating_circuits[index].cooling
+            _cooling.set_unscaled_value(cooling)
+            return _cooling.commit()
+        return False
+
+    def set_domestic_hot_water_mode(self, index, mode: DomesticHotWaterMode) -> bool:
+        """Set domestic hot water / boiler mode"""
+        if 0 <= index < len(self.boilers):
+            _mode = self.boilers[index].cooling
+            _mode.set_unscaled_value(mode)
+            return _mode.commit()
+        return False
+
+    def set_domestic_hot_water_single_charge(self, index, charge: bool) -> bool:
+        """Set domestic hot water / boiler mode"""
+        if 0 <= index < len(self.boilers):
+            _single_charge = self.boilers[index].single_charge
+            _single_charge.set_unscaled_value(int(charge))
+            return _single_charge.commit()
+        return False
+
+    def set_heat_pump_sg_ready_mode(self, mode: HeatPumpSgReadyMode) -> bool:
+        """Set SG-Ready mode of heat pump"""
+        if self._system is Systems.VAMPAIR:
+            _smart_grid = self.heatpump.smart_grid
+            _smart_grid.set_unscaled_value(mode)
+            return _smart_grid.commit()
+        return False
+
+    def set_heat_pump_evu_lock(self, lock: bool) -> bool:
+        """Set heat pump EVU Lock"""
+        if self._system is Systems.VAMPAIR:
+            _evu_lock = self.heatpump.evu_lock
+            _evu_lock.set_unscaled_value(int(lock))
+            return _evu_lock.commit()
+        return False
 
     def __repr__(self) -> str:
         message = ["-" * 50]
