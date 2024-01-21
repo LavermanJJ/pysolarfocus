@@ -21,11 +21,13 @@ class BiomassBoiler(Component):
         self.ash_container = DataValue(address=7)
         self.outdoor_temperature = DataValue(address=8, multiplier=0.1)
         self.boiler_operating_mode = DataValue(address=9)
-        self.octoplus_buffer_temperature_bottom = DataValue(address=10, multiplier=0.1)
-        self.octoplus_buffer_temperature_top = DataValue(address=11, multiplier=0.1)
-        self.log_wood = DataValue(address=12, data_type=DataTypes.UINT)
 
         if api_version.greater_or_equal(ApiVersions.V_22_090.value) and system is not Systems.ECOTOP:
+            self.boiler_operating_mode = DataValue(address=9,type=DataTypes.UINT)
+            # assuming octoplus is also related to Therminator
+            self.octoplus_buffer_temperature_bottom = DataValue(address=10, multiplier=0.1)
+            self.octoplus_buffer_temperature_top = DataValue(address=11, multiplier=0.1)
+            self.log_wood = DataValue(address=12, data_type=DataTypes.UINT)
             self.sweep_function_start_stop = DataValue(address=10, register_type=RegisterTypes.HOLDING)
             self.sweep_function_extend = DataValue(address=11, register_type=RegisterTypes.HOLDING)
 
