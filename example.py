@@ -5,9 +5,14 @@ solarfocus = SolarfocusAPI(
     ip="solarfocus", system=Systems.VAMPAIR, api_version=ApiVersions.V_23_020  # adapt IP-Address  # change to Systems.Therminator
 )  # select Solarfocus version
 
-solarfocus.connect()
+if not solarfocus.connect():
+    print("Connecting to solarfocus failed.")
+    exit(1)
+
 # Fetch the values
-solarfocus.update()
+if not solarfocus.update():
+    print("Updating solarfocus failed.")
+    exit(1)
 
 # Print the values
 print(solarfocus)
