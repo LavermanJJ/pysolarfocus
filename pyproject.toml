@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pysolarfocus"
-version = "4.0.3"
+version = "4.1.0"
 description = "Unofficial, local Solarfocus client"
 authors = ["Jeroen Laverman <jjlaverman@web.de>"]
 license = "Apache-2.0"
@@ -13,7 +13,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-pymodbus = "3.2.2"
+pymodbus = "^3.2.2"
 packaging = "^23.1"
 
 [tool.poetry.dev-dependencies]
