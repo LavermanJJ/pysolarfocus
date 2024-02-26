@@ -25,10 +25,12 @@ class ApiVersions(str, Enum):
     Supported Solarfocus API versions by this library
     """
 
+    V_20_110 = "20.110"
     V_21_140 = "21.140"
     V_22_090 = "22.090"
     V_23_010 = "23.010"
     V_23_020 = "23.020"
+    V_23_040 = "23.040"
 
     def greater_or_equal(self, api_version) -> bool:
         """Compare given version with own version."""
@@ -85,14 +87,14 @@ class SolarfocusAPI:
 
         # Lists of components
         self.heating_circuits = self.__factory.heating_circuit(system, heating_circuit_count)
-        self.boilers = self.__factory.boiler(system, boiler_count)
+        self.boilers = self.__factory.boiler(system, boiler_count, api_version)
         self.buffers = self.__factory.buffer(system, buffer_count, api_version)
         if self._api_version.greater_or_equal(ApiVersions.V_23_020.value):
-            self.fresh_water_modules = self.__factory.fresh_water_modules(system, fresh_water_module_count)
+            self.fresh_water_modules = self.__factory.fresh_water_modules(system, fresh_water_module_count, api_version)
 
         # Single components
         self.heatpump = self.__factory.heatpump(system)
-        self.photovoltaic = self.__factory.photovoltaic(system)
+        self.photovoltaic = self.__factory.photovoltaic(system, api_version)
         self.biomassboiler = self.__factory.pelletsboiler(system, api_version)
         self.solar = self.__factory.solar(system)
 

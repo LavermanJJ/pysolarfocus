@@ -29,5 +29,7 @@ if solarfocus.system is Systems.VAMPAIR:
 print("\n")
 print(solarfocus.photovoltaic)
 print("\n")
+print(solarfocus.fresh_water_modules[0])
+print("\n")
 print(solarfocus.solar)
 print("\n")

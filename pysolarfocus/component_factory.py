@@ -28,13 +28,13 @@ class ComponentFactory:
             heating_circuits.append(heating_circuit)
         return heating_circuits
 
-    def boiler(self, system: Systems, count: int) -> list[Boiler]:
+    def boiler(self, system: Systems, count: int, api_version: ApiVersions) -> list[Boiler]:
         input_addresses = list(range(500, 500 + (50 * count), 50))
         holding_addresses = list(range(32000, 32000 + (50 * count), 50))
         boilers = []
         for i in range(count):
             input, holding = input_addresses[i], holding_addresses[i]
-            boilers.append(Boiler(input, holding).initialize(self.__modbus_connector))
+            boilers.append(Boiler(input, holding, api_version=api_version).initialize(self.__modbus_connector))
         return boilers
 
     def buffer(self, system: Systems, count: int, api_version: ApiVersions) -> list[Buffer]:
@@ -56,19 +56,19 @@ class ComponentFactory:
             buffers.append(buffer)
         return buffers
 
-    def fresh_water_modules(self, system: Systems, count: int) -> list[FreshWaterModule]:
+    def fresh_water_modules(self, system: Systems, count: int, api_version: ApiVersions) -> list[FreshWaterModule]:
         input_addresses = list(range(700, 700 + (25 * count), 25))
         fresh_water_modules = []
         for i in range(count):
             input = input_addresses[i]
-            fresh_water_modules.append(FreshWaterModule(input).initialize(self.__modbus_connector))
+            fresh_water_modules.append(FreshWaterModule(input, api_version=api_version).initialize(self.__modbus_connector))
         return fresh_water_modules
 
     def heatpump(self, system: Systems) -> HeatPump:
         return HeatPump().initialize(self.__modbus_connector)
 
-    def photovoltaic(self, system: Systems) -> Photovoltaic:
-        return Photovoltaic().initialize(self.__modbus_connector)
+    def photovoltaic(self, system: Systems, api_version: ApiVersions) -> Photovoltaic:
+        return Photovoltaic(api_version=api_version).initialize(self.__modbus_connector)
 
     def pelletsboiler(self, system: Systems, api_version: ApiVersions) -> BiomassBoiler:
         return BiomassBoiler(api_version=api_version, system=system).initialize(self.__modbus_connector)
