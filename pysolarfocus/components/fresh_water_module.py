@@ -13,4 +13,4 @@ class FreshWaterModule(Component):
             self.supply_temperature = DataValue(address=1, count=1)
             self.flow_rate = DataValue(address=2, count=1)
             self.target_temperature = DataValue(address=3, count=1)
-            self.valuve = DataValue(address=4, count=1)
+            self.valve = DataValue(address=4, count=1)
