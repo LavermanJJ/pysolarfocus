@@ -10,7 +10,7 @@ class FreshWaterModule(Component):
         self.state = DataValue(address=0)
 
         if api_version.greater_or_equal(ApiVersions.V_23_040.value):
-            self.supply_temperature = DataValue(address=1, count=1)
+            self.supply_temperature = DataValue(address=1, count=1, multiplier=0.1)
             self.flow_rate = DataValue(address=2, count=1)
-            self.target_temperature = DataValue(address=3, count=1)
+            self.target_temperature = DataValue(address=3, count=1, multiplier=0.1)
             self.valve = DataValue(address=4, count=1)
