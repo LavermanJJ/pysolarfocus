@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pysolarfocus"
-version = "3.6.4"
+version = "4.2.1"
 description = "Unofficial, local Solarfocus client"
 authors = ["Jeroen Laverman <jjlaverman@web.de>"]
 license = "Apache-2.0"
@@ -12,12 +12,86 @@ readme = "README.md"
 
 
 [tool.poetry.dependencies]
-python = "^3.9"
-pymodbus = "3.2.2"
+python = "^3.11"
+pymodbus = "^3.2.2"
+packaging = "^23.1"
 
 [tool.poetry.dev-dependencies]
-pytest = "^5.2"
+ruff = "^0.0.286"
+black = "^22.10.0"
+isort = "^5.10.1"
+pylint = "^2.15.9"
+pytest = "^5.2.0"
+
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+profile = "black"
+
+[tool.ruff]
+# Decrease the maximum line length to 79 characters.
+line-length = 180
+select = [
+  "E",   # pycodestyle
+  "F",   # pyflakes
+  "I",  # pyupgrade
+]
+
+[tool.black]
+target-version = ["py311"]
+line-length = 180
+
+[tool.pylint.MAIN]
+max-line-length = 180
+
+[tool.pylint."MESSAGES CONTROL"]
+# Reasons disabled:
+# format - handled by black
+# locally-disabled - it spams too much
+# duplicate-code - unavoidable
+# cyclic-import - doesn't test if both import on load
+# abstract-class-little-used - prevents from setting right foundation
+# unused-argument - generic callbacks and setup methods create a lot of warnings
+# too-many-* - are not enforced for the sake of readability
+# too-few-* - same as too-many-*
+# abstract-method - with intro of async there are always methods missing
+# inconsistent-return-statements - doesn't handle raise
+# too-many-ancestors - it's too strict.
+# wrong-import-order - isort guards this
+# consider-using-f-string - str.format sometimes more readable
+# ---
+# Enable once current issues are fixed:
+# consider-using-namedtuple-or-dataclass (Pylint CodeStyle extension)
+# consider-using-assignment-expr (Pylint CodeStyle extension)
+disable = [
+    "format",
+    "abstract-method",
+    "cyclic-import",
+    "duplicate-code",
+    "inconsistent-return-statements",
+    "locally-disabled",
+    "not-context-manager",
+    "too-few-public-methods",
+    "too-many-ancestors",
+    "too-many-arguments",
+    "too-many-branches",
+    "too-many-instance-attributes",
+    "too-many-lines",
+    "too-many-locals",
+    "too-many-public-methods",
+    "too-many-return-statements",
+    "too-many-statements",
+    "too-many-boolean-expressions",
+    "unused-argument",
+    "wrong-import-order",
+    "missing-class-docstring",
+    "missing-function-docstring",
+    "logging-fstring-interpolation"
+]
+enable = [
+    #"useless-suppression",  # temporarily every now and then to clean them up
+    "use-symbolic-message-instead",
+]

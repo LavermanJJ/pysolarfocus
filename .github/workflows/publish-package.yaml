@@ -1,0 +1,25 @@
+name: publish package
+
+on:
+  push:
+    tags:
+    - '**'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.x'
+    - name: Install tools
+      run: |
+        pip install --upgrade pip
+        pip install poetry
+    - name: Publish distribution 📦 to PyPI
+      run: |
+        poetry version ${{ github.ref_name }}
+        poetry config pypi-token.pypi ${{ secrets.PYPI_API_TOKEN }}
+        poetry publish --build
