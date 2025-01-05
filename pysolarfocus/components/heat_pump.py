@@ -29,6 +29,9 @@ class HeatPump(Component):
         self.electrical_energy_cooling = DataValue(address=24, count=2, multiplier=0.001, data_type=DataTypes.UINT)
         self.vampair_state = DataValue(address=26, data_type=DataTypes.UINT)
 
+        # This register is shared with the biomass boiler
+        self.outdoor_temperature = DataValue(address=108, multiplier=0.1)
+
         self.evu_lock = DataValue(address=0, register_type=RegisterTypes.HOLDING)
         self.smart_grid = DataValue(address=1, register_type=RegisterTypes.HOLDING)
         self.outdoor_temperature_external = DataValue(address=2, multiplier=10, register_type=RegisterTypes.HOLDING)
