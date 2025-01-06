@@ -31,6 +31,7 @@ class ApiVersions(str, Enum):
     V_23_010 = "23.010"
     V_23_020 = "23.020"
     V_23_040 = "23.040"
+    V_23_080 = "23.080"
 
     def greater_or_equal(self, api_version) -> bool:
         """Compare given version with own version."""
@@ -42,6 +43,7 @@ from .const import (
     SLAVE_ID,
     DomesticHotWaterMode,
     HeatingCircuitCooling,
+    HeatingCircuitHeatingMode,
     HeatingCircuitMode,
     HeatPumpSgReadyMode,
 )
@@ -185,6 +187,14 @@ class SolarfocusAPI:
             _cooling = self.heating_circuits[index].cooling
             _cooling.set_unscaled_value(cooling)
             return _cooling.commit()
+        return False
+    
+    def set_heating_circuit_heating_mode(self, index, heating_mode: HeatingCircuitHeatingMode) -> bool:
+        """Set heating_mode of heating circuit"""
+        if 0 <= index < len(self.heating_circuits):
+            _heating_mode = self.heating_circuits[index].heating_mode
+            _heating_mode.set_unscaled_value(heating_mode)
+            return _heating_mode.commit()
         return False
 
     def set_domestic_hot_water_mode(self, index, mode: DomesticHotWaterMode) -> bool:
