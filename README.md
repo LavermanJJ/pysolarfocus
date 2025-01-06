@@ -45,11 +45,11 @@ Python client library to interact with heating systems of [Solarfocus](https://w
 ### Software
 
 > **Important**
-> This integration has been tested with Solarfocus eco<sup>manager-touch</sup> version `23.020`.
+> This integration has been tested with Solarfocus eco<sup>manager-touch</sup> version `23.110`.
 
-Supported versions: `21.140` - `23.020`. Features added in later versions are not yet supported.
+Supported versions: `21.140` - `23.110`. Features added in later versions are not yet supported.
 
-The eco<sup>manager-touch</sup> Modbus TCP specification can be found [here](https://www.solarfocus.com/de/partnerportal/pdf/open/UGFydG5lcmJlcmVpY2gtREUvUmVnZWx1bmdfZWNvbWFuYWdlci10b3VjaC9BbmxlaXR1bmdlbi9lY29tYW5hZ2VyLXRvdWNoX01vZGJ1cy1UQ1AtUmVnaXN0ZXJkYXRlbl9BbmxlaXR1bmcucGRm/117920/0/Lng_YSxpM245S30zMTc4W2Y8cVRRXWlJVWRQJDsv?serialNumber=21010).
+The eco<sup>manager-touch</sup> Modbus TCP specification can be found [here](https://www.solarfocus.com/partnerbereich/ecomanager-touch_modbus-tcp_registerdaten_anleitung1.pdf)).
 
 ### Hardware
 
