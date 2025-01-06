@@ -20,14 +20,22 @@ class HeatingCircuitCooling(IntEnum):
     COOLING = 1
 
 
+class HeatingCircuitHeatingMode(IntEnum):
+    """Heating circuit heating mode. Requires: Cooling and room temperature influence enabled."""
+
+    HEATING = 0
+    COOLING = 1
+    HEATING_AND_COOLING = 2
+
+
 class DomesticHotWaterMode(IntEnum):
     """Domestic hot water modes."""
 
     ALWAYS_OFF = 0
     ALWAYS_ON = 1
     MONDAY_SUNDAY = 2
-    BLOCKWISE = 3
-    DAYIWSE = 4
+    BLOCK_WISE = 3
+    DAY_WISE = 4
 
 
 class DomesticHotWaterSingleCharge(IntEnum):

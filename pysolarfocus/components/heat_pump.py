@@ -1,9 +1,9 @@
 """Solarfocus heat pump component"""
-from pysolarfocus.components.base.performance_calculator import PerformanceCalculator
 
 from .base.component import Component
 from .base.data_value import DataValue
 from .base.enums import DataTypes, RegisterTypes
+from .base.performance_calculator import PerformanceCalculator
 
 
 class HeatPump(Component):
@@ -27,6 +27,7 @@ class HeatPump(Component):
         self.thermal_power_heating = DataValue(address=21)
         self.thermal_energy_cooling = DataValue(address=22, count=2, multiplier=0.001, data_type=DataTypes.UINT)
         self.electrical_energy_cooling = DataValue(address=24, count=2, multiplier=0.001, data_type=DataTypes.UINT)
+
         self.vampair_state = DataValue(address=26, data_type=DataTypes.UINT)
 
         # This register is shared with the biomass boiler
