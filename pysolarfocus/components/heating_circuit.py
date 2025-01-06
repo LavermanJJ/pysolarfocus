@@ -1,4 +1,5 @@
 """Solarfocus heating circuit component"""
+
 from .. import ApiVersions
 from .base.component import Component
 from .base.data_value import DataValue
@@ -19,8 +20,8 @@ class HeatingCircuit(Component):
         self.target_supply_temperature = DataValue(address=0, multiplier=10, register_type=RegisterTypes.HOLDING)
         self.cooling = DataValue(address=2, register_type=RegisterTypes.HOLDING)
         self.mode = DataValue(address=3, register_type=RegisterTypes.HOLDING)
-        self.target_room_temperatur = DataValue(address=5, multiplier=10, register_type=RegisterTypes.HOLDING)
-        self.indoor_temperatur_external = DataValue(address=6, multiplier=10, register_type=RegisterTypes.HOLDING)
+        self.target_room_temperature = DataValue(address=5, multiplier=10, register_type=RegisterTypes.HOLDING)
+        self.indoor_temperature_external = DataValue(address=6, multiplier=10, register_type=RegisterTypes.HOLDING)
         self.indoor_humidity_external = DataValue(address=7, register_type=RegisterTypes.HOLDING)
 
         if api_version.greater_or_equal(ApiVersions.V_22_090.value):

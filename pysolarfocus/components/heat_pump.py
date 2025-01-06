@@ -1,9 +1,9 @@
 """Solarfocus heat pump component"""
-from pysolarfocus.components.base.performance_calculator import PerformanceCalculator
 
 from .base.component import Component
 from .base.data_value import DataValue
 from .base.enums import DataTypes, RegisterTypes
+from .base.performance_calculator import PerformanceCalculator
 
 
 class HeatPump(Component):
