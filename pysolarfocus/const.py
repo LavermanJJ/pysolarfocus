@@ -19,12 +19,14 @@ class HeatingCircuitCooling(IntEnum):
     HEATING = 0
     COOLING = 1
 
+
 class HeatingCircuitHeatingMode(IntEnum):
     """Heating circuit heating mode. Requires: Cooling and room temperature influene enabled."""
 
     HEATING = 0
     COOLING = 1
     HEATING_AND_COOLING = 2
+
 
 class DomesticHotWaterMode(IntEnum):
     """Domestic hot water modes."""

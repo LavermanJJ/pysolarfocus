@@ -188,7 +188,7 @@ class SolarfocusAPI:
             _cooling.set_unscaled_value(cooling)
             return _cooling.commit()
         return False
-    
+
     def set_heating_circuit_heating_mode(self, index, heating_mode: HeatingCircuitHeatingMode) -> bool:
         """Set heating_mode of heating circuit"""
         if 0 <= index < len(self.heating_circuits):
