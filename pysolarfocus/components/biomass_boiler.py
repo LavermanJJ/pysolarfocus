@@ -15,6 +15,8 @@ class BiomassBoiler(Component):
         super().__init__(input_address, holding_address)
         self.temperature = DataValue(address=0, multiplier=0.1)
         self.status = DataValue(address=1, data_type=DataTypes.UINT)
+        self.time_of_operation_at_maintenance = DataValue(address=1, count=2, data_type=DataTypes.UINT)
+
         self.message_number = DataValue(address=4)
         self.door_contact = DataValue(address=5)
         self.cleaning = DataValue(address=6)

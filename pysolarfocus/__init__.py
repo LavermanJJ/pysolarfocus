@@ -86,7 +86,7 @@ class SolarfocusAPI:
         self._api_version = api_version
 
         # Lists of components
-        self.heating_circuits = self.__factory.heating_circuit(system, heating_circuit_count)
+        self.heating_circuits = self.__factory.heating_circuit(system, heating_circuit_count, api_version)
         self.boilers = self.__factory.boiler(system, boiler_count, api_version)
         self.buffers = self.__factory.buffer(system, buffer_count, api_version)
         if self._api_version.greater_or_equal(ApiVersions.V_23_020.value):
