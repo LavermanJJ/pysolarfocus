@@ -28,7 +28,7 @@
    - [API-Version specification](#api-version-specification)
 4. [Changelog of API-Versions](#changelog-of-api-versions)
 
-   
+
 </details>
 
 
@@ -67,7 +67,7 @@ The eco<sup>manager-touch</sup> can integrate the following heating systems
 | Solar (_Solar_)| :white_check_mark: |
 | Boiler 1 - 4 (_Boiler_) | :white_check_mark: |
 | Heat Pump (_Wärmepumpe_) | :white_check_mark: |
-| Biomass Boiler (_Kessel_) | :white_check_mark: | 
+| Biomass Boiler (_Kessel_) | :white_check_mark: |
 | Fresh Water Module 1 - 4 (_Frischwassermodul_) | :white_check_mark: |
 
 ## How To
@@ -78,15 +78,15 @@ The eco<sup>manager-touch</sup> can integrate the following heating systems
 $ pip3 install pysolarfocus
 ```
 
-### Basic Example 
+### Basic Example
 
 ```python
 from pysolarfocus import SolarfocusAPI,Systems,ApiVersions
 
 # Create the Solarfocus API client
 solarfocus = SolarfocusAPI(
-    ip="solarfocus",                    # adapt IP-Address 
-    system=Systems.VAMPAIR,             # for biomass boiler change to Systems.THERMINATOR / ECOTOP 
+    ip="solarfocus",                    # adapt IP-Address
+    system=Systems.VAMPAIR,             # for biomass boiler change to Systems.THERMINATOR / ECOTOP
     api_version=ApiVersions.V_23_020)   # select Solarfocus version
 
 solarfocus.connect()
@@ -98,7 +98,7 @@ print(solarfocus)
 print(solarfocus.heating_circuits[0])
 ```
 
-Output: 
+Output:
 
 ```
 --------------------------------------------------
@@ -141,7 +141,7 @@ indoor_humidity_external | raw:480 scaled:48.0
 ### Handling multiple components
 Solarfocus systems allow the use of multiple heating circuits, buffers, boilers, and fresh water modules. The api can be configured to interact with multiple components.
 
-```python 
+```python
 # Create the Solarfocus API client with 2 Heating Circuits
 solarfocus = SolarfocusAPI(ip="[Your-IP]",heating_circuit_count=2,system=Systems.VAMPAIR)
 # Connect to the heating system
@@ -175,7 +175,7 @@ solarfocus.set_heating_circuit_mode(0, HeatingCircuitMode.ALWAYS_ON)
 
 ### API-Version specification
 By default, the integration uses API-Version`21.140`. If your system is newer, you can specify
-the version by using the `api_version` parameter. 
+the version by using the `api_version` parameter.
 
 ```python
 solarfocus = SolarfocusAPI(ip="[Your-IP]", system=Systems.VAMPAIR, api_version=ApiVersions.V_23_020)
@@ -187,7 +187,7 @@ You can find the API-Version displayed in the header of the screen of your Solar
 
 ## Changelog of API-Versions
 > **Note**
-> The API-Version of Solarfocus is independent of the versions of this library. Below list refers to to 
+> The API-Version of Solarfocus is independent of the versions of this library. Below list refers to to
 > the Solarfocus versions. See [releases](https://github.com/LavermanJJ/pysolarfocus/releases) for the changelog
 > of this library.
 
