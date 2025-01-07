@@ -134,7 +134,7 @@ target_supply_temperature | raw:0 scaled:0.0
 cooling | raw:0 scaled:0
 mode | raw:0 scaled:0
 target_room_temperatur | raw:0 scaled:0.0
-indoor_temperatur_external | raw:222 scaled:22.2
+indoor_temperature_external | raw:222 scaled:22.2
 indoor_humidity_external | raw:480 scaled:48.0
 ```
 
@@ -156,9 +156,9 @@ solarfocus.heating_circuits[0].update()
 print(solarfocus.heating_circuits[0])
 
 # Set the temperature of the first heating circuit to 30°C
-solarfocus.heating_circuits[0].indoor_temperatur_external.set_unscaled_value(30)
+solarfocus.heating_circuits[0].indoor_temperature_external.set_unscaled_value(30)
 # Write the value to the heating system
-solarfocus.heating_circuits[0].indoor_temperatur_external.commit()
+solarfocus.heating_circuits[0].indoor_temperature_external.commit()
 ```
 
 ### Convenitently set modes
