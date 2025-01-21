@@ -200,7 +200,7 @@ class SolarfocusAPI:
     def set_domestic_hot_water_mode(self, index, mode: DomesticHotWaterMode) -> bool:
         """Set domestic hot water / boiler mode"""
         if 0 <= index < len(self.boilers):
-            _mode = self.boilers[index].cooling
+            _mode = self.boilers[index].mode
             _mode.set_unscaled_value(mode)
             return _mode.commit()
         return False
