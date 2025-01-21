@@ -187,7 +187,7 @@ You can find the API-Version displayed in the header of the screen of your Solar
 
 ## Changelog of API-Versions
 > **Note**
-> The API-Version of Solarfocus is independent of the versions of this library. Below list refers to to
+> The API-Version of Solarfocus is independent of the versions of this library. Below list refers to
 > the Solarfocus versions. See [releases](https://github.com/LavermanJJ/pysolarfocus/releases) for the changelog
 > of this library.
 
