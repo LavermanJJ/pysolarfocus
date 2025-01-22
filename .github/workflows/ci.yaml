@@ -5,10 +5,10 @@ on:
   # Run action when pushed to master, or for commits in a pull request.
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
 
 defaults:
   run:
