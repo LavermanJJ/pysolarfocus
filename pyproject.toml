@@ -28,10 +28,12 @@ dev = [
     "pylint>=3.3.3",
 ]
 
-[tool.hatch.build.targets.sdist]
+[tool.hatch.build.targets.wheel]
+packages = ["src/pysolarfocus"]
 include = ["LICENSE"]
 
-[tool.hatch.build.targets.wheel]
+[tool.hatch.build.targets.sdist]
+packages = ["src/pysolarfocus"]
 include = ["LICENSE"]
 
 [build-system]
