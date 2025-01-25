@@ -22,7 +22,7 @@ class HeatingCircuit(Component):
         self.mode = DataValue(address=3, register_type=RegisterTypes.HOLDING)
         self.target_room_temperature = DataValue(address=5, multiplier=10, register_type=RegisterTypes.HOLDING)
         self.indoor_temperature_external = DataValue(address=6, multiplier=10, register_type=RegisterTypes.HOLDING)
-        self.indoor_humidity_external = DataValue(address=7, register_type=RegisterTypes.HOLDING)
+        self.indoor_humidity_external = DataValue(address=7, multiplier=10, register_type=RegisterTypes.HOLDING)
 
         if api_version.greater_or_equal(ApiVersions.V_22_090.value):
             self.heating_mode = DataValue(address=8, register_type=RegisterTypes.HOLDING)
