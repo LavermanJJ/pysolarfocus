@@ -15,6 +15,8 @@ class BiomassBoiler(Component):
         super().__init__(input_address, holding_address)
         self.temperature = DataValue(address=0, multiplier=0.1)
         self.status = DataValue(address=1, data_type=DataTypes.UINT)
+        self.time_of_operation_at_maintenance = DataValue(address=2, count=2, data_type=DataTypes.INT)
+
         self.message_number = DataValue(address=4)
         self.door_contact = DataValue(address=5)
         self.cleaning = DataValue(address=6)
@@ -23,9 +25,9 @@ class BiomassBoiler(Component):
         self.boiler_operating_mode = DataValue(address=9)
         self.octoplus_buffer_temperature_bottom = DataValue(address=10, multiplier=0.1)
         self.octoplus_buffer_temperature_top = DataValue(address=11, multiplier=0.1)
-        self.log_wood = DataValue(address=12, data_type=DataTypes.UINT)
 
         if api_version.greater_or_equal(ApiVersions.V_22_090.value) and system is not Systems.ECOTOP:
+            self.log_wood = DataValue(address=12, data_type=DataTypes.UINT)
             self.sweep_function_start_stop = DataValue(address=10, register_type=RegisterTypes.HOLDING)
             self.sweep_function_extend = DataValue(address=11, register_type=RegisterTypes.HOLDING)
 
@@ -35,3 +37,6 @@ class BiomassBoiler(Component):
             self.heat_energy_total = DataValue(address=18, count=2, multiplier=0.1)
 
             self.pellet_usage_reset = DataValue(address=12, register_type=RegisterTypes.HOLDING)
+
+        if api_version.greater_or_equal(ApiVersions.V_23_080.value):
+            self.sweep_almost_done = DataValue(address=20)

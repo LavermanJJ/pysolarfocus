@@ -1,32 +1,36 @@
-[tool.poetry]
+[project]
 name = "pysolarfocus"
-version = "4.2.1"
+version = "5.0.4"
 description = "Unofficial, local Solarfocus client"
-authors = ["Jeroen Laverman <jjlaverman@web.de>"]
-license = "Apache-2.0"
-homepage = "https://github.com/lavermanjj/pysolarfocus"
-repository = "https://github.com/lavermanjj/pysolarfocus"
-keywords = ["solarfocus", "api client"]
-include = ["LICENSE"]
+authors = [{ name = "Jeroen Laverman", email = "jjlaverman@web.de" }]
+requires-python = "~=3.11"
 readme = "README.md"
+license = "Apache-2.0"
+keywords = [
+    "solarfocus",
+    "api client",
+]
+dependencies = [
+    "pymodbus>=3.2.2,<4",
+    "packaging~=24.0",
+]
 
+[project.urls]
+Homepage = "https://github.com/lavermanjj/pysolarfocus"
+Repository = "https://github.com/lavermanjj/pysolarfocus"
 
-[tool.poetry.dependencies]
-python = "^3.11"
-pymodbus = "^3.2.2"
-packaging = "^23.1"
-
-[tool.poetry.dev-dependencies]
-ruff = "^0.0.286"
-black = "^22.10.0"
-isort = "^5.10.1"
-pylint = "^2.15.9"
-pytest = "^5.2.0"
-
+[dependency-groups]
+dev = [
+    "ruff>=0.0.286,<0.0.287",
+    "black>=22.10.0,<23",
+    "isort>=5.10.1,<6",
+    "pytest>=8.3.4,<9",
+    "pylint>=3.3.3",
+]
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [tool.isort]
 profile = "black"

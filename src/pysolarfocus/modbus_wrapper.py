@@ -16,7 +16,7 @@ from .components.base.register_slice import RegisterSlice
 
 class ModbusConnector:
     """
-    Helper methodes to read/write data to a modbus server
+    Helper methods to read/write data to a modbus server
     """
 
     def __init__(self, ip: str, port: int, slave_id: int) -> None:
@@ -34,7 +34,7 @@ class ModbusConnector:
         return self.client.connect()
 
     def read_input_registers(self, slices: list[RegisterSlice], count: int, check_connection: bool = True) -> tuple[bool, list[int]]:
-        """Internal methode to read input registers from modbus"""
+        """Internal method to read input registers from modbus"""
         if check_connection and not self.is_connected:
             logging.error("Connection to modbus is not established!")
             return False, None
@@ -53,7 +53,7 @@ class ModbusConnector:
             return False, None
 
     def read_holding_registers(self, slices: list[RegisterSlice], count: int, check_connection: bool = True) -> tuple[bool, list[int]]:
-        """Internal methode to read holding registers from modbus"""
+        """Internal method to read holding registers from modbus"""
         if check_connection and not self.is_connected:
             logging.error("Connection to modbus is not established!")
             return False, None
@@ -82,6 +82,6 @@ class ModbusConnector:
                 logging.error(f"Error writing value={value} to register: {address}: {response}")
                 return False
         except Exception:
-            logging.exception(f"Eception while writing value={value} to register: {address}!")
+            logging.exception(f"Exception while writing value={value} to register: {address}!")
             return False
         return True

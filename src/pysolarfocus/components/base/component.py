@@ -198,7 +198,7 @@ class Component:
         if self.has_input_address:
             message.append("---Input:")
             for name, value in self.__get_input_values():
-                message.append(f"{name}| raw:{value.value} scaled:{value.scaled_value}")
+                message.append(f"{name} | raw:{value.value} scaled:{value.scaled_value}")
         if self.has_holding_address:
             message.append("---Holding:")
             for name, value in self.__get_holding_values():

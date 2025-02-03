@@ -15,16 +15,16 @@ class ComponentFactory:
     def __init__(self, modbus_connector: ModbusConnector) -> None:
         self.__modbus_connector = modbus_connector
 
-    def heating_circuit(self, system: Systems, count: int) -> list[HeatingCircuit]:
+    def heating_circuit(self, system: Systems, count: int, api_version: ApiVersions) -> list[HeatingCircuit]:
         input_addresses = list(range(1100, 1100 + (50 * count), 50))
         holding_addresses = list(range(32600, 32600 + (50 * count), 50))
         heating_circuits = []
         for i in range(count):
             input, holding = input_addresses[i], holding_addresses[i]
             if system in [Systems.THERMINATOR, Systems.ECOTOP]:
-                heating_circuit = TherminatorHeatingCircuit(input, holding).initialize(self.__modbus_connector)
+                heating_circuit = TherminatorHeatingCircuit(input, holding, api_version=api_version).initialize(self.__modbus_connector)
             else:
-                heating_circuit = HeatingCircuit(input, holding).initialize(self.__modbus_connector)
+                heating_circuit = HeatingCircuit(input, holding, api_version=api_version).initialize(self.__modbus_connector)
             heating_circuits.append(heating_circuit)
         return heating_circuits
 

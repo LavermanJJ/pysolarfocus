@@ -5,10 +5,10 @@ on:
   # Run action when pushed to master, or for commits in a pull request.
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
 
 defaults:
   run:
@@ -17,27 +17,32 @@ defaults:
 jobs:
   checks:
     name: Code checks
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest 
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest ]
-        python-version: [ "3.11" ]
+        python-version:
+          - "3.10"
+          - "3.11"
+          - "3.12"
+          - "3.13"
     steps:
-      - name: Check out ${{ github.sha }} from repository ${{ github.repository }}
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Install poetry
-        run: pipx install poetry
-
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+  
+      - name: "Set up Python"
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-          cache: 'poetry'
 
       - name: Install dependencies
-        run: poetry install --no-interaction
+        run: uv sync
 
       - name: Run checks
         run: make check
+
+      - name: Run tests
+        run: make test
