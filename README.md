@@ -45,9 +45,9 @@ Python client library to interact with heating systems of [Solarfocus](https://w
 ### Software
 
 > **Important**
-> This integration has been tested with Solarfocus eco<sup>manager-touch</sup> version `23.110`.
+> This integration has been tested with Solarfocus eco<sup>manager-touch</sup> version `25.030`.
 
-Supported versions: `21.140` - `23.110`. Features added in later versions are not yet supported.
+Supported versions: `21.140` - `25.030`. Features added in later versions are not yet supported.
 
 The eco<sup>manager-touch</sup> Modbus TCP specification can be found [here](https://www.solarfocus.com/partnerbereich/ecomanager-touch_modbus-tcp_registerdaten_anleitung1.pdf)).
 
@@ -64,11 +64,13 @@ The eco<sup>manager-touch</sup> can integrate the following heating systems
 |---|---|
 | Heating Circuit 1 - 8 (_Heizkreis_)| :white_check_mark: |
 | Buffer 1 - 4 (_Puffer_) | :white_check_mark: |
-| Solar (_Solar_)| :white_check_mark: |
+| Solar 1 - 4 (_Solar_)| :white_check_mark: |
 | Boiler 1 - 4 (_Boiler_) | :white_check_mark: |
 | Heat Pump (_Wärmepumpe_) | :white_check_mark: |
 | Biomass Boiler (_Kessel_) | :white_check_mark: |
 | Fresh Water Module 1 - 4 (_Frischwassermodul_) | :white_check_mark: |
+| Differential Module 1 - 4 (_Differenzmodul_)| :white_check_mark: |
+| Circulation 1 - 4 (_Zirkulation_)| :white_check_mark: |
 
 ## How To
 
@@ -87,7 +89,7 @@ from pysolarfocus import SolarfocusAPI,Systems,ApiVersions
 solarfocus = SolarfocusAPI(
     ip="solarfocus",                    # adapt IP-Address
     system=Systems.VAMPAIR,             # for biomass boiler change to Systems.THERMINATOR / ECOTOP
-    api_version=ApiVersions.V_23_020)   # select Solarfocus version
+    api_version=ApiVersions.V_25_030)   # select Solarfocus version
 
 solarfocus.connect()
 # Fetch the values
@@ -102,9 +104,9 @@ Output:
 
 ```
 --------------------------------------------------
-SolarfocusAPI, v3.6.4
+SolarfocusAPI, v5.1.0
 --------------------------------------------------
-+ API Version: 23.020
++ API Version: 25.030
 + System: Vampair
 + Components:
   + Heat pump: True
@@ -113,7 +115,7 @@ SolarfocusAPI, v3.6.4
   + Buffer: 1
   + Boiler: 1
   + Fresh water module: 1
-  + Solar: False
+  + Solar: 1
   + Photovoltaic: False
 --------------------------------------------------
 
@@ -191,6 +193,11 @@ You can find the API-Version displayed in the header of the screen of your Solar
 > the Solarfocus versions. See [releases](https://github.com/LavermanJJ/pysolarfocus/releases) for the changelog
 > of this library.
 
+#### 25.030
+* Add differential modules
+* Add circulation
+* Add multiple solar modules
+* Adapt for changes in registers for heat pump
 
 #### 23.020
 * Add fresh water module state.
