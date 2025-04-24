@@ -36,7 +36,7 @@ class Component:
                 # Holding registers can write to the heating system
                 value.modbus = modbus
 
-        # Dynamically calcuate how many registers have to be read
+        # Dynamically calculate how many registers have to be read
         if len(self.__get_input_values()) > 0:
             _, last_input_value = self.__get_input_values()[-1]
             self.input_count = last_input_value.address + last_input_value.count
@@ -163,7 +163,7 @@ class Component:
 
     def _parse(self, data: list[int], type: RegisterTypes) -> bool:
         """
-        Dynamically assignes the values to the DataValues of this Component
+        Dynamically assigns the values to the DataValues of this Component
         """
         if len(data) != (self.input_count if type == RegisterTypes.INPUT else self.holding_count):
             logging.error(
