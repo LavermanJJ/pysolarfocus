@@ -32,6 +32,7 @@ class ApiVersions(str, Enum):
     V_23_020 = "23.020"
     V_23_040 = "23.040"
     V_23_080 = "23.080"
+    V_25_030 = "25.030"
 
     def greater_or_equal(self, api_version) -> bool:
         """Compare given version with own version."""
@@ -68,6 +69,9 @@ class SolarfocusAPI:
         buffer_count: int = 1,
         boiler_count: int = 1,
         fresh_water_module_count: int = 1,
+        circulation_count: int = 1,
+        differential_module_count: int = 1,
+        solar_count: int = 1,
         system: Systems = Systems.VAMPAIR,
         port: int = PORT,
         slave_id: int = SLAVE_ID,
@@ -78,6 +82,9 @@ class SolarfocusAPI:
         assert buffer_count >= 0 and buffer_count < 5, "Buffer count must be between 0 and 4"
         assert boiler_count >= 0 and boiler_count < 5, "Boiler count must be between 0 and 4"
         assert fresh_water_module_count >= 0 and fresh_water_module_count < 5, "Fresh water module count must be between 0 and 4"
+        assert circulation_count >= 0 and circulation_count < 5, "Circulation count must be between 0 and 4"
+        assert differential_module_count >= 0 and differential_module_count < 5, "Differential module count must be between 0 and 4"
+
         assert isinstance(system, Systems), "system not of type Systems"
         assert isinstance(api_version, ApiVersions), "api_version not of type ApiVersions"
 
@@ -87,18 +94,28 @@ class SolarfocusAPI:
         self._system = system
         self._api_version = api_version
 
+        if self._api_version.greater_or_equal(ApiVersions.V_25_030.value):
+            assert solar_count >= 0 and solar_count < 5, "Solar count must be between 0 and 4"
+        else:
+            assert solar_count >= 0 and solar_count < 2, "Solar count must be max 1"
+
         # Lists of components
         self.heating_circuits = self.__factory.heating_circuit(system, heating_circuit_count, api_version)
         self.boilers = self.__factory.boiler(system, boiler_count, api_version)
         self.buffers = self.__factory.buffer(system, buffer_count, api_version)
+        self.solar = self.__factory.solar(system, solar_count, api_version)
+
         if self._api_version.greater_or_equal(ApiVersions.V_23_020.value):
             self.fresh_water_modules = self.__factory.fresh_water_modules(system, fresh_water_module_count, api_version)
 
+        if self._api_version.greater_or_equal(ApiVersions.V_25_030.value):
+            self.circulations = self.__factory.circulation(system, circulation_count, api_version)
+            self.differential_modules = self.__factory.differential_modules(system, differential_module_count, api_version)
+
         # Single components
-        self.heatpump = self.__factory.heatpump(system)
+        self.heatpump = self.__factory.heatpump(system, api_version)
         self.photovoltaic = self.__factory.photovoltaic(system, api_version)
         self.biomassboiler = self.__factory.pelletsboiler(system, api_version)
-        self.solar = self.__factory.solar(system)
 
     def connect(self):
         """Connect to Solarfocus eco manager-touch"""
@@ -120,6 +137,8 @@ class SolarfocusAPI:
             and self.update_biomassboiler()
             and self.update_solar()
             and self.update_fresh_water_modules()
+            and self.update_circulation()
+            and self.update_differential_modules()
         ):
             return True
         return False
@@ -153,6 +172,22 @@ class SolarfocusAPI:
                     return False
         return True
 
+    def update_circulation(self) -> bool:
+        """Read values from Heating System"""
+        if self._api_version.greater_or_equal(ApiVersions.V_25_030.value):
+            for circulation in self.circulations:
+                if not circulation.update():
+                    return False
+        return True
+
+    def update_differential_modules(self) -> bool:
+        """Read values from Heating System"""
+        if self._api_version.greater_or_equal(ApiVersions.V_25_030.value):
+            for differential_module in self.differential_modules:
+                if not differential_module.update():
+                    return False
+        return True
+
     def update_heatpump(self) -> bool:
         """Read values from Heating System"""
         if self._system is Systems.VAMPAIR:
@@ -171,7 +206,10 @@ class SolarfocusAPI:
 
     def update_solar(self) -> bool:
         """Read values from Solar"""
-        return self.solar.update()
+        for solar in self.solar:
+            if not solar.update():
+                return False
+        return True
 
     def set_heating_circuit_mode(self, index, mode: HeatingCircuitMode) -> bool:
         """Set mode of heating circuit"""
