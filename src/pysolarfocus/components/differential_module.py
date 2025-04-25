@@ -16,4 +16,3 @@ class DifferentialModule(Component):
             self.relay_control_loop_o2 = DataValue(address=3, data_type=DataTypes.UINT)
             self.temperature_1_control_loop_2 = DataValue(address=4, multiplier=0.1)
             self.temperature_2_control_loop_2 = DataValue(address=5, multiplier=0.1)
-

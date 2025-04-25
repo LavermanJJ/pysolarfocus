@@ -70,7 +70,7 @@ class SolarfocusAPI:
         boiler_count: int = 1,
         fresh_water_module_count: int = 1,
         circulation_count: int = 1,
-        differential_module__count: int = 1,
+        differential_module_count: int = 1,
         solar_count: int = 1,
         system: Systems = Systems.VAMPAIR,
         port: int = PORT,
@@ -83,7 +83,7 @@ class SolarfocusAPI:
         assert boiler_count >= 0 and boiler_count < 5, "Boiler count must be between 0 and 4"
         assert fresh_water_module_count >= 0 and fresh_water_module_count < 5, "Fresh water module count must be between 0 and 4"
         assert circulation_count >= 0 and circulation_count < 5, "Circulation count must be between 0 and 4"
-        assert differential_module__count >= 0 and differential_module__count < 5, "Differential module count must be between 0 and 4"
+        assert differential_module_count >= 0 and differential_module_count < 5, "Differential module count must be between 0 and 4"
 
         assert isinstance(system, Systems), "system not of type Systems"
         assert isinstance(api_version, ApiVersions), "api_version not of type ApiVersions"
@@ -103,18 +103,19 @@ class SolarfocusAPI:
         self.heating_circuits = self.__factory.heating_circuit(system, heating_circuit_count, api_version)
         self.boilers = self.__factory.boiler(system, boiler_count, api_version)
         self.buffers = self.__factory.buffer(system, buffer_count, api_version)
+        self.solar = self.__factory.solar(system, solar_count, api_version)
+
         if self._api_version.greater_or_equal(ApiVersions.V_23_020.value):
             self.fresh_water_modules = self.__factory.fresh_water_modules(system, fresh_water_module_count, api_version)
 
         if self._api_version.greater_or_equal(ApiVersions.V_25_030.value):
             self.circulations = self.__factory.circulation(system, circulation_count, api_version)
-            self.differential_modules = self.__factory.differential_modules(system, differential_module__count, api_version)
+            self.differential_modules = self.__factory.differential_modules(system, differential_module_count, api_version)
 
         # Single components
         self.heatpump = self.__factory.heatpump(system, api_version)
         self.photovoltaic = self.__factory.photovoltaic(system, api_version)
         self.biomassboiler = self.__factory.pelletsboiler(system, api_version)
-        self.solar = self.__factory.solar(system, solar_count, api_version)
 
     def connect(self):
         """Connect to Solarfocus eco manager-touch"""
