@@ -75,7 +75,7 @@ class ComponentFactory:
         return circulation
 
     def differential_modules(self, system: Systems, count: int, api_version: ApiVersions) -> list[DifferentialModule]:
-        input_addresses = list(range(900, 900 + (25 * count), 25))
+        input_addresses = list(range(2200, 2200 + (10 * count), 10))
         differential_modules = []
         for i in range(count):
             input = input_addresses[i]
