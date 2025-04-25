@@ -103,41 +103,39 @@ print(solarfocus.heating_circuits[0])
 Output:
 
 ```
+❯ uv run example.py
 --------------------------------------------------
 SolarfocusAPI, v5.1.0
 --------------------------------------------------
-+ API Version: 25.030
 + System: Vampair
-+ Components:
-  + Heat pump: True
-  + Biomass boiler: False
-  + Heating circuit: 1
-  + Buffer: 1
-  + Boiler: 1
-  + Fresh water module: 1
-  + Solar: 1
-  + Photovoltaic: False
++ Version: 25.030
 --------------------------------------------------
-
-
 ============
 HeatingCircuit
 ============
 ---Input:
-supply_temperature| raw:258 scaled:25.8
-room_temperature| raw:222 scaled:22.2
-humidity| raw:480 scaled:48.0
-limit_thermostat| raw:1 scaled:1
-circulator_pump| raw:1 scaled:1
-mixer_valve| raw:34 scaled:34
-state| raw:12 scaled:12
+supply_temperature | raw:257 scaled:25.700000000000003
+room_temperature | raw:224 scaled:22.400000000000002
+humidity | raw:480 scaled:48.0
+limit_thermostat | raw:1 scaled:1
+circulator_pump | raw:0 scaled:0
+mixer_valve | raw:0 scaled:0
+state | raw:0 scaled:0
 ---Holding:
 target_supply_temperature | raw:0 scaled:0.0
 cooling | raw:0 scaled:0
-mode | raw:0 scaled:0
-target_room_temperatur | raw:0 scaled:0.0
-indoor_temperature_external | raw:222 scaled:22.2
+mode | raw:3 scaled:3
+target_room_temperature | raw:0 scaled:0.0
+indoor_temperature_external | raw:224 scaled:22.4
 indoor_humidity_external | raw:480 scaled:48.0
+heating_mode | raw:2 scaled:2
+
+
+============
+Boiler
+============
+---Input:
+....
 ```
 
 ### Handling multiple components

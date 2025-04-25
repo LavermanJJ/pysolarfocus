@@ -9,5 +9,5 @@ class Circulation(Component):
         super().__init__(input_address)
 
         if api_version.greater_or_equal(ApiVersions.V_25_030.value):
-            self.temperature = DataValue(address=0)
+            self.temperature = DataValue(address=0, multiplier=0.1)
             self.pump = DataValue(address=1)
