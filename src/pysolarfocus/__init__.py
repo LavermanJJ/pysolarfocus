@@ -18,6 +18,8 @@ class Systems(str, Enum):
     VAMPAIR = "Vampair"
     THERMINATOR = "Therminator"
     ECOTOP = "Ecotop"
+    PELLETELEGANCE = "Pellet Elegance"
+    OCTOPLUS = "Octoplus"
 
 
 class ApiVersions(str, Enum):

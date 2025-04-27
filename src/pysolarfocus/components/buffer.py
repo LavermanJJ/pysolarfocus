@@ -13,9 +13,15 @@ class Buffer(Component):
 
         self.top_temperature = DataValue(address=0, multiplier=0.1)
         self.bottom_temperature = DataValue(address=1, multiplier=0.1)
-        self.pump = DataValue(address=2)
-        self.state = DataValue(address=3, data_type=DataTypes.UINT)
-        self.mode = DataValue(address=4, data_type=DataTypes.UINT)
+
+        if api_version.greater_or_equal(ApiVersions.V_25_030.value):
+            self.pump = DataValue(address=3)
+            self.state = DataValue(address=4, data_type=DataTypes.UINT)
+            self.mode = DataValue(address=5, data_type=DataTypes.UINT)
+        else:
+            self.pump = DataValue(address=2)
+            self.state = DataValue(address=3, data_type=DataTypes.UINT)
+            self.mode = DataValue(address=4, data_type=DataTypes.UINT)
 
         if api_version.greater_or_equal(ApiVersions.V_22_090.value):
             self.external_top_temperature_x44 = DataValue(address=0, multiplier=10, register_type=RegisterTypes.HOLDING)
