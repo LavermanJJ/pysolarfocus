@@ -105,7 +105,7 @@ Output:
 ```
 ❯ uv run example.py
 --------------------------------------------------
-SolarfocusAPI, v5.1.0
+SolarfocusAPI, v5.1.1
 --------------------------------------------------
 + System: Vampair
 + Version: 25.030

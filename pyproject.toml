@@ -1,6 +1,6 @@
 [project]
 name = "pysolarfocus"
-version = "5.1.0"
+version = "5.1.1"
 description = "Unofficial, local Solarfocus client"
 authors = [{ name = "Jeroen Laverman", email = "jjlaverman@web.de" }]
 requires-python = "~=3.11"
