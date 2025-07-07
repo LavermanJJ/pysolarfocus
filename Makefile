@@ -1,14 +1,14 @@
 check: check-pylint check-black
 
 check-pylint:
-	@uv run pylint --errors-only src/pysolarfocus/*
+	@uv run pylint --errors-only src/pysolarfocus/* tests/*
 
 check-black:
-	@uv run black --check src/pysolarfocus/*
+	@uv run black --check src/pysolarfocus/* tests/*
 
 codefix:
-	@uv run isort src/pysolarfocus/*
-	@uv run black src/pysolarfocus/*
+	@uv run isort src/pysolarfocus/* tests/*
+	@uv run black src/pysolarfocus/* tests/*
 
 test:
 	@uv run pytest

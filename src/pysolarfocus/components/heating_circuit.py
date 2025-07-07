@@ -1,5 +1,4 @@
 """Solarfocus heating circuit component"""
-
 from .. import ApiVersions
 from .base.component import Component
 from .base.data_value import DataValue

@@ -198,7 +198,9 @@ class SolarfocusAPI:
 
     def update_photovoltaic(self) -> bool:
         """Read values from Heating System"""
-        return self.photovoltaic.update()
+        if self.photovoltaic:
+            return self.photovoltaic.update()
+        return True
 
     def update_biomassboiler(self) -> bool:
         """Read values from biomass boiler"""
