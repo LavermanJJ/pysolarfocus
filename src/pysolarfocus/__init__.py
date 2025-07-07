@@ -42,6 +42,8 @@ class ApiVersions(str, Enum):
 
 
 from .component_factory import ComponentFactory
+from .component_manager import ComponentManager
+from .config_validator import ConfigValidator
 from .const import (
     SLAVE_ID,
     DomesticHotWaterMode,
@@ -50,11 +52,60 @@ from .const import (
     HeatingCircuitMode,
     HeatPumpSgReadyMode,
 )
+from .exceptions import (
+    ComponentInitializationError,
+    DataParsingError,
+    InvalidConfigurationError,
+    ModbusConnectionError,
+    PySolarfocusError,
+    RegisterReadError,
+    RegisterWriteError,
+)
+from .logging_config import get_logger, setup_logging
 from .modbus_wrapper import ModbusConnector
 
 
 class SolarfocusAPI:
     """Solarfocus Heating System"""
+
+    def _validate_parameters(
+        self,
+        heating_circuit_count: int,
+        buffer_count: int,
+        boiler_count: int,
+        fresh_water_module_count: int,
+        circulation_count: int,
+        differential_module_count: int,
+        solar_count: int,
+        system: Systems,
+        api_version: ApiVersions,
+    ) -> None:
+        """Validate initialization parameters."""
+        if not (0 <= heating_circuit_count < 9):
+            raise InvalidConfigurationError("Heating circuit count must be between 0 and 8")
+        if not (0 <= buffer_count < 5):
+            raise InvalidConfigurationError("Buffer count must be between 0 and 4")
+        if not (0 <= boiler_count < 5):
+            raise InvalidConfigurationError("Boiler count must be between 0 and 4")
+        if not (0 <= fresh_water_module_count < 5):
+            raise InvalidConfigurationError("Fresh water module count must be between 0 and 4")
+        if not (0 <= circulation_count < 5):
+            raise InvalidConfigurationError("Circulation count must be between 0 and 4")
+        if not (0 <= differential_module_count < 5):
+            raise InvalidConfigurationError("Differential module count must be between 0 and 4")
+
+        if not isinstance(system, Systems):
+            raise InvalidConfigurationError("system not of type Systems")
+        if not isinstance(api_version, ApiVersions):
+            raise InvalidConfigurationError("api_version not of type ApiVersions")
+
+        # Validate solar count based on API version
+        if api_version.greater_or_equal(ApiVersions.V_25_030.value):
+            if not (0 <= solar_count < 5):
+                raise InvalidConfigurationError("Solar count must be between 0 and 4")
+        else:
+            if not (0 <= solar_count < 2):
+                raise InvalidConfigurationError("Solar count must be max 1")
 
     @property
     def system(self) -> Systems:
@@ -80,26 +131,15 @@ class SolarfocusAPI:
         api_version: ApiVersions = ApiVersions.V_21_140,
     ):
         """Initialize Solarfocus communication."""
-        assert heating_circuit_count >= 0 and heating_circuit_count < 9, "Heating circuit count must be between 0 and 8"
-        assert buffer_count >= 0 and buffer_count < 5, "Buffer count must be between 0 and 4"
-        assert boiler_count >= 0 and boiler_count < 5, "Boiler count must be between 0 and 4"
-        assert fresh_water_module_count >= 0 and fresh_water_module_count < 5, "Fresh water module count must be between 0 and 4"
-        assert circulation_count >= 0 and circulation_count < 5, "Circulation count must be between 0 and 4"
-        assert differential_module_count >= 0 and differential_module_count < 5, "Differential module count must be between 0 and 4"
-
-        assert isinstance(system, Systems), "system not of type Systems"
-        assert isinstance(api_version, ApiVersions), "api_version not of type ApiVersions"
+        self._validate_parameters(
+            heating_circuit_count, buffer_count, boiler_count, fresh_water_module_count, circulation_count, differential_module_count, solar_count, system, api_version
+        )
 
         self.__conn = ModbusConnector(ip, port, slave_id)
         self.__factory = ComponentFactory(self.__conn)
         self._slave_id = slave_id
         self._system = system
         self._api_version = api_version
-
-        if self._api_version.greater_or_equal(ApiVersions.V_25_030.value):
-            assert solar_count >= 0 and solar_count < 5, "Solar count must be between 0 and 4"
-        else:
-            assert solar_count >= 0 and solar_count < 2, "Solar count must be max 1"
 
         # Lists of components
         self.heating_circuits = self.__factory.heating_circuit(system, heating_circuit_count, api_version)
