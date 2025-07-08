@@ -5,7 +5,11 @@ from .components.boiler import Boiler
 from .components.buffer import Buffer, TherminatorBuffer
 from .components.circulation import Circulation
 from .components.differential_module import DifferentialModule
-from .components.fresh_water_module import FreshWaterModule
+from .components.fresh_water_module import (
+    CirculationModule,
+    FreshWaterModule,
+    FreshWaterModuleCascade,
+)
 from .components.heat_pump import HeatPump
 from .components.heating_circuit import HeatingCircuit, TherminatorHeatingCircuit
 from .components.photovoltaic import Photovoltaic
@@ -98,3 +102,11 @@ class ComponentFactory:
             input = input_addresses[i]
             solar_modules.append(Solar(input, api_version=api_version).initialize(self.__modbus_connector))
         return solar_modules
+
+    def fresh_water_module_cascade(self, system: Systems, api_version: ApiVersions) -> FreshWaterModuleCascade:
+        """Get the Fresh Water Module Cascade component (address 800)"""
+        return FreshWaterModuleCascade(api_version=api_version).initialize(self.__modbus_connector)
+
+    def circulation_module(self, system: Systems, api_version: ApiVersions) -> CirculationModule:
+        """Get the Circulation Module for DHW component (address 850)"""
+        return CirculationModule(api_version=api_version).initialize(self.__modbus_connector)

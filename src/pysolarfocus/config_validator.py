@@ -1,7 +1,5 @@
 """Configuration validation utilities for pysolarfocus"""
 
-from typing import Any, Dict, List
-
 from .exceptions import InvalidConfigurationError
 
 

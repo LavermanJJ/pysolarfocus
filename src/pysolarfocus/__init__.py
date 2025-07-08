@@ -150,6 +150,10 @@ class SolarfocusAPI:
         if self._api_version.greater_or_equal(ApiVersions.V_23_020.value):
             self.fresh_water_modules = self.__factory.fresh_water_modules(system, fresh_water_module_count, api_version)
 
+        if self._api_version.greater_or_equal(ApiVersions.V_23_040.value):
+            self.fresh_water_module_cascade = self.__factory.fresh_water_module_cascade(system, api_version)
+            self.circulation_module = self.__factory.circulation_module(system, api_version)
+
         if self._api_version.greater_or_equal(ApiVersions.V_25_030.value):
             self.circulations = self.__factory.circulation(system, circulation_count, api_version)
             self.differential_modules = self.__factory.differential_modules(system, differential_module_count, api_version)
@@ -179,6 +183,8 @@ class SolarfocusAPI:
             and self.update_biomassboiler()
             and self.update_solar()
             and self.update_fresh_water_modules()
+            and self.update_fresh_water_module_cascade()
+            and self.update_circulation_module()
             and self.update_circulation()
             and self.update_differential_modules()
         ):
@@ -212,6 +218,18 @@ class SolarfocusAPI:
             for fresh_water_module in self.fresh_water_modules:
                 if not fresh_water_module.update():
                     return False
+        return True
+
+    def update_fresh_water_module_cascade(self) -> bool:
+        """Read values from Fresh Water Module Cascade"""
+        if self._api_version.greater_or_equal(ApiVersions.V_23_040.value):
+            return self.fresh_water_module_cascade.update()
+        return True
+
+    def update_circulation_module(self) -> bool:
+        """Read values from Circulation Module for DHW"""
+        if self._api_version.greater_or_equal(ApiVersions.V_23_040.value):
+            return self.circulation_module.update()
         return True
 
     def update_circulation(self) -> bool:

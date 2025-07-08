@@ -5,7 +5,6 @@ from typing import Any, Dict, List, Optional
 
 from . import ApiVersions, Systems
 from .component_factory import ComponentFactory
-from .components.base.component import Component
 from .exceptions import ComponentInitializationError
 from .modbus_wrapper import ModbusConnector
 
