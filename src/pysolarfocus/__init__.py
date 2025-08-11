@@ -87,7 +87,7 @@ class SolarfocusAPI:
             raise InvalidConfigurationError("system not of type Systems")
         if not isinstance(api_version, ApiVersions):
             raise InvalidConfigurationError("api_version not of type ApiVersions")
-            
+
         is_modern_api = api_version.greater_or_equal(ApiVersions.V_25_030.value)
         ConfigValidator.validate_component_count("heating_circuit", heating_circuit_count)
         ConfigValidator.validate_component_count("buffer", buffer_count)
@@ -101,21 +101,13 @@ class SolarfocusAPI:
         self._slave_id = slave_id
         self._system = system
         self._api_version = api_version
-        
+
         # Initialize component manager
         self.__component_manager = ComponentManager(self.__conn)
         self.__component_manager.create_components(
-            system,
-            api_version,
-            heating_circuit_count,
-            buffer_count,
-            boiler_count,
-            fresh_water_module_count,
-            circulation_count,
-            differential_module_count,
-            solar_count
+            system, api_version, heating_circuit_count, buffer_count, boiler_count, fresh_water_module_count, circulation_count, differential_module_count, solar_count
         )
-        
+
         # Get component references
         components = self.__component_manager.components
         self.heating_circuits = components["heating_circuits"]
