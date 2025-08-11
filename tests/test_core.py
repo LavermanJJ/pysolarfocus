@@ -1,11 +1,14 @@
 """Tests for pysolarfocus core functionality"""
 
+from unittest.mock import MagicMock, patch
+
 from pysolarfocus import (
     ApiVersions,
     DomesticHotWaterMode,
     HeatingCircuitCooling,
     HeatingCircuitMode,
     HeatPumpSgReadyMode,
+    InvalidConfigurationError,
     SolarfocusAPI,
     Systems,
 )
@@ -42,32 +45,32 @@ def test_solarfocus_api_init_validation():
     """Test input validation during SolarfocusAPI initialization"""
     try:
         SolarfocusAPI(ip="localhost", heating_circuit_count=10)
-        assert False, "Should raise assertion error for invalid heating circuit count"
-    except AssertionError:
+        assert False, "Should raise InvalidConfigurationError for invalid heating circuit count"
+    except InvalidConfigurationError:
         pass
 
     try:
         SolarfocusAPI(ip="localhost", buffer_count=5)
-        assert False, "Should raise assertion error for invalid buffer count"
-    except AssertionError:
+        assert False, "Should raise InvalidConfigurationError for invalid buffer count"
+    except InvalidConfigurationError:
         pass
 
     try:
         SolarfocusAPI(ip="localhost", boiler_count=5)
-        assert False, "Should raise assertion error for invalid boiler count"
-    except AssertionError:
+        assert False, "Should raise InvalidConfigurationError for invalid boiler count"
+    except InvalidConfigurationError:
         pass
 
     try:
         SolarfocusAPI(ip="localhost", fresh_water_module_count=5)
-        assert False, "Should raise assertion error for invalid fresh water module count"
-    except AssertionError:
+        assert False, "Should raise InvalidConfigurationError for invalid fresh water module count"
+    except InvalidConfigurationError:
         pass
 
     try:
-        SolarfocusAPI(ip="localhost", system="invalid")
-        assert False, "Should raise assertion error for invalid system type"
-    except AssertionError:
+        SolarfocusAPI(ip="localhost", system="invalid")  # type: ignore
+        assert False, "Should raise InvalidConfigurationError for invalid system type"
+    except InvalidConfigurationError:
         pass
 
     # Valid initialization should work
@@ -78,24 +81,56 @@ def test_solarfocus_api_init_validation():
 
 def test_solarfocus_api_update_methods():
     """Test all update methods"""
-    api = SolarfocusAPI(ip="localhost", heating_circuit_count=2, buffer_count=2, boiler_count=2, system=Systems.VAMPAIR, api_version=ApiVersions.V_25_030)
+    with patch("pysolarfocus.ModbusConnector") as mock_modbus_class:
+        mock_modbus_instance = MagicMock()
+        mock_modbus_class.return_value = mock_modbus_instance
 
-    # Components that don't belong to VAMPAIR system return True
-    assert api.update_biomassboiler() == True
-    assert api.update_solar() == True
+        # Mock successful reads for components that should return True
+        def mock_read_input_registers(slices, count):
+            return (True, [0] * count)
 
-    # Components that belong to VAMPAIR but can't connect return False
-    assert api.update_heating() == False
-    assert api.update_buffer() == False
-    assert api.update_boiler() == False
-    assert api.update_heatpump() == False
-    assert api.update_photovoltaic() == False
-    assert api.update_fresh_water_modules() == True
-    assert api.update_circulation() == True
-    assert api.update_differential_modules() == True
+        def mock_read_holding_registers(slices, count):
+            return (True, [0] * count)
 
-    # Overall update should return False since components can't connect
-    assert api.update() == False
+        mock_modbus_instance.read_input_registers.side_effect = mock_read_input_registers
+        mock_modbus_instance.read_holding_registers.side_effect = mock_read_holding_registers
+
+        api = SolarfocusAPI(ip="localhost", heating_circuit_count=2, buffer_count=2, boiler_count=2, system=Systems.VAMPAIR, api_version=ApiVersions.V_25_030)
+
+        # Components that don't belong to VAMPAIR system return True
+        assert api.update_biomassboiler() == True
+        assert api.update_solar() == True
+
+        # Components that belong to VAMPAIR but can't connect return False
+        # Set up failing modbus reads for these
+        mock_modbus_instance.read_input_registers.side_effect = lambda slices, count: (False, None)
+        mock_modbus_instance.read_holding_registers.side_effect = lambda slices, count: (False, None)
+
+        assert api.update_heating() == False
+        assert api.update_buffer() == False
+        assert api.update_boiler() == False
+        assert api.update_heatpump() == False
+        assert api.update_photovoltaic() == False
+
+        # Reset to successful for components that should return True even when they have components
+        mock_modbus_instance.read_input_registers.side_effect = mock_read_input_registers
+        mock_modbus_instance.read_holding_registers.side_effect = mock_read_holding_registers
+
+        assert api.update_fresh_water_modules() == True
+        assert api.update_circulation() == True
+        assert api.update_differential_modules() == True
+
+    # Overall update should return False since components can't connect when not mocked properly
+    with patch("pysolarfocus.ModbusConnector") as mock_modbus_class:
+        mock_modbus_instance = MagicMock()
+        mock_modbus_class.return_value = mock_modbus_instance
+
+        # Set up failing modbus reads
+        mock_modbus_instance.read_input_registers.return_value = (False, None)
+        mock_modbus_instance.read_holding_registers.return_value = (False, None)
+
+        api_fail = SolarfocusAPI(ip="localhost", heating_circuit_count=2, buffer_count=2, boiler_count=2, system=Systems.VAMPAIR, api_version=ApiVersions.V_25_030)
+        assert api_fail.update() == False
 
 
 def test_solarfocus_api_setters():

@@ -1,0 +1,352 @@
+Register Type,Register Address,Register Count,Name,Data Type,Unit,Scale Factor,Description,Version
+Input,1100,1,Vorlauftemperatur,int16,°C,1/10,Flow temperature as three-digit value (e.g. 490 = 49.0°C),
+Input,1101,1,Raumtemperatur,int16,°C,1/10,Room temperature as three-digit value (e.g. 240 = 24.0°C),
+Input,1102,1,Feuchte,int16,%,1/10,Room humidity in %,
+Input,1103,1,Begrenzungsthermostat offen/geschlossen,uint16,-,-,0=open 1=closed (ok),
+Input,1105,1,Heizkreispumpe Ein/Aus,uint16,-,-,0=Off 1=On,
+Input,1106,1,Mischerstellung,uint16,%,-,Mixer position in % (0-100%),
+Input,1107,1,Status Heizkreis,uint16,-,-,Heating circuit status (enumeration with multiple status codes),
+Input,1150,1,Vorlauftemperatur,int16,°C,1/10,Flow temperature heating circuit 2,
+Input,1151,1,Raumtemperatur,int16,°C,1/10,Room temperature heating circuit 2,
+Input,1152,1,Feuchte,int16,%,-,Room humidity heating circuit 2,
+Input,1153,1,Begrenzungsthermostat offen/geschlossen,uint16,-,-,Limiter thermostat heating circuit 2,
+Input,1155,1,Heizkreispumpe Ein/Aus,uint16,-,-,Heating circuit pump 2 status,
+Input,1156,1,Mischerstellung,uint16,%,-,Mixer position heating circuit 2,
+Input,1157,1,Status Heizkreis,uint16,-,-,Status heating circuit 2,
+Input,1200,1,Vorlauftemperatur,int16,°C,1/10,Flow temperature heating circuit 3,
+Input,1201,1,Raumtemperatur,int16,°C,1/10,Room temperature heating circuit 3,
+Input,1202,1,Feuchte,int16,%,-,Room humidity heating circuit 3,
+Input,1203,1,Begrenzungsthermostat offen/geschlossen,uint16,-,-,Limiter thermostat heating circuit 3,
+Input,1205,1,Heizkreispumpe Ein/Aus,uint16,-,-,Heating circuit pump 3 status,
+Input,1206,1,Mischerstellung,uint16,%,-,Mixer position heating circuit 3,
+Input,1207,1,Status Heizkreis,uint16,-,-,Status heating circuit 3,
+Input,1250,1,Vorlauftemperatur,int16,°C,1/10,Flow temperature heating circuit 4,
+Input,1251,1,Raumtemperatur,int16,°C,1/10,Room temperature heating circuit 4,
+Input,1252,1,Feuchte,int16,%,-,Room humidity heating circuit 4,
+Input,1253,1,Begrenzungsthermostat offen/geschlossen,uint16,-,-,Limiter thermostat heating circuit 4,
+Input,1255,1,Heizkreispumpe Ein/Aus,uint16,-,-,Heating circuit pump 4 status,
+Input,1256,1,Mischerstellung,uint16,%,-,Mixer position heating circuit 4,
+Input,1257,1,Status Heizkreis,uint16,-,-,Status heating circuit 4,
+Input,1300,1,Vorlauftemperatur,int16,°C,1/10,Flow temperature heating circuit 5,V20.110
+Input,1301,1,Raumtemperatur,int16,°C,1/10,Room temperature heating circuit 5,V20.110
+Input,1302,1,Feuchte,int16,%,-,Room humidity heating circuit 5,V20.110
+Input,1303,1,Begrenzungsthermostat offen/geschlossen,uint16,-,-,Limiter thermostat heating circuit 5,V20.110
+Input,1305,1,Heizkreispumpe Ein/Aus,uint16,-,-,Heating circuit pump 5 status,V20.110
+Input,1306,1,Mischerstellung,uint16,%,-,Mixer position heating circuit 5,V20.110
+Input,1307,1,Status Heizkreis,uint16,-,-,Status heating circuit 5,V20.110
+Input,1350,1,Vorlauftemperatur,int16,°C,1/10,Flow temperature heating circuit 6,V20.110
+Input,1351,1,Raumtemperatur,int16,°C,1/10,Room temperature heating circuit 6,V20.110
+Input,1352,1,Feuchte,int16,%,-,Room humidity heating circuit 6,V20.110
+Input,1353,1,Begrenzungsthermostat offen/geschlossen,uint16,-,-,Limiter thermostat heating circuit 6,V20.110
+Input,1355,1,Heizkreispumpe Ein/Aus,uint16,-,-,Heating circuit pump 6 status,V20.110
+Input,1356,1,Mischerstellung,uint16,%,-,Mixer position heating circuit 6,V20.110
+Input,1357,1,Status Heizkreis,uint16,-,-,Status heating circuit 6,V20.110
+Input,1400,1,Vorlauftemperatur,int16,°C,1/10,Flow temperature heating circuit 7,V20.110
+Input,1401,1,Raumtemperatur,int16,°C,1/10,Room temperature heating circuit 7,V20.110
+Input,1402,1,Feuchte,int16,%,-,Room humidity heating circuit 7,V20.110
+Input,1403,1,Begrenzungsthermostat offen/geschlossen,uint16,-,-,Limiter thermostat heating circuit 7,V20.110
+Input,1405,1,Heizkreispumpe Ein/Aus,uint16,-,-,Heating circuit pump 7 status,V20.110
+Input,1406,1,Mischerstellung,uint16,%,-,Mixer position heating circuit 7,V20.110
+Input,1407,1,Status Heizkreis,uint16,-,-,Status heating circuit 7,V20.110
+Input,1450,1,Vorlauftemperatur,int16,°C,1/10,Flow temperature heating circuit 8,V20.110
+Input,1451,1,Raumtemperatur,int16,°C,1/10,Room temperature heating circuit 8,V20.110
+Input,1452,1,Feuchte,int16,%,-,Room humidity heating circuit 8,V20.110
+Input,1453,1,Begrenzungsthermostat offen/geschlossen,uint16,-,-,Limiter thermostat heating circuit 8,V20.110
+Input,1455,1,Heizkreispumpe Ein/Aus,uint16,-,-,Heating circuit pump 8 status,V20.110
+Input,1456,1,Mischerstellung,uint16,%,-,Mixer position heating circuit 8,V20.110
+Input,1457,1,Status Heizkreis,uint16,-,-,Status heating circuit 8,V20.110
+Input,1900,1,Puffertemperatur oben,int16,°C,1/10,Buffer temperature top (e.g. 560 = 56.0°C),
+Input,1901,1,Puffertemperatur unten,int16,°C,1/10,Buffer temperature bottom (e.g. 450 = 45.0°C),
+Input,1902,1,Puffertemperatur X35,int16,°C,1/10,Buffer temperature X35 (therminator only),
+Input,1903,1,Puffer – Ladepumpe,int16,-,-,0=not being charged 1=being charged,
+Input,1904,1,Pufferstatus,uint16,-,-,Buffer status (enumeration),
+Input,1905,1,Puffer – Freigabeart,uint16,-,-,0=Always Off 1=Always On 2=Time switching,
+Input,1920,1,Puffertemperatur oben,int16,°C,1/10,Buffer 2 temperature top,
+Input,1921,1,Puffertemperatur unten,int16,°C,1/10,Buffer 2 temperature bottom,
+Input,1922,1,Puffertemperatur X35,int16,°C,1/10,Buffer 2 temperature X35 (therminator only),
+Input,1923,1,Puffer – Ladepumpe,int16,-,-,Buffer 2 charging pump,
+Input,1924,1,Pufferstatus,uint16,-,-,Buffer 2 status,
+Input,1925,1,Puffer – Freigabeart,uint16,-,-,Buffer 2 release type,
+Input,1940,1,Puffertemperatur oben,int16,°C,1/10,Buffer 3 temperature top,
+Input,1941,1,Puffertemperatur unten,int16,°C,1/10,Buffer 3 temperature bottom,
+Input,1942,1,Puffertemperatur X35,int16,°C,1/10,Buffer 3 temperature X35 (therminator only),
+Input,1943,1,Puffer – Ladepumpe,int16,-,-,Buffer 3 charging pump,
+Input,1944,1,Pufferstatus,uint16,-,-,Buffer 3 status,
+Input,1945,1,Puffer – Freigabeart,uint16,-,-,Buffer 3 release type,
+Input,1960,1,Puffertemperatur oben,int16,°C,1/10,Buffer 4 temperature top,
+Input,1961,1,Puffertemperatur unten,int16,°C,1/10,Buffer 4 temperature bottom,
+Input,1962,1,Puffertemperatur X35,int16,°C,1/10,Buffer 4 temperature X35 (therminator only),
+Input,1963,1,Puffer – Ladepumpe,int16,-,-,Buffer 4 charging pump,
+Input,1964,1,Pufferstatus,uint16,-,-,Buffer 4 status,
+Input,1965,1,Puffer – Freigabeart,uint16,-,-,Buffer 4 release type,
+Input,2100,1,Kollektortemperatur 1,int16,°C,1/10,Collector temperature 1 (e.g. 550 = 55.0°C),
+Input,2101,1,Kollektortemperatur 2,int16,°C,1/10,Collector temperature 2 (e.g. 550 = 55.0°C),
+Input,2102,1,Kollektorvorlauftemperatur,int16,°C,1/10,Collector flow temperature (e.g. 450 = 45.0°C),
+Input,2103,1,Kollektorrücklauftemperatur,int16,°C,1/10,Collector return temperature (e.g. 340 = 34.0°C),
+Input,2104,1,Durchfluss WMZ,int16,l,-,Current flow heat meter in liters,
+Input,2105,1,aktuelle Leistung,int16,kW,1/10,Power in kW (e.g. 230 = 23.0 kW),
+Input,2106,2,Ertrag WMZ,int32,Wh,-,Yield in Wh (2 x 16-bit registers),
+Input,2108,2,Tagesertrag,int32,Wh,-,Daily yield in Wh (2 x 16-bit registers),
+Input,2110,1,Speicherfühler 1,int16,°C,1/10,Storage temperature 1 (e.g. 550 = 55.0°C),
+Input,2111,1,Speicherfühler 2,int16,°C,1/10,Storage temperature 2 (e.g. 440 = 44.0°C),
+Input,2112,1,Speicherfühler 3,int16,°C,1/10,Storage temperature 3 (e.g. 440 = 44.0°C),
+Input,2113,1,Solar – Statuszeile,uint16,-,-,Solar status line (enumeration),
+Input,2114,1,Relais O1 Ein/Aus,uint16,-,-,0=Off 1=On,V25.020/V25.010
+Input,2115,1,Ansteuerung Out 1,uint16,%,-,0-100%,V25.020/V25.010
+Input,2116,1,Relais O2 Ein/Aus,uint16,-,-,0=Off 1=On,V25.020/V25.010
+Input,2117,1,Ansteuerung Out 2,uint16,%,-,0-100%,V25.020/V25.010
+Input,2120,1,Kollektortemperatur 1,int16,°C,1/10,Collector 2 temperature 1,V25.020/V25.010
+Input,2121,1,Kollektortemperatur 2,int16,°C,1/10,Collector 2 temperature 2,V25.020/V25.010
+Input,2122,1,Kollektorvorlauftemperatur,int16,°C,1/10,Collector 2 flow temperature,V25.020/V25.010
+Input,2123,1,Kollektorrücklauftemperatur,int16,°C,1/10,Collector 2 return temperature,V25.020/V25.010
+Input,2124,1,Durchfluss WMZ,int16,l,-,Flow heat meter 2,V25.020/V25.010
+Input,2125,1,Aktuelle Leistung,int16,kW,1/10,Current power solar 2,V25.020/V25.010
+Input,2126,2,Ertrag WMZ,int32,Wh,-,Yield heat meter 2,V25.020/V25.010
+Input,2128,2,Tagesertrag,int32,Wh,-,Daily yield solar 2,V25.020/V25.010
+Input,2130,1,Speicherfühler 1,int16,°C,1/10,Storage temperature 1 solar 2,V25.020/V25.010
+Input,2131,1,Speicherfühler 2,int16,°C,1/10,Storage temperature 2 solar 2,V25.020/V25.010
+Input,2132,1,Speicherfühler 3,int16,°C,1/10,Storage temperature 3 solar 2,V25.020/V25.010
+Input,2133,1,Solar-Statuszeile,int16,-,-,Solar 2 status line,V25.020/V25.010
+Input,2134,1,Relais O1 Ein/Aus,uint16,-,-,Relay O1 solar 2,V25.020/V25.010
+Input,2135,1,Ansteuerung Out 1,uint16,%,-,Control Out 1 solar 2,V25.020/V25.010
+Input,2136,1,Relais O2 Ein/Aus,uint16,-,-,Relay O2 solar 2,V25.020/V25.010
+Input,2137,1,Ansteuerung Out 2,uint16,%,-,Control Out 2 solar 2,V25.020/V25.010
+Input,2140,1,Kollektortemperatur 1,int16,°C,1/10,Collector 3 temperature 1,V25.020/V25.010
+Input,2141,1,Kollektortemperatur 2,int16,°C,1/10,Collector 3 temperature 2,V25.020/V25.010
+Input,2142,1,Kollektorvorlauftemperatur,int16,°C,1/10,Collector 3 flow temperature,V25.020/V25.010
+Input,2143,1,Kollektorrücklauftemperatur,int16,°C,1/10,Collector 3 return temperature,V25.020/V25.010
+Input,2144,1,Durchfluss WMZ,int16,l,-,Flow heat meter 3,V25.020/V25.010
+Input,2145,1,Aktuelle Leistung,int16,kW,1/10,Current power solar 3,V25.020/V25.010
+Input,2146,2,Ertrag WMZ,int32,Wh,-,Yield heat meter 3,V25.020/V25.010
+Input,2148,2,Tagesertrag,int32,Wh,-,Daily yield solar 3,V25.020/V25.010
+Input,2150,1,Speicherfühler 1,int16,°C,1/10,Storage temperature 1 solar 3,V25.020/V25.010
+Input,2151,1,Speicherfühler 2,int16,°C,1/10,Storage temperature 2 solar 3,V25.020/V25.010
+Input,2152,1,Speicherfühler 3,int16,°C,1/10,Storage temperature 3 solar 3,V25.020/V25.010
+Input,2153,1,Solar-Statuszeile,uint16,-,-,Solar 3 status line,V25.020/V25.010
+Input,2154,1,Relais O1 Ein/Aus,uint16,-,-,Relay O1 solar 3,V25.020/V25.010
+Input,2155,1,Ansteuerung Out 1,uint16,%,-,Control Out 1 solar 3,V25.020/V25.010
+Input,2156,1,Relais O2 Ein/Aus,uint16,-,-,Relay O2 solar 3,V25.020/V25.010
+Input,2157,1,Ansteuerung Out 2,uint16,%,-,Control Out 2 solar 3,V25.020/V25.010
+Input,2160,1,Kollektortemperatur 1,int16,°C,1/10,Collector 4 temperature 1,V25.020/V25.010
+Input,2161,1,Kollektortemperatur 2,int16,°C,1/10,Collector 4 temperature 2,V25.020/V25.010
+Input,2162,1,Kollektorvorlauftemperatur,int16,°C,1/10,Collector 4 flow temperature,V25.020/V25.010
+Input,2163,1,Kollektorrücklauftemperatur,int16,°C,1/10,Collector 4 return temperature,V25.020/V25.010
+Input,2164,1,Durchfluss WMZ,int16,l,-,Flow heat meter 4,V25.020/V25.010
+Input,2165,1,Aktuelle Leistung,int16,kW,1/10,Current power solar 4,V25.020/V25.010
+Input,2166,2,Ertrag WMZ,int32,Wh,-,Yield heat meter 4,V25.020/V25.010
+Input,2168,2,Tagesertrag,int32,Wh,-,Daily yield solar 4,V25.020/V25.010
+Input,2170,1,Speicherfühler 1,int16,°C,1/10,Storage temperature 1 solar 4,V25.020/V25.010
+Input,2171,1,Speicherfühler 2,int16,°C,1/10,Storage temperature 2 solar 4,V25.020/V25.010
+Input,2172,1,Speicherfühler 3,int16,°C,1/10,Storage temperature 3 solar 4,V25.020/V25.010
+Input,2173,1,Solar-Statuszeile,uint16,-,-,Solar 4 status line,V25.020/V25.010
+Input,2174,1,Relais O1 Ein/Aus,uint16,-,-,Relay O1 solar 4,V25.020/V25.010
+Input,2175,1,Ansteuerung Out 1,uint16,%,-,Control Out 1 solar 4,V25.020/V25.010
+Input,2176,1,Relais O2 Ein/Aus,uint16,-,-,Relay O2 solar 4,V25.020/V25.010
+Input,2177,1,Ansteuerung Out 2,uint16,%,-,Control Out 2 solar 4,V25.020/V25.010
+Input,2200,1,Relais Regelkreis 1 O1 Ein/Aus,uint16,-,-,Difference module 1 - circuit 1 relay status,V25.020/V25.010
+Input,2201,1,Temperatur 1 Regelkreis 1,int16,°C,1/10,Difference module 1 - circuit 1 temperature 1,V25.020/V25.010
+Input,2202,1,Temperatur 2 Regelkreis 1,int16,°C,1/10,Difference module 1 - circuit 1 temperature 2,V25.020/V25.010
+Input,2203,1,Relais Regelkreis 2 O2 Ein/Aus,uint16,-,-,Difference module 1 - circuit 2 relay status,V25.020/V25.010
+Input,2204,1,Temperatur 1 Regelkreis 2,int16,°C,1/10,Difference module 1 - circuit 2 temperature 1,V25.020/V25.010
+Input,2205,1,Temperatur 2 Regelkreis 2,int16,°C,1/10,Difference module 1 - circuit 2 temperature 2,V25.020/V25.010
+Input,2210,2,Relais Regelkreis 1 O1 Ein/Aus,uint16,-,-,Difference module 2 - circuit 1 relay status,V25.020/V25.010
+Input,2211,2,Temperatur 1 Regelkreis 1,int16,°C,1/10,Difference module 2 - circuit 1 temperature 1,V25.020/V25.010
+Input,2212,2,Temperatur 2 Regelkreis 1,int16,°C,1/10,Difference module 2 - circuit 1 temperature 2,V25.020/V25.010
+Input,2213,2,Relais Regelkreis 2 O2 Ein/Aus,uint16,-,-,Difference module 2 - circuit 2 relay status,V25.020/V25.010
+Input,2214,2,Temperatur 1 Regelkreis 2,int16,°C,1/10,Difference module 2 - circuit 2 temperature 1,V25.020/V25.010
+Input,2215,2,Temperatur 2 Regelkreis 2,int16,°C,1/10,Difference module 2 - circuit 2 temperature 2,V25.020/V25.010
+Input,2220,3,Relais Regelkreis 1 O1 Ein/Aus,uint16,-,-,Difference module 3 - circuit 1 relay status,V25.020/V25.010
+Input,2221,3,Temperatur 1 Regelkreis 1,int16,°C,1/10,Difference module 3 - circuit 1 temperature 1,V25.020/V25.010
+Input,2222,3,Temperatur 2 Regelkreis 1,int16,°C,1/10,Difference module 3 - circuit 1 temperature 2,V25.020/V25.010
+Input,2223,3,Relais Regelkreis 2 O2 Ein/Aus,uint16,-,-,Difference module 3 - circuit 2 relay status,V25.020/V25.010
+Input,2224,3,Temperatur 1 Regelkreis 2,int16,°C,1/10,Difference module 3 - circuit 2 temperature 1,V25.020/V25.010
+Input,2225,3,Temperatur 2 Regelkreis 2,int16,°C,1/10,Difference module 3 - circuit 2 temperature 2,V25.020/V25.010
+Input,2230,4,Relais Regelkreis 1 O1 Ein/Aus,uint16,-,-,Difference module 4 - circuit 1 relay status,V25.020/V25.010
+Input,2231,4,Temperatur 1 Regelkreis 1,int16,°C,1/10,Difference module 4 - circuit 1 temperature 1,V25.020/V25.010
+Input,2232,4,Temperatur 2 Regelkreis 1,int16,°C,1/10,Difference module 4 - circuit 1 temperature 2,V25.020/V25.010
+Input,2233,4,Relais Regelkreis 2 O2 Ein/Aus,uint16,-,-,Difference module 4 - circuit 2 relay status,V25.020/V25.010
+Input,2234,4,Temperatur 1 Regelkreis 2,int16,°C,1/10,Difference module 4 - circuit 2 temperature 1,V25.020/V25.010
+Input,2235,4,Temperatur 2 Regelkreis 2,int16,°C,1/10,Difference module 4 - circuit 2 temperature 2,V25.020/V25.010
+Input,500,1,Boiler – Temperatur,int16,°C,1/10,Boiler 1 temperature (e.g. 600 = 60.0°C),
+Input,501,1,Boiler Status,uint16,-,-,Boiler 1 status (enumeration),
+Input,502,1,Boiler Freigabeart – Ist,uint16,-,-,Boiler 1 release type,
+Input,550,1,Boiler – Temperatur,int16,°C,1/10,Boiler 2 temperature,
+Input,551,1,Boiler Status,uint16,-,-,Boiler 2 status,
+Input,552,1,Boiler Freigabeart – Ist,uint16,-,-,Boiler 2 release type,
+Input,600,1,Boiler – Temperatur,int16,°C,1/10,Boiler 3 temperature,
+Input,601,1,Boiler Status,uint16,-,-,Boiler 3 status,
+Input,602,1,Boiler Freigabeart – Ist,uint16,-,-,Boiler 3 release type,
+Input,650,1,Boiler – Temperatur,int16,°C,1/10,Boiler 4 temperature,
+Input,651,1,Boiler Status,uint16,-,-,Boiler 4 status,
+Input,652,1,Boiler Freigabeart – Ist,uint16,-,-,Boiler 4 release type,
+Input,900,1,Zirkulationstemperatur,int16,°C,1/10,Circulation temperature 1,V25.020/V25.010
+Input,901,1,Zirkulationspumpe Ein/Aus,uint16,-,-,Circulation pump 1 status,V25.020/V25.010
+Input,925,1,Zirkulationstemperatur,int16,°C,1/10,Circulation temperature 2,V25.020/V25.010
+Input,926,1,Zirkulationspumpe Ein/Aus,uint16,-,-,Circulation pump 2 status,V25.020/V25.010
+Input,950,1,Zirkulationstemperatur,int16,°C,1/10,Circulation temperature 3,V25.020/V25.010
+Input,951,1,Zirkulationspumpe Ein/Aus,uint16,-,-,Circulation pump 3 status,V25.020/V25.010
+Input,975,1,Zirkulationstemperatur,int16,°C,1/10,Circulation temperature 4,V25.020/V25.010
+Input,976,4,Zirkulationspumpe Ein/Aus,uint16,-,-,Circulation pump 4 status,V25.020/V25.010
+Input,2300,1,Vorlauftemperatur Wärmepumpe,int16,°C,1/10,Heat pump flow temperature (e.g. 400 = 40.0°C),
+Input,2301,1,Rücklauftemperatur Wärmepumpe,int16,°C,1/10,Heat pump return temperature (e.g. 320 = 32.0°C),
+Input,2302,1,Durchfluss,int16,l/h,-,Flow rate in l/h,
+Input,2303,1,Kompressordrehzahl,int16,U/min,-,Compressor speed (0-7000 RPM),
+Input,2304,1,EVU – Lock aktiv,uint16,-,-,0=EVU-Lock not active 1=EVU-Lock active,
+Input,2306,1,Defrost aktiv,uint16,-,-,0=Defrost not active 1=Defrost active,
+Input,2307,1,Boilerladung,uint16,-,-,0=Boiler charging not active 1=Boiler charging active,
+Input,2310,2,Gesamtenergie thermisch Heizung + Trinkwassererwärmung,int32,Wh,1/1000,Total thermal energy for heating and DHW in Wh/1000=kWh,
+Input,2312,2,thermische Energie Trinkwassererwärmung,int32,Wh,1/1000,Thermal energy for DHW in Wh/1000=kWh,
+Input,2314,2,thermische Energie Heizung,int32,Wh,1/1000,Thermal energy for heating in Wh/1000=kWh,
+Input,2316,2,Gesamtenergie elektrisch Heizung + Trinkwassererwärmung,int32,Wh,1/1000,Total electrical energy for heating and DHW in Wh/1000=kWh,
+Input,2318,2,elektr. Energie Trinkwassererwärmung,int32,Wh,1/1000,Electrical energy for DHW in Wh/1000=kWh,
+Input,2320,2,elektr. Energie Heizung,int32,Wh,1/1000,Electrical energy for heating in Wh/1000=kWh,
+Input,2322,1,aktuell aufgenommene elektr. Leistung,int16,W,-,Current electrical power consumption,
+Input,2323,1,aktuelle thermische Leistung Kühlen,int16,W,-,Current thermal cooling power,
+Input,2324,1,aktuelle thermische Leistung Heizen,int16,W,-,Current thermal heating power,
+Input,2326,2,thermische Energie Kühlung,int32,Wh,1/1000,Thermal energy for cooling in Wh/1000=kWh,
+Input,2328,2,elekt. Energie Kühlung,int32,Wh,1/1000,Electrical energy for cooling in Wh/1000=kWh,
+Input,2330,1,vampair Status,uint16,-,-,Heat pump status (enumeration),V20.110
+Input,2500,2,Leistung PV,int32,W,-,Generated power of PV system,V20.050
+Input,2502,2,Verbrauch,int32,W,-,Total building consumption,V20.050
+Input,2504,2,Verbrauch WP,int32,W,-,Heat pump consumption,V20.050
+Input,2506,2,Netzbezug,int32,W,-,Energy drawn from grid,V20.050
+Input,2508,2,Einspeisung,int32,W,-,Energy fed into grid,V20.050
+Input,2510,1,PV Überladung möglich,int16,-,-,0=No overcharging of WVT possible 1=WVT can be overcharged with PV surplus,V21.050
+Input,2511,1,PV-Überladung aktiv,int16,-,-,0=No PV surplus available 1=Heat pump started due to PV surplus,V21.050
+Input,2400,1,Kesseltemperatur,int16,°C,1/10,Boiler temperature (e.g. 400 = 40.0°C),V20.110
+Input,2401,1,Statuszeile Kessel,uint16,-,-,Boiler status line (enumeration),
+Input,2402,2,Betriebsminuten zum Wartungszeitpunkt,int32,Min.,-,Operating minutes until maintenance,
+Input,2404,1,Nachrichtennummer,int16,-,-,Active message number,
+Input,2405,1,Türkontakt offen/geschlossen,int16,-,-,0=Door closed 1=Door open,
+Input,2406,1,Kesselreinigung,int16,%,-,0-100% (boiler cleaning recommended at 100%),
+Input,2407,1,Ascheboxfüllstand,int16,%,-,0-100% (ash box should be emptied at 100%),
+Input,2408,1,Außentemperatur,int16,°C,1/10,Outdoor temperature (e.g. 270 = 27.0°C),
+Input,2409,1,Kesselbetriebsart therminator,int16,-,-,Boiler operating mode (therminator),
+Input,2410,1,SpeichertemperaturUnten octoplus,int16,°C,1/10,Buffer temperature bottom (octoplus),V20.110
+Input,2411,1,SpeichertemperaturOben octoplus,int16,°C,1/10,Buffer temperature top (octoplus),V20.110
+Input,2412,1,Stückholz therminator,uint16,-,-,0=No wood fueling needed 1=Wood can be added,
+Input,2414,2,Pelletverbrauch seit letzter Lagerraumbefüllung,uint32,kg,1/10,Pellet consumption since last filling,V23.010
+Input,2416,2,Pelletverbrauch gesamt seit Update auf V21.050 oder jünger,uint32,kg,1/10,Total pellet consumption since update to V21.050 or newer,V23.010
+Input,2418,2,produzierte Wärmemenge gesamt seit Update auf V21.050 oder jünger,uint32,kWh,1/10,Total heat produced since update to V21.050 or newer,V23.010
+Input,2420,1,Kaminkehrer kurz vor Ende,int16,-,-,0=Chimney sweep mode active/not enabled 1=Chimney sweep mode ending soon,V22.090/V23.080
+Input,2421,1,Restsauerstoffgehalt,uint16,%,1/10,Residual oxygen content,V25.020/V25.010
+Input,2422,1,Rücklaufanhebungspumpe Ein/Aus,uint16,-,-,Return flow pump status,V25.020/V25.010
+Input,700,1,Statuszeile,uint16,-,-,Fresh water module 1 status line,V23.020
+Input,701,1,WW-Vorlauftemperatur,int16,°C,1/10,Fresh water module 1 flow temperature,V23.040
+Input,702,1,WW-Durchfluss,int16,l/min,1/10,Fresh water module 1 flow rate,V23.040
+Input,703,1,WW-Solltemperatur,int16,°C,1/10,Fresh water module 1 target temperature,V23.040
+Input,704,1,Ventilstellung FWM Kaskade,uint16,-,-,Fresh water module 1 valve position,V23.040
+Input,725,1,Statuszeile,uint16,-,-,Fresh water module 2 status line,V23.020
+Input,726,1,WW-Vorlauftemperatur,int16,°C,1/10,Fresh water module 2 flow temperature,V23.040
+Input,727,1,WW-Durchfluss,int16,l/min,1/10,Fresh water module 2 flow rate,V23.040
+Input,728,1,WW-Solltemperatur,int16,°C,-,Fresh water module 2 target temperature,V23.040
+Input,729,1,Ventilstellung FWM Kaskade,uint16,-,-,Fresh water module 2 valve position,V23.040
+Input,750,1,Statuszeile,uint16,-,-,Fresh water module 3 status line,V23.020
+Input,751,1,WW-Vorlauftemperatur,int16,°C,1/10,Fresh water module 3 flow temperature,V23.040
+Input,752,1,WW-Durchfluss,int16,l/min,1/10,Fresh water module 3 flow rate,V23.040
+Input,753,1,WW-Solltemperatur,int16,°C,1/10,Fresh water module 3 target temperature,V23.040
+Input,754,1,Ventilstellung FWM Kaskade,uint16,-,-,Fresh water module 3 valve position,V23.040
+Input,775,1,Statuszeile,uint16,-,-,Fresh water module 4 status line,V23.020
+Input,776,1,WW-Vorlauftemperatur,int16,°C,1/10,Fresh water module 4 flow temperature,V23.040
+Input,777,1,WW-Durchfluss,int16,l/min,1/10,Fresh water module 4 flow rate,V23.040
+Input,778,1,WW-Solltemperatur,int16,°C,1/10,Fresh water module 4 target temperature,V23.040
+Input,779,1,Ventilstellung FWM Kaskade,uint16,-,-,Fresh water module 4 valve position,V23.040
+Input,800,1,Statuszeile Kaskade FWM,uint16,-,-,Fresh water module cascade status line,V23.040
+Input,801,1,FWM Kaskade Gesamtdurchfluss,int16,l/min,1/10,Fresh water module cascade total flow,V23.040
+Input,802,1,FWM Kaskade Solltemperatur,int16,°C,1/10,Fresh water module cascade target temperature,V23.040
+Input,850,1,Zirkultionsmodul WW-Vorlauftemperatur,int16,°C,1/10,Circulation module DHW flow temperature,V23.040
+Input,851,1,Zirkulationsmodul WW-Durchfluss,int16,l/min,1/10,Circulation module DHW flow rate,V23.040
+Holding,32600,1,Vorlaufsolltemperatur Heizen,int16,°C,*10,Target flow temperature for heating (e.g. 450 = 45.0°C),
+Holding,32600,1,Vorlaufsolltemperatur Kühlen,int16,°C,*10,Target flow temperature for cooling (e.g. 280 = 28.0°C),
+Holding,32602,1,Kühlen Ein/Aus,int16,-,-,0=Heating mode 1=Cooling mode,
+Holding,32603,1,Heizkreisbetriebsart,int16,-,-,0=Continuous operation 1=Setback mode 2=Automatic 3=Heating circuit off,
+Holding,32605,1,Raumtemperatur Soll,int16,°C,*10,Target room temperature (e.g. 230 = 23.0°C),
+Holding,32606,1,Raumtemperatur Ist extern,int16,°C,*10,External room temperature (e.g. 230 = 23.0°C),
+Holding,32607,1,Raumfeuchte ist extern,int16,%,-,External room humidity (%),
+Holding,32608,1,Heizkreismodus,int16,-,-,0=Heating 1=Cooling 2=Heating+Cooling,V22.090
+Holding,32650,1,Vorlaufsolltemperatur Heizen / Kühlen,int16,°C,*10,Heating circuit 2 target flow temperature,
+Holding,32652,1,Kühlen E/A,int16,-,-,Heating circuit 2 cooling on/off,
+Holding,32653,1,Heizkreisbetriebsart,int16,-,-,Heating circuit 2 operating mode,
+Holding,32655,1,Raumtemperatur Soll,int16,°C,*10,Heating circuit 2 target room temperature,
+Holding,32656,1,Raumtemperatur Ist extern,int16,°C,*10,Heating circuit 2 external room temperature,
+Holding,32657,1,Raumfeuchte externer Raumfühler,int16,%,-,Heating circuit 2 external room humidity,
+Holding,32658,1,Heizkreismodus,int16,-,-,Heating circuit 2 mode,V22.090
+Holding,32700,1,Vorlaufsolltemperatur Heizen / Kühlen,int16,°C,*10,Heating circuit 3 target flow temperature,
+Holding,32702,1,Kühlen E/A,int16,-,-,Heating circuit 3 cooling on/off,
+Holding,32703,1,Heizkreisbetriebsart,int16,-,-,Heating circuit 3 operating mode,
+Holding,32705,1,Raumtemperatur Soll,int16,°C,*10,Heating circuit 3 target room temperature,
+Holding,32706,1,Raumtemperatur Ist extern,int16,°C,*10,Heating circuit 3 external room temperature,
+Holding,32707,1,Raumfeuchte externer Raumfühler,int16,%,-,Heating circuit 3 external room humidity,
+Holding,32708,1,Heizkreismodus,int16,-,-,Heating circuit 3 mode,V22.090
+Holding,32750,1,Vorlaufsolltemperatur Heizen / Kühlen,int16,°C,*10,Heating circuit 4 target flow temperature,
+Holding,32752,1,Kühlen E/A,int16,-,-,Heating circuit 4 cooling on/off,
+Holding,32753,1,Heizkreisbetriebsart,int16,-,-,Heating circuit 4 operating mode,
+Holding,32755,1,Raumtemperatur Soll,int16,°C,*10,Heating circuit 4 target room temperature,
+Holding,32756,1,Raumtemperatur Ist extern,int16,°C,*10,Heating circuit 4 external room temperature,
+Holding,32757,1,Raumfeuchte externer Raumfühler,int16,%,-,Heating circuit 4 external room humidity,
+Holding,32758,1,Heizkreismodus,int16,-,-,Heating circuit 4 mode,V22.090
+Holding,32800,1,Vorlaufsolltemperatur Heizen / Kühlen,int16,°C,*10,Heating circuit 5 target flow temperature,
+Holding,32802,1,Kühlen E/A,int16,-,-,Heating circuit 5 cooling on/off,V20.110
+Holding,32803,1,Heizkreisbetriebsart,int16,-,-,Heating circuit 5 operating mode,V20.110
+Holding,32805,1,Raumtemperatur Soll,int16,°C,*10,Heating circuit 5 target room temperature,V20.110
+Holding,32806,1,Raumtemperatur Ist extern,int16,°C,*10,Heating circuit 5 external room temperature,V20.110
+Holding,32807,1,Raumfeuchte externer Raumfühler,int16,%,-,Heating circuit 5 external room humidity,V20.110
+Holding,32808,1,Heizkreismodus,int16,-,-,Heating circuit 5 mode,V22.090
+Holding,32850,1,Vorlaufsolltemperatur Heizen / Kühlen,int16,°C,*10,Heating circuit 6 target flow temperature,V20.110
+Holding,32852,1,Kühlen E/A,int16,-,-,Heating circuit 6 cooling on/off,V20.110
+Holding,32853,1,Heizkreisbetriebsart,int16,-,-,Heating circuit 6 operating mode,V20.110
+Holding,32855,1,Raumtemperatur Soll,int16,°C,*10,Heating circuit 6 target room temperature,V20.110
+Holding,32856,1,Raumtemperatur Ist extern,int16,°C,*10,Heating circuit 6 external room temperature,V20.110
+Holding,32857,1,Raumfeuchte externer Raumfühler,int16,%,-,Heating circuit 6 external room humidity,V20.110
+Holding,32858,1,Heizkreismodus,int16,-,-,Heating circuit 6 mode,V22.090
+Holding,32750,1,Vorlaufsolltemperatur Heizen / Kühlen,int16,°C,*10,Heating circuit 7 target flow temperature,V20.110
+Holding,32902,1,Kühlen E/A,int16,-,-,Heating circuit 7 cooling on/off,V20.110
+Holding,32903,1,Heizkreisbetriebsart,int16,-,-,Heating circuit 7 operating mode,V20.110
+Holding,32905,1,Raumtemperatur Soll,int16,°C,*10,Heating circuit 7 target room temperature,V20.110
+Holding,32906,1,Raumtemperatur Ist extern,int16,°C,*10,Heating circuit 7 external room temperature,V20.110
+Holding,32907,1,Raumfeuchte externer Raumfühler,int16,%,-,Heating circuit 7 external room humidity,V20.110
+Holding,32908,1,Heizkreismodus,int16,-,-,Heating circuit 7 mode,V22.090
+Holding,32950,1,Vorlaufsolltemperatur Heizen / Kühlen,int16,°C,*10,Heating circuit 8 target flow temperature,V20.110
+Holding,32952,1,Kühlen E/A,int16,-,-,Heating circuit 8 cooling on/off,V20.110
+Holding,32953,1,Heizkreisbetriebsart,int16,-,-,Heating circuit 8 operating mode,V20.110
+Holding,32955,1,Raumtemperatur Soll,int16,°C,*10,Heating circuit 8 target room temperature,V20.110
+Holding,32956,1,Raumtemperatur Ist extern,int16,°C,*10,Heating circuit 8 external room temperature,V20.110
+Holding,32957,1,Raumfeuchte externer Raumfühler,int16,%,-,Heating circuit 8 external room humidity,V20.110
+Holding,32958,1,Heizkreismodus,int16,-,-,Heating circuit 8 mode,V22.090
+Holding,32000,1,Boiler – Solltemperatur,int16,°C,*10,Boiler 1 target temperature (e.g. 450 = 45.0°C),
+Holding,32001,1,Boiler – Einmalladung,int16,-,-,0=Deactivate one-time loading 1=Activate one-time loading,
+Holding,32002,1,Boiler – Freigabeart,int16,-,-,0=Always Off 1=Always On 2=Monday-Sunday 3=Block-wise 4=Day-wise,
+Holding,32050,1,Boiler – Solltemperatur,int16,°C,*10,Boiler 2 target temperature,
+Holding,32051,1,Boiler – Einmalladung,int16,-,-,Boiler 2 one-time loading,
+Holding,32052,1,Boiler – Freigabeart,int16,-,-,Boiler 2 release type,
+Holding,32100,1,Boiler – Solltemperatur,int16,°C,*10,Boiler 3 target temperature,
+Holding,32101,1,Boiler – Einmalladung,int16,-,-,Boiler 3 one-time loading,
+Holding,32102,1,Boiler – Freigabeart,int16,-,-,Boiler 3 release type,
+Holding,32150,1,Boiler – Solltemperatur,int16,°C,*10,Boiler 4 target temperature,
+Holding,32151,1,Boiler – Einmalladung,int16,-,-,Boiler 4 one-time loading,
+Holding,32152,1,Boiler – Freigabeart,int16,-,-,Boiler 4 release type,
+Holding,32003,1,Zirkulation 1 anfordern,int16,-,-,0->1: Activate circulation 1 program if not set to "Always Off",V20.110
+Holding,32053,1,Zirkulation 2 anfordern,int16,-,-,0->1: Activate circulation 2 program if not set to "Always Off",V20.110
+Holding,32103,1,Zirkulation 3 anfordern,int16,-,-,0->1: Activate circulation 3 program if not set to "Always Off",V20.110
+Holding,32153,1,Zirkulation 4 anfordern,int16,-,-,0->1: Activate circulation 4 program if not set to "Always Off",V20.110
+Holding,33404,1,EVU – Lock,int16,-,-,0=Deactivate EVU-Lock 1=Activate EVU-Lock,
+Holding,33405,1,Betriebsart SG – Ready,int16,-,-,Smart Grid operation mode (0-4),
+Holding,33406,1,Außentemperatur extern,int16,°C,1/10,External outdoor temperature,V20.110
+Holding,33407,1,Smart Meter,int16,W,-,Measured power at house feed-in,V21.050
+Holding,33408,1,Photovoltaik,int16,W,-,Generated power of PV system,V21.050
+Holding,33409,1,Netzbezug / Einspeisung,int16,W,-,Grid consumption/feed-in,V21.050
+Holding,33410,1,Kaminkehrerfunktion Start/Stopp,int16,-,-,1=Start chimney sweep function 2=End chimney sweep function,V22.090
+Holding,33411,1,Kaminkehrer Messung verlängern,int16,-,-,1=Extend chimney sweep measurement by 30 minutes,V22.090
+Holding,33412,1,Pelletvorratslagerraum befüllt,int16,-,-,1=Reset pellet consumption since last storage room filling,V23.010
+Holding,34000,1,Puffertemperatur oben X44 extern,int16,°C,1/10,External buffer 1 temperature top,V22.090
+Holding,34001,1,Puffertemperatur unten/Mitte X36 extern,int16,°C,1/10,External buffer 1 temperature bottom/middle,V22.090
+Holding,34002,1,Puffertemperatur unten X35 extern,int16,°C,1/10,External buffer 1 temperature bottom X35,V22.090
+Holding,34050,1,Puffertemperatur oben X44 extern,int16,°C,1/10,External buffer 2 temperature top,V22.090
+Holding,34051,1,Puffertemperatur unten/Mitte X36 extern,int16,°C,1/10,External buffer 2 temperature bottom/middle,V22.090
+Holding,34052,1,Puffertemperatur unten X35 extern,int16,°C,1/10,External buffer 2 temperature bottom X35,V22.090
+Holding,34100,1,Puffertemperatur oben X44 extern,int16,°C,1/10,External buffer 3 temperature top,V22.090
+Holding,34101,1,Puffertemperatur unten/Mitte X36 extern,int16,°C,1/10,External buffer 3 temperature bottom/middle,V22.090
+Holding,34102,1,Puffertemperatur unten X35 extern,int16,°C,1/10,External buffer 3 temperature bottom X35,V22.090
+Holding,34150,1,Puffertemperatur oben X44 extern,int16,°C,1/10,External buffer 4 temperature top,V22.090
+Holding,34151,1,Puffertemperatur unten/Mitte X36 extern,int16,°C,1/10,External buffer 4 temperature bottom/middle,V22.090
+Holding,34152,1,Puffertemperatur unten X35 extern,int16,°C,1/10,External buffer 4 temperature bottom X35,V22.090
