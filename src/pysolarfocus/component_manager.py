@@ -76,21 +76,9 @@ class ComponentManager:
         success = True
         self._failed_components.clear()
 
-        for component_name, component in self.components.items():
-            try:
-                if isinstance(component, list):
-                    for i, comp in enumerate(component):
-                        if not comp.update():
-                            success = False
-                            self._failed_components.append(f"{component_name}[{i}]")
-                else:
-                    if not component.update():
-                        success = False
-                        self._failed_components.append(component_name)
-            except Exception as e:
-                logging.error(f"Error updating {component_name}: {e}")
+        for component_name in self.components:
+            if not self.update(component_name):
                 success = False
-                self._failed_components.append(component_name)
 
         if not success:
             logging.warning(f"Failed to update components: {', '.join(self._failed_components)}")
@@ -123,3 +111,32 @@ class ComponentManager:
             True if no components failed in last update
         """
         return len(self._failed_components) == 0
+
+    def update(self, component_name: str) -> bool:
+        """Update a single component or component list.
+
+        Args:
+            component_name: Name of the component to update
+
+        Returns:
+            True if update was successful, False otherwise
+        """
+        if component_name not in self.components:
+            return False
+
+        component = self.components[component_name]
+        try:
+            if isinstance(component, list):
+                for i, comp in enumerate(component):
+                    if not comp.update():
+                        self._failed_components.append(f"{component_name}[{i}]")
+                        return False
+            else:
+                if not component.update():
+                    self._failed_components.append(component_name)
+                    return False
+            return True
+        except Exception as e:
+            logging.error(f"Error updating {component_name}: {e}")
+            self._failed_components.append(component_name)
+            return False
