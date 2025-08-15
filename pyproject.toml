@@ -74,6 +74,7 @@ disable = [
     "format",
     "abstract-method",
     "cyclic-import",
+    "no-name-in-module",
     "duplicate-code",
     "inconsistent-return-statements",
     "locally-disabled",
