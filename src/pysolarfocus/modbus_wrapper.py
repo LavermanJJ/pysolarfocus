@@ -9,7 +9,7 @@ try:
 
     IS_LEGACY_VERSION = True
     IS_VERSION_3_10 = False
-    
+
 except ImportError:
     from pymodbus.client import ModbusTcpClient as ModbusClient
 
