@@ -1,6 +1,7 @@
 [project]
 name = "pysolarfocus"
 version = "5.2.0"
+
 description = "Unofficial, local Solarfocus client"
 authors = [{ name = "Jeroen Laverman", email = "jjlaverman@web.de" }]
 requires-python = "~=3.13.0"
@@ -76,6 +77,7 @@ disable = [
     "format",
     "abstract-method",
     "cyclic-import",
+    "no-name-in-module",
     "duplicate-code",
     "inconsistent-return-statements",
     "locally-disabled",

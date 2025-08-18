@@ -8,11 +8,22 @@ try:
     from pymodbus.client.sync import ModbusTcpClient as ModbusClient
 
     IS_LEGACY_VERSION = True
+    IS_VERSION_3_10 = False
+    
 except ImportError:
-    # modbus version >= 3.0
     from pymodbus.client import ModbusTcpClient as ModbusClient
 
     IS_LEGACY_VERSION = False
+
+    # modbus version >= 3.0 <= 3.10
+    try:
+        from pymodbus.datastore.context import ModbusDeviceContext
+
+        IS_VERSION_3_10 = True
+    except ImportError:
+        IS_VERSION_3_10 = False
+
+
 from .components.base.register_slice import RegisterSlice
 from .exceptions import ModbusConnectionError, RegisterReadError, RegisterWriteError
 
@@ -38,7 +49,7 @@ class ModbusConnector:
         self.retry_count = retry_count
         self.retry_delay = retry_delay
         self.client = ModbusClient(ip, port=port)
-        self.__slave_args = {"unit": slave_id} if IS_LEGACY_VERSION else {"slave": slave_id}
+        self.__slave_args = {"unit": slave_id} if IS_LEGACY_VERSION else {"device_id": slave_id} if IS_VERSION_3_10 else {"slave": slave_id}
 
     @property
     def is_connected(self) -> bool:
