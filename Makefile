@@ -13,7 +13,19 @@ codefix:
 test:
 	@uv run pytest
 
+test-cov:
+	@uv run pytest --cov=src/pysolarfocus --cov-report=term-missing
+
+coverage:
+	@uv run coverage run -m pytest
+	@uv run coverage report --show-missing
+
+coverage-html:
+	@uv run coverage run -m pytest
+	@uv run coverage html
+	@echo "Coverage report generated in htmlcov/index.html"
+
 run: 
 	@uv run python3 example.py
 
-.PHONY: check codefix test run
+.PHONY: check codefix test test-cov coverage coverage-html run
