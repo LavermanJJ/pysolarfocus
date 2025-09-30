@@ -28,4 +28,7 @@ coverage-html:
 run: 
 	@uv run python3 example.py
 
-.PHONY: check codefix test test-cov coverage coverage-html run
+run-async:
+	@uv run python3 async_example.py
+
+.PHONY: check codefix test test-cov coverage coverage-html run run-async

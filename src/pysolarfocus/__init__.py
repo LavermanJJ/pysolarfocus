@@ -55,6 +55,11 @@ from .const import (
 from .exceptions import InvalidConfigurationError
 from .modbus_wrapper import ModbusConnector
 
+# Async imports
+from .async_api import AsyncSolarfocusAPI
+from .async_modbus_wrapper import AsyncModbusConnector
+from .async_component_manager import AsyncComponentManager
+
 
 class SolarfocusAPI:
     """Solarfocus Heating System"""
