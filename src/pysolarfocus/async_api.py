@@ -4,12 +4,16 @@ import asyncio
 import logging
 from typing import List, Optional
 
-from . import PORT, SLAVE_ID, ApiVersions, Systems
+from . import (  # These are defined in __init__.py after const imports
+    ApiVersions,
+    Systems,
+)
 from .async_component import AsyncComponent
 from .async_component_manager import AsyncComponentManager
 from .async_modbus_wrapper import AsyncModbusConnector
 from .config_validator import ConfigValidator
 from .const import (
+    SLAVE_ID,
     DomesticHotWaterMode,
     HeatingCircuitCooling,
     HeatingCircuitHeatingMode,
@@ -17,6 +21,9 @@ from .const import (
     HeatPumpSgReadyMode,
 )
 from .exceptions import InvalidConfigurationError
+
+# Constants to avoid circular imports
+PORT = 502
 
 
 class AsyncSolarfocusAPI:
