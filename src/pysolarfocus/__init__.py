@@ -41,6 +41,10 @@ class ApiVersions(str, Enum):
         return version.parse(self.value) >= version.parse(api_version)
 
 
+# Async imports
+from .async_api import AsyncSolarfocusAPI
+from .async_component_manager import AsyncComponentManager
+from .async_modbus_wrapper import AsyncModbusConnector
 from .component_factory import ComponentFactory
 from .component_manager import ComponentManager
 from .config_validator import ConfigValidator
