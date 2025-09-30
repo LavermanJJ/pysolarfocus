@@ -15,7 +15,7 @@ class AsyncComponent:
 
     def __init__(self, sync_component: Component):
         """Initialize with sync component.
-        
+
         Args:
             sync_component: The synchronous component to wrap
         """
@@ -26,22 +26,19 @@ class AsyncComponent:
         """Delegate attribute access to sync component"""
         return getattr(self._sync_component, name)
 
-    async def initialize(self, async_modbus: AsyncModbusConnector) -> 'AsyncComponent':
+    async def initialize(self, async_modbus: AsyncModbusConnector) -> "AsyncComponent":
         """Initialize the async component with async modbus connector.
-        
+
         Args:
             async_modbus: Async modbus connector instance
-            
+
         Returns:
             Self for method chaining
         """
         self._async_modbus = async_modbus
-        
+
         # Initialize the underlying sync component with the sync connector
-        await asyncio.to_thread(
-            self._sync_component.initialize, 
-            async_modbus.sync_connector
-        )
+        await asyncio.to_thread(self._sync_component.initialize, async_modbus.sync_connector)
         return self
 
     async def update(self) -> bool:
@@ -67,33 +64,19 @@ class AsyncComponent:
 
         # Handle input registers
         if self._sync_component.has_input_address:
-            read_success, registers = await self._async_modbus.read_input_registers(
-                self._sync_component.input_slices, 
-                self._sync_component.input_count
-            )
+            read_success, registers = await self._async_modbus.read_input_registers(self._sync_component.input_slices, self._sync_component.input_count)
             if read_success and registers is not None:
-                parsing_success = await asyncio.to_thread(
-                    self._sync_component._parse, 
-                    registers, 
-                    RegisterTypes.INPUT
-                )
+                parsing_success = await asyncio.to_thread(self._sync_component._parse, registers, RegisterTypes.INPUT)
                 failed = not parsing_success or failed
             else:
                 failed = True
                 logging.error(f"Failed to read input registers of {self._sync_component.__class__.__name__}")
 
-        # Handle holding registers  
+        # Handle holding registers
         if self._sync_component.has_holding_address:
-            read_success, registers = await self._async_modbus.read_holding_registers(
-                self._sync_component.holding_slices, 
-                self._sync_component.holding_count
-            )
+            read_success, registers = await self._async_modbus.read_holding_registers(self._sync_component.holding_slices, self._sync_component.holding_count)
             if read_success and registers is not None:
-                parsing_success = await asyncio.to_thread(
-                    self._sync_component._parse, 
-                    registers, 
-                    RegisterTypes.HOLDING
-                )
+                parsing_success = await asyncio.to_thread(self._sync_component._parse, registers, RegisterTypes.HOLDING)
                 failed = not parsing_success or failed
             else:
                 failed = True

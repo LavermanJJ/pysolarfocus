@@ -4,12 +4,18 @@ import asyncio
 import logging
 from typing import List, Optional
 
-from . import ApiVersions, PORT, SLAVE_ID, Systems
+from . import PORT, SLAVE_ID, ApiVersions, Systems
 from .async_component import AsyncComponent
 from .async_component_manager import AsyncComponentManager
 from .async_modbus_wrapper import AsyncModbusConnector
 from .config_validator import ConfigValidator
-from .const import DomesticHotWaterMode, HeatingCircuitCooling, HeatingCircuitHeatingMode, HeatingCircuitMode, HeatPumpSgReadyMode
+from .const import (
+    DomesticHotWaterMode,
+    HeatingCircuitCooling,
+    HeatingCircuitHeatingMode,
+    HeatingCircuitMode,
+    HeatPumpSgReadyMode,
+)
 from .exceptions import InvalidConfigurationError
 
 
@@ -25,7 +31,7 @@ class AsyncSolarfocusAPI:
     def api_version(self) -> ApiVersions:
         """Get the API version"""
         return self._api_version
-    
+
     @property
     def component_manager(self) -> AsyncComponentManager:
         """Get the component manager (for testing purposes)"""
@@ -49,7 +55,7 @@ class AsyncSolarfocusAPI:
         connection_timeout: float = 10.0,
     ):
         """Initialize Async Solarfocus communication.
-        
+
         Args:
             ip: IP address of the Solarfocus system
             heating_circuit_count: Number of heating circuits
@@ -89,18 +95,18 @@ class AsyncSolarfocusAPI:
 
         # Store component counts for later initialization
         self._component_counts = {
-            'heating_circuit_count': heating_circuit_count,
-            'buffer_count': buffer_count,
-            'boiler_count': boiler_count,
-            'fresh_water_module_count': fresh_water_module_count,
-            'circulation_count': circulation_count,
-            'differential_module_count': differential_module_count,
-            'solar_count': solar_count,
+            "heating_circuit_count": heating_circuit_count,
+            "buffer_count": buffer_count,
+            "boiler_count": boiler_count,
+            "fresh_water_module_count": fresh_water_module_count,
+            "circulation_count": circulation_count,
+            "differential_module_count": differential_module_count,
+            "solar_count": solar_count,
         }
 
         # Initialize component manager
         self.__component_manager = AsyncComponentManager(self.__conn)
-        
+
         # Component references (will be set after create_components)
         self.heating_circuits: List[AsyncComponent] = []
         self.boilers: List[AsyncComponent] = []
@@ -117,29 +123,25 @@ class AsyncSolarfocusAPI:
 
     async def initialize(self) -> None:
         """Initialize components asynchronously. Must be called after __init__."""
-        await self.__component_manager.create_components(
-            self._system, 
-            self._api_version, 
-            **self._component_counts
-        )
-        
+        await self.__component_manager.create_components(self._system, self._api_version, **self._component_counts)
+
         # Get component references
         self._update_component_references()
 
     def _update_component_references(self) -> None:
         """Update component references from component manager"""
         components = self.__component_manager.components
-        
+
         # Handle list components with type checking
         heating_circuits = components.get("heating_circuits", [])
         self.heating_circuits = heating_circuits if isinstance(heating_circuits, list) else []
-        
+
         boilers = components.get("boilers", [])
         self.boilers = boilers if isinstance(boilers, list) else []
-        
+
         buffers = components.get("buffers", [])
         self.buffers = buffers if isinstance(buffers, list) else []
-        
+
         solar = components.get("solar", [])
         self.solar = solar if isinstance(solar, list) else []
 
@@ -150,24 +152,24 @@ class AsyncSolarfocusAPI:
         if self._api_version.greater_or_equal(ApiVersions.V_23_040.value):
             fwm_cascade = components.get("fresh_water_module_cascade")
             self.fresh_water_module_cascade = fwm_cascade if not isinstance(fwm_cascade, list) else None
-            
+
             circ_module = components.get("circulation_module")
             self.circulation_module = circ_module if not isinstance(circ_module, list) else None
 
         if self._api_version.greater_or_equal(ApiVersions.V_25_030.value):
             circulations = components.get("circulations", [])
             self.circulations = circulations if isinstance(circulations, list) else []
-            
+
             diff_modules = components.get("differential_modules", [])
             self.differential_modules = diff_modules if isinstance(diff_modules, list) else []
 
         # Single components with type checking
         heatpump = components.get("heatpump")
         self.heatpump = heatpump if not isinstance(heatpump, list) else None
-        
+
         photovoltaic = components.get("photovoltaic")
         self.photovoltaic = photovoltaic if not isinstance(photovoltaic, list) else None
-        
+
         biomassboiler = components.get("biomassboiler")
         self.biomassboiler = biomassboiler if not isinstance(biomassboiler, list) else None
 
@@ -195,7 +197,7 @@ class AsyncSolarfocusAPI:
 
     async def update(self, parallel: bool = True, optimized: bool = False) -> bool:
         """Read values from Heating System.
-        
+
         Args:
             parallel: Whether to update components in parallel (default: True)
             optimized: Whether to use optimized update method (default: False)
@@ -211,7 +213,7 @@ class AsyncSolarfocusAPI:
 
     async def update_partial(self, component_names: List[str], parallel: bool = True, optimized: bool = False) -> bool:
         """Update only specific components.
-        
+
         Args:
             component_names: List of component names to update
             parallel: Whether to update in parallel
@@ -352,13 +354,14 @@ class AsyncSolarfocusAPI:
         await self.initialize()
         await self.connect()
         return self
-        
+
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         """Async context manager exit"""
         await self.disconnect()
 
     def __repr__(self) -> str:
         from . import __version__
+
         message = ["-" * 50]
         message.append(f"Async{self.__class__.__name__}, v{__version__}")
         message.append("-" * 50)

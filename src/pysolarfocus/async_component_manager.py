@@ -48,8 +48,15 @@ class AsyncComponentManager:
             # Create sync components first using the factory
             sync_components = await asyncio.to_thread(
                 self._create_sync_components,
-                system, api_version, heating_circuit_count, buffer_count, boiler_count,
-                fresh_water_module_count, circulation_count, differential_module_count, solar_count
+                system,
+                api_version,
+                heating_circuit_count,
+                buffer_count,
+                boiler_count,
+                fresh_water_module_count,
+                circulation_count,
+                differential_module_count,
+                solar_count,
             )
             # Wrap sync components in async wrappers
             await self._wrap_components(sync_components)
@@ -71,7 +78,7 @@ class AsyncComponentManager:
     ) -> Dict[str, Any]:
         """Create sync components using the factory (runs in thread pool)"""
         sync_components = {}
-        
+
         # Create multi-instance components
         sync_components["heating_circuits"] = self.factory.heating_circuit(system, heating_circuit_count, api_version)
         sync_components["boilers"] = self.factory.boiler(system, boiler_count, api_version)
@@ -90,7 +97,7 @@ class AsyncComponentManager:
         sync_components["heatpump"] = self.factory.heatpump(system, api_version)
         sync_components["photovoltaic"] = self.factory.photovoltaic(system, api_version)
         sync_components["biomassboiler"] = self.factory.pelletsboiler(system, api_version)
-        
+
         return sync_components
 
     async def _wrap_components(self, sync_components: Dict[str, Any]) -> None:
@@ -138,7 +145,7 @@ class AsyncComponentManager:
             component_names.append(component_name)
 
         results = await asyncio.gather(*tasks, return_exceptions=True)
-        
+
         success = True
         for i, result in enumerate(results):
             if isinstance(result, Exception):
@@ -165,8 +172,6 @@ class AsyncComponentManager:
             logging.warning(f"Failed to update components: {', '.join(self._failed_components)}")
 
         return success
-
-
 
     def get_component(self, name: str) -> Optional[Union[AsyncComponent, List[AsyncComponent]]]:
         """Get component by name.
@@ -214,7 +219,7 @@ class AsyncComponentManager:
                 # Update list of components
                 tasks = []
                 for comp in component:
-                    if optimized and hasattr(comp, 'update_optimized'):
+                    if optimized and hasattr(comp, "update_optimized"):
                         tasks.append(comp.update_optimized())
                     else:
                         tasks.append(comp.update())
@@ -225,7 +230,7 @@ class AsyncComponentManager:
                         return False
             else:
                 # Update single component
-                if optimized and hasattr(component, 'update_optimized'):
+                if optimized and hasattr(component, "update_optimized"):
                     result = await component.update_optimized()
                 else:
                     result = await component.update()
