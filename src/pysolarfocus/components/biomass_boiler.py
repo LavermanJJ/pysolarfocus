@@ -36,7 +36,11 @@ class BiomassBoiler(Component):
             self.pellet_usage_total = DataValue(address=16, count=2, multiplier=0.1)
             self.heat_energy_total = DataValue(address=18, count=2, multiplier=0.1)
 
-            self.pellet_usage_reset = DataValue(address=12, register_type=RegisterTypes.HOLDING)
+            if system is not Systems.ECOTOP:
+                self.pellet_usage_reset = DataValue(address=12, register_type=RegisterTypes.HOLDING)
 
         if api_version.greater_or_equal(ApiVersions.V_23_080.value):
             self.sweep_almost_done = DataValue(address=20)
+
+        if api_version.greater_or_equal(ApiVersions.V_25_020.value):
+            self.residual_oxygen_level = DataValue(address=21, count=1, multiplier=0.1)
