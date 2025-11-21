@@ -12,9 +12,14 @@ class HeatingCircuit(Component):
         self.room_temperature = DataValue(address=1, multiplier=0.1)
         self.humidity = DataValue(address=2, multiplier=0.1)
         self.limit_thermostat = DataValue(address=3, data_type=DataTypes.UINT)
-        self.circulator_pump = DataValue(address=4, data_type=DataTypes.UINT)
-        self.mixer_valve = DataValue(address=5, data_type=DataTypes.UINT)
-        self.state = DataValue(address=6, data_type=DataTypes.UINT)
+        if api_version.greater_or_equal(ApiVersions.V_25_030.value):
+            self.circulator_pump = DataValue(address=5, data_type=DataTypes.UINT)
+            self.mixer_valve = DataValue(address=6, data_type=DataTypes.UINT)
+            self.state = DataValue(address=7, data_type=DataTypes.UINT)
+        else:
+            self.circulator_pump = DataValue(address=4, data_type=DataTypes.UINT)
+            self.mixer_valve = DataValue(address=5, data_type=DataTypes.UINT)
+            self.state = DataValue(address=6, data_type=DataTypes.UINT)
 
         self.target_supply_temperature = DataValue(address=0, multiplier=10, register_type=RegisterTypes.HOLDING)
         self.cooling = DataValue(address=2, register_type=RegisterTypes.HOLDING)
