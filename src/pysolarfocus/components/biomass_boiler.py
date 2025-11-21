@@ -48,4 +48,3 @@ class BiomassBoiler(Component):
         if api_version.greater_or_equal(ApiVersions.V_25_020.value):
             self.residual_oxygen_level = DataValue(address=21, count=1, multiplier=0.1)
             self.return_flow_booster_pump = DataValue(address=22, data_type=DataTypes.UINT)
-
