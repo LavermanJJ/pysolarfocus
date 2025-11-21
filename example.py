@@ -2,7 +2,7 @@ from pysolarfocus import ApiVersions, SolarfocusAPI, Systems
 
 # Create the Solarfocus API client
 solarfocus = SolarfocusAPI(
-    ip="solarfocus", system=Systems.VAMPAIR, api_version=ApiVersions.V_23_020  # adapt IP-Address  # change to Systems.Therminator
+    ip="solarfocus", system=Systems.VAMPAIR, api_version=ApiVersions.V_25_030  # adapt IP-Address  # change to Systems.Therminator
 )  # select Solarfocus version
 
 if not solarfocus.connect():
@@ -31,5 +31,9 @@ print(solarfocus.photovoltaic)
 print("\n")
 print(solarfocus.fresh_water_modules[0])
 print("\n")
-print(solarfocus.solar)
+print(solarfocus.solar[0])
+print("\n")
+print(solarfocus.differential_modules[0])
+print("\n")
+print(solarfocus.circulations[0])
 print("\n")

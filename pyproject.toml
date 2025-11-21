@@ -1,9 +1,10 @@
 [project]
 name = "pysolarfocus"
-version = "5.0.4"
+version = "5.2.0"
+
 description = "Unofficial, local Solarfocus client"
 authors = [{ name = "Jeroen Laverman", email = "jjlaverman@web.de" }]
-requires-python = "~=3.11.0"
+requires-python = "~=3.13.0"
 readme = "README.md"
 license = "Apache-2.0"
 keywords = [
@@ -26,6 +27,8 @@ dev = [
     "isort>=5.10.1,<6",
     "pytest>=8.3.4,<9",
     "pylint>=3.3.3",
+    "coverage>=7.9.2",
+    "pytest-cov>=6.2.1",
 ]
 
 [build-system]
@@ -74,6 +77,7 @@ disable = [
     "format",
     "abstract-method",
     "cyclic-import",
+    "no-name-in-module",
     "duplicate-code",
     "inconsistent-return-statements",
     "locally-disabled",

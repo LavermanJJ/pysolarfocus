@@ -18,6 +18,8 @@ class Systems(str, Enum):
     VAMPAIR = "Vampair"
     THERMINATOR = "Therminator"
     ECOTOP = "Ecotop"
+    PELLETELEGANCE = "Pellet Elegance"
+    OCTOPLUS = "Octoplus"
 
 
 class ApiVersions(str, Enum):
@@ -33,6 +35,7 @@ class ApiVersions(str, Enum):
     V_23_040 = "23.040"
     V_23_080 = "23.080"
     V_25_020 = "25.020"
+    V_25_030 = "25.030"
     V_25_100 = "25.100"
 
     def greater_or_equal(self, api_version) -> bool:
@@ -41,6 +44,8 @@ class ApiVersions(str, Enum):
 
 
 from .component_factory import ComponentFactory
+from .component_manager import ComponentManager
+from .config_validator import ConfigValidator
 from .const import (
     SLAVE_ID,
     DomesticHotWaterMode,
@@ -49,6 +54,7 @@ from .const import (
     HeatingCircuitMode,
     HeatPumpSgReadyMode,
 )
+from .exceptions import InvalidConfigurationError
 from .modbus_wrapper import ModbusConnector
 
 
@@ -70,37 +76,62 @@ class SolarfocusAPI:
         buffer_count: int = 1,
         boiler_count: int = 1,
         fresh_water_module_count: int = 1,
+        circulation_count: int = 1,
+        differential_module_count: int = 1,
+        solar_count: int = 1,
         system: Systems = Systems.VAMPAIR,
         port: int = PORT,
         slave_id: int = SLAVE_ID,
         api_version: ApiVersions = ApiVersions.V_21_140,
     ):
         """Initialize Solarfocus communication."""
-        assert heating_circuit_count >= 0 and heating_circuit_count < 9, "Heating circuit count must be between 0 and 8"
-        assert buffer_count >= 0 and buffer_count < 5, "Buffer count must be between 0 and 4"
-        assert boiler_count >= 0 and boiler_count < 5, "Boiler count must be between 0 and 4"
-        assert fresh_water_module_count >= 0 and fresh_water_module_count < 5, "Fresh water module count must be between 0 and 4"
-        assert isinstance(system, Systems), "system not of type Systems"
-        assert isinstance(api_version, ApiVersions), "api_version not of type ApiVersions"
+        if not isinstance(system, Systems):
+            raise InvalidConfigurationError("system not of type Systems")
+        if not isinstance(api_version, ApiVersions):
+            raise InvalidConfigurationError("api_version not of type ApiVersions")
+
+        is_modern_api = api_version.greater_or_equal(ApiVersions.V_25_030.value)
+        ConfigValidator.validate_component_count("heating_circuit", heating_circuit_count)
+        ConfigValidator.validate_component_count("buffer", buffer_count)
+        ConfigValidator.validate_component_count("boiler", boiler_count)
+        ConfigValidator.validate_component_count("fresh_water_module", fresh_water_module_count)
+        ConfigValidator.validate_component_count("circulation", circulation_count)
+        ConfigValidator.validate_component_count("differential_module", differential_module_count)
+        ConfigValidator.validate_component_count("solar", solar_count, is_modern_api)
 
         self.__conn = ModbusConnector(ip, port, slave_id)
-        self.__factory = ComponentFactory(self.__conn)
         self._slave_id = slave_id
         self._system = system
         self._api_version = api_version
 
-        # Lists of components
-        self.heating_circuits = self.__factory.heating_circuit(system, heating_circuit_count, api_version)
-        self.boilers = self.__factory.boiler(system, boiler_count, api_version)
-        self.buffers = self.__factory.buffer(system, buffer_count, api_version)
+        # Initialize component manager
+        self.__component_manager = ComponentManager(self.__conn)
+        self.__component_manager.create_components(
+            system, api_version, heating_circuit_count, buffer_count, boiler_count, fresh_water_module_count, circulation_count, differential_module_count, solar_count
+        )
+
+        # Get component references
+        components = self.__component_manager.components
+        self.heating_circuits = components["heating_circuits"]
+        self.boilers = components["boilers"]
+        self.buffers = components["buffers"]
+        self.solar = components["solar"]
+
         if self._api_version.greater_or_equal(ApiVersions.V_23_020.value):
-            self.fresh_water_modules = self.__factory.fresh_water_modules(system, fresh_water_module_count, api_version)
+            self.fresh_water_modules = components.get("fresh_water_modules", [])
+
+        if self._api_version.greater_or_equal(ApiVersions.V_23_040.value):
+            self.fresh_water_module_cascade = components.get("fresh_water_module_cascade")
+            self.circulation_module = components.get("circulation_module")
+
+        if self._api_version.greater_or_equal(ApiVersions.V_25_030.value):
+            self.circulations = components.get("circulations", [])
+            self.differential_modules = components.get("differential_modules", [])
 
         # Single components
-        self.heatpump = self.__factory.heatpump(system)
-        self.photovoltaic = self.__factory.photovoltaic(system, api_version)
-        self.biomassboiler = self.__factory.pelletsboiler(system, api_version)
-        self.solar = self.__factory.solar(system)
+        self.heatpump = components.get("heatpump")
+        self.photovoltaic = components.get("photovoltaic")
+        self.biomassboiler = components.get("biomassboiler")
 
     def connect(self):
         """Connect to Solarfocus eco manager-touch"""
@@ -113,67 +144,69 @@ class SolarfocusAPI:
 
     def update(self) -> bool:
         """Read values from Heating System"""
-        if (
-            self.update_heating()
-            and self.update_buffer()
-            and self.update_boiler()
-            and self.update_heatpump()
-            and self.update_photovoltaic()
-            and self.update_biomassboiler()
-            and self.update_solar()
-            and self.update_fresh_water_modules()
-        ):
-            return True
-        return False
+        return self.__component_manager.update_all()
 
     def update_heating(self) -> bool:
         """Read values from Heating System"""
-        for heating_circuit in self.heating_circuits:
-            if not heating_circuit.update():
-                return False
-        return True
+        return self.__component_manager.update("heating_circuits")
 
     def update_buffer(self) -> bool:
         """Read values from Heating System"""
-        for buffer in self.buffers:
-            if not buffer.update():
-                return False
-        return True
+        return self.__component_manager.update("buffers")
 
     def update_boiler(self) -> bool:
         """Read values from Heating System"""
-        for boiler in self.boilers:
-            if not boiler.update():
-                return False
-        return True
+        return self.__component_manager.update("boilers")
 
     def update_fresh_water_modules(self) -> bool:
         """Read values from Heating System"""
         if self._api_version.greater_or_equal(ApiVersions.V_23_020.value):
-            for fresh_water_module in self.fresh_water_modules:
-                if not fresh_water_module.update():
-                    return False
+            return self.__component_manager.update("fresh_water_modules")
+        return True
+
+    def update_fresh_water_module_cascade(self) -> bool:
+        """Read values from Fresh Water Module Cascade"""
+        if self._api_version.greater_or_equal(ApiVersions.V_23_040.value):
+            return self.fresh_water_module_cascade.update()
+        return True
+
+    def update_circulation_module(self) -> bool:
+        """Read values from Circulation Module for DHW"""
+        if self._api_version.greater_or_equal(ApiVersions.V_23_040.value):
+            return self.__component_manager.update("circulation_module")
+        return True
+
+    def update_circulation(self) -> bool:
+        """Read values from Heating System"""
+        if self._api_version.greater_or_equal(ApiVersions.V_25_030.value):
+            return self.__component_manager.update("circulations")
+        return True
+
+    def update_differential_modules(self) -> bool:
+        """Read values from Heating System"""
+        if self._api_version.greater_or_equal(ApiVersions.V_25_030.value):
+            return self.__component_manager.update("differential_modules")
         return True
 
     def update_heatpump(self) -> bool:
         """Read values from Heating System"""
         if self._system is Systems.VAMPAIR:
-            return self.heatpump.update()
+            return self.__component_manager.update("heatpump")
         return True
 
     def update_photovoltaic(self) -> bool:
         """Read values from Heating System"""
-        return self.photovoltaic.update()
+        return self.__component_manager.update("photovoltaic")
 
     def update_biomassboiler(self) -> bool:
         """Read values from biomass boiler"""
         if self._system in [Systems.THERMINATOR, Systems.ECOTOP]:
-            return self.biomassboiler.update()
+            return self.__component_manager.update("biomassboiler")
         return True
 
     def update_solar(self) -> bool:
         """Read values from Solar"""
-        return self.solar.update()
+        return self.__component_manager.update("solar")
 
     def set_heating_circuit_mode(self, index, mode: HeatingCircuitMode) -> bool:
         """Set mode of heating circuit"""

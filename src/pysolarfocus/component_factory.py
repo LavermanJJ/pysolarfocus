@@ -3,7 +3,13 @@ from . import ApiVersions, Systems
 from .components.biomass_boiler import BiomassBoiler
 from .components.boiler import Boiler
 from .components.buffer import Buffer, TherminatorBuffer
-from .components.fresh_water_module import FreshWaterModule
+from .components.circulation import Circulation
+from .components.differential_module import DifferentialModule
+from .components.fresh_water_module import (
+    CirculationModule,
+    FreshWaterModule,
+    FreshWaterModuleCascade,
+)
 from .components.heat_pump import HeatPump
 from .components.heating_circuit import HeatingCircuit, TherminatorHeatingCircuit
 from .components.photovoltaic import Photovoltaic
@@ -64,8 +70,24 @@ class ComponentFactory:
             fresh_water_modules.append(FreshWaterModule(input, api_version=api_version).initialize(self.__modbus_connector))
         return fresh_water_modules
 
-    def heatpump(self, system: Systems) -> HeatPump:
-        return HeatPump().initialize(self.__modbus_connector)
+    def circulation(self, system: Systems, count: int, api_version: ApiVersions) -> list[Circulation]:
+        input_addresses = list(range(900, 900 + (25 * count), 25))
+        circulation = []
+        for i in range(count):
+            input = input_addresses[i]
+            circulation.append(Circulation(input, api_version=api_version).initialize(self.__modbus_connector))
+        return circulation
+
+    def differential_modules(self, system: Systems, count: int, api_version: ApiVersions) -> list[DifferentialModule]:
+        input_addresses = list(range(2200, 2200 + (10 * count), 10))
+        differential_modules = []
+        for i in range(count):
+            input = input_addresses[i]
+            differential_modules.append(DifferentialModule(input, api_version=api_version).initialize(self.__modbus_connector))
+        return differential_modules
+
+    def heatpump(self, system: Systems, api_version: ApiVersions) -> HeatPump:
+        return HeatPump(api_version=api_version).initialize(self.__modbus_connector)
 
     def photovoltaic(self, system: Systems, api_version: ApiVersions) -> Photovoltaic:
         return Photovoltaic(api_version=api_version).initialize(self.__modbus_connector)
@@ -73,5 +95,18 @@ class ComponentFactory:
     def pelletsboiler(self, system: Systems, api_version: ApiVersions) -> BiomassBoiler:
         return BiomassBoiler(api_version=api_version, system=system).initialize(self.__modbus_connector)
 
-    def solar(self, system: Systems) -> Solar:
-        return Solar().initialize(self.__modbus_connector)
+    def solar(self, system: Systems, count: int, api_version: ApiVersions) -> list[Solar]:
+        input_addresses = list(range(2100, 2100 + (20 * count), 20))
+        solar_modules = []
+        for i in range(count):
+            input = input_addresses[i]
+            solar_modules.append(Solar(input, api_version=api_version).initialize(self.__modbus_connector))
+        return solar_modules
+
+    def fresh_water_module_cascade(self, system: Systems, api_version: ApiVersions) -> FreshWaterModuleCascade:
+        """Get the Fresh Water Module Cascade component (address 800)"""
+        return FreshWaterModuleCascade(api_version=api_version).initialize(self.__modbus_connector)
+
+    def circulation_module(self, system: Systems, api_version: ApiVersions) -> CirculationModule:
+        """Get the Circulation Module for DHW component (address 850)"""
+        return CirculationModule(api_version=api_version).initialize(self.__modbus_connector)

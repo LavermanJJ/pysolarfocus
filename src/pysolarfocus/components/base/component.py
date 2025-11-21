@@ -1,5 +1,6 @@
 """Solarfocus abstract component"""
 import logging
+from typing import List, Optional, Tuple
 
 from ...modbus_wrapper import ModbusConnector
 from .data_value import DataValue
@@ -9,16 +10,27 @@ from .register_slice import RegisterSlice
 
 
 class Component:
+    """Base class for all Solarfocus components.
+
+    Handles modbus communication, data parsing, and register address management.
+    """
+
     def __init__(self, input_address: int, holding_address: int = -1) -> None:
+        """Initialize component with modbus addresses.
+
+        Args:
+            input_address: Base address for input registers
+            holding_address: Base address for holding registers (optional)
+        """
         self.input_address = input_address
         self.input_count = 0
         self.holding_address = holding_address
         self.holding_count = 0
-        self.__data_values = None
-        self.__input_values = None
-        self.__holding_values = None
-        self.__performance_calculators = None
-        self.__modbus = None
+        self.__data_values: Optional[List[Tuple[str, DataValue]]] = None
+        self.__input_values: Optional[List[Tuple[str, DataValue]]] = None
+        self.__holding_values: Optional[List[Tuple[str, DataValue]]] = None
+        self.__performance_calculators: Optional[List[Tuple[str, PerformanceCalculator]]] = None
+        self.__modbus: Optional[ModbusConnector] = None
 
     def initialize(self, modbus: ModbusConnector):
         """
@@ -36,7 +48,7 @@ class Component:
                 # Holding registers can write to the heating system
                 value.modbus = modbus
 
-        # Dynamically calcuate how many registers have to be read
+        # Dynamically calculate how many registers have to be read
         if len(self.__get_input_values()) > 0:
             _, last_input_value = self.__get_input_values()[-1]
             self.input_count = last_input_value.address + last_input_value.count
@@ -142,28 +154,36 @@ class Component:
         Retrieve current values from the heating system
         """
         failed = False
+
+        # Only check for modbus if we actually have addresses to read
+        if (self.has_input_address or self.has_holding_address) and self.__modbus is None:
+            logging.error(f"Component {self.__class__.__name__} not properly initialized - modbus connector is None")
+            return False
+
         if self.has_input_address:
+            assert self.__modbus is not None  # Type assertion for type checker
             read_success, registers = self.__modbus.read_input_registers(self.input_slices, self.input_count)
             parsing_success = False
-            if read_success:
-                parsing_success = self._parse(registers, RegisterTypes.INPUT) and read_success
-            failed = not parsing_success and read_success or failed
-            if failed:
+            if read_success and registers is not None:
+                parsing_success = self._parse(registers, RegisterTypes.INPUT)
+            failed = not (parsing_success and read_success) or failed
+            if not (parsing_success and read_success):
                 logging.error(f"Failed to read input registers of {self.__class__.__name__}")
 
         if self.has_holding_address:
+            assert self.__modbus is not None  # Type assertion for type checker
             read_success, registers = self.__modbus.read_holding_registers(self.holding_slices, self.holding_count)
             parsing_success = False
-            if read_success:
-                parsing_success = self._parse(registers, RegisterTypes.HOLDING) and read_success
+            if read_success and registers is not None:
+                parsing_success = self._parse(registers, RegisterTypes.HOLDING)
             failed = not (parsing_success and read_success) or failed
-            if failed:
+            if not (parsing_success and read_success):
                 logging.error(f"Failed to read holding registers of {self.__class__.__name__}")
         return not failed
 
     def _parse(self, data: list[int], type: RegisterTypes) -> bool:
         """
-        Dynamically assignes the values to the DataValues of this Component
+        Dynamically assigns the values to the DataValues of this Component
         """
         if len(data) != (self.input_count if type == RegisterTypes.INPUT else self.holding_count):
             logging.error(
@@ -186,8 +206,8 @@ class Component:
 
                 # Store
                 value.value = _value
-            except:
-                logging.exception(f"Error while parsing {name} of {self.__class__.__name__}")
+            except Exception as e:
+                logging.exception(f"Error while parsing {name} of {self.__class__.__name__}: {e}")
                 encountered_error = True
         return not encountered_error
 
