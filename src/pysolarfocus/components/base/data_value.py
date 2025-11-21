@@ -87,13 +87,13 @@ class DataValue(Part):
         if self.has_scaler and self.multiplier is not None:
             # Input registers are scaled differently than holding registers
             if self.register_type == RegisterTypes.INPUT:
-                return float(self.value) * self.multiplier
+                return self.value * self.multiplier
             else:
                 # Handle division by zero gracefully
                 if self.multiplier == 0:
                     return 0.0
-                return float(self.value) / self.multiplier
-        return float(self.value)
+                return self.value / self.multiplier
+        return self.value
 
     def reverse_scale(self, value: float) -> float:
         """
