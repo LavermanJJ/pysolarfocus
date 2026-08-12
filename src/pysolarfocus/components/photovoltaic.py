@@ -21,3 +21,8 @@ class Photovoltaic(Component):
         self.smart_meter = DataValue(address=0, register_type=RegisterTypes.HOLDING)
         self.photovoltaic = DataValue(address=1, register_type=RegisterTypes.HOLDING)
         self.grid_im_export = DataValue(address=2, register_type=RegisterTypes.HOLDING)
+
+        if api_version.greater_or_equal(ApiVersions.V_26_020.value):
+            # Register 33415: target electrical power of the heat generator during
+            # PV overcharge, provided by an external HEMS
+            self.hems_target_electrical_power = DataValue(address=8, register_type=RegisterTypes.HOLDING)

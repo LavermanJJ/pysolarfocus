@@ -279,3 +279,34 @@ def test_solarfocus_api_fresh_water_modules_validation():
     api = SolarfocusAPI(ip="localhost", fresh_water_module_count=3, api_version=ApiVersions.V_23_020)
 
     assert len(api.fresh_water_modules) == 3
+
+
+def test_solarfocus_api_set_photovoltaic_hems_target_electrical_power():
+    """Test setting the HEMS target electrical power (register 33415)"""
+    with patch("pysolarfocus.ModbusConnector") as mock_modbus_class:
+        mock_modbus_instance = MagicMock()
+        mock_modbus_class.return_value = mock_modbus_instance
+        mock_modbus_instance.write_register.return_value = True
+
+        api = SolarfocusAPI(ip="localhost", system=Systems.VAMPAIR, api_version=ApiVersions.V_26_020)
+
+        assert api.set_photovoltaic_hems_target_electrical_power(2500) is True
+        mock_modbus_instance.write_register.assert_called_once_with(2500, 33415)
+        assert api.photovoltaic.hems_target_electrical_power.value == 2500
+
+        # Commit failures are propagated
+        mock_modbus_instance.write_register.return_value = False
+        assert api.set_photovoltaic_hems_target_electrical_power(0) is False
+
+
+def test_solarfocus_api_set_photovoltaic_hems_target_electrical_power_unsupported():
+    """The HEMS target electrical power is not available before api version 26.020"""
+    with patch("pysolarfocus.ModbusConnector") as mock_modbus_class:
+        mock_modbus_instance = MagicMock()
+        mock_modbus_class.return_value = mock_modbus_instance
+
+        api = SolarfocusAPI(ip="localhost", system=Systems.VAMPAIR, api_version=ApiVersions.V_25_100)
+
+        assert api.set_photovoltaic_hems_target_electrical_power(2500) is False
+        mock_modbus_instance.write_register.assert_not_called()
+        assert not hasattr(api.photovoltaic, "hems_target_electrical_power")

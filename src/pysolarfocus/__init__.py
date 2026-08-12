@@ -37,6 +37,7 @@ class ApiVersions(str, Enum):
     V_25_020 = "25.020"
     V_25_030 = "25.030"
     V_25_100 = "25.100"
+    V_26_020 = "26.020"
 
     def greater_or_equal(self, api_version) -> bool:
         """Compare given version with own version."""
@@ -262,6 +263,14 @@ class SolarfocusAPI:
             _evu_lock = self.heatpump.evu_lock
             _evu_lock.set_unscaled_value(int(lock))
             return _evu_lock.commit()
+        return False
+
+    def set_photovoltaic_hems_target_electrical_power(self, power: int) -> bool:
+        """Set the HEMS target electrical power [W] used during PV overcharge"""
+        if self._api_version.greater_or_equal(ApiVersions.V_26_020.value):
+            _power = self.photovoltaic.hems_target_electrical_power
+            _power.set_unscaled_value(power)
+            return _power.commit()
         return False
 
     def __repr__(self) -> str:
