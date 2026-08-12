@@ -2,6 +2,8 @@
 import unittest.mock as mock
 from unittest.mock import MagicMock
 
+import pytest
+
 from pysolarfocus.components.base.data_value import DataValue
 from pysolarfocus.components.base.enums import DataTypes, RegisterTypes
 from pysolarfocus.modbus_wrapper import ModbusConnector
@@ -219,3 +221,29 @@ def test_data_value_edge_cases():
     dv = DataValue(address=0, multiplier=100.0, register_type=RegisterTypes.INPUT)
     dv.value = 5
     assert dv.scaled_value == 500.0
+
+
+def test_write_multiplier_scales_writing_independently():
+    """Some registers are read in a different unit than they are written in."""
+    value = DataValue(address=0, multiplier=10, write_multiplier=1, register_type=RegisterTypes.HOLDING)
+
+    value.set_unscaled_value(44)
+    assert value.value == 44
+
+    value.value = 440
+    assert value.scaled_value == 44.0
+
+
+def test_write_multiplier_defaults_to_the_multiplier():
+    """A register without the asymmetry keeps scaling both ways."""
+    value = DataValue(address=0, multiplier=10, register_type=RegisterTypes.HOLDING)
+
+    value.set_unscaled_value(23)
+    assert value.value == 230
+    assert value.scaled_value == 23.0
+
+
+def test_negative_write_multiplier_is_rejected():
+    """Same validation as the multiplier itself."""
+    with pytest.raises(ValueError):
+        DataValue(address=0, multiplier=10, write_multiplier=-1, register_type=RegisterTypes.HOLDING)

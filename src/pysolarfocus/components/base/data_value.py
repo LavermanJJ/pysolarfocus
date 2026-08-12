@@ -21,6 +21,7 @@ class DataValue(Part):
         multiplier: Optional[float] = None,
         data_type: DataTypes = DataTypes.INT,
         register_type: RegisterTypes = RegisterTypes.INPUT,
+        write_multiplier: Optional[float] = None,
     ) -> None:
         """Initialize DataValue with validation.
 
@@ -31,16 +32,22 @@ class DataValue(Part):
             multiplier: Scaling multiplier (None for no scaling)
             data_type: Data type (INT or UINT)
             register_type: Register type (INPUT or HOLDING)
+            write_multiplier: Scaling multiplier for writing, for the registers
+                that are read in a different unit than they are written in
+                (None to write with `multiplier`)
 
         Raises:
             ValueError: If parameters are invalid
         """
         self._validate_parameters(address, count, multiplier, data_type, register_type)
+        if write_multiplier is not None and write_multiplier < 0:
+            raise ValueError("Write multiplier must be non-negative")
 
         self.address = address
         self.count = count
         self.value: Union[int, float] = default_value
         self.multiplier = multiplier
+        self.write_multiplier = write_multiplier
         self.data_type = data_type
         self.register_type = register_type
         # These are set by the parent component
@@ -99,6 +106,8 @@ class DataValue(Part):
         """
         Applies the scaler in the reverse direction
         """
+        if self.write_multiplier is not None:
+            return value * self.write_multiplier
         if self.has_scaler and self.multiplier is not None:
             # Input registers are scaled differently than holding registers
             if self.register_type == RegisterTypes.INPUT:
