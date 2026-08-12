@@ -69,12 +69,12 @@ def test_heating_circuit_enums():
 
 
 def test_external_room_humidity_is_written_as_whole_percent():
-    """Register 32607 has no scale factor, see registers.csv.
+    """Register 32607 is written as a whole percent, see registers.csv.
 
-    The temperature registers around it are written as tenths (32606: 230 = 23.0
-    degrees), and the humidity register was given the same multiplier by analogy.
-    The controller then rejected every value above 10 percent, because 55 percent
-    was sent as 550. See home-assistant-solarfocus issue #150.
+    The controller only accepts 1 to 100 here. The temperature registers around
+    it are written as tenths (32606: 230 = 23.0 degrees), and the humidity
+    register was given the same multiplier by analogy, so 55 percent went out as
+    550 and was dropped. See home-assistant-solarfocus issue #150.
     """
     modbus = MagicMock()
     modbus.write_register.return_value = True
@@ -84,7 +84,19 @@ def test_external_room_humidity_is_written_as_whole_percent():
     hc.indoor_humidity_external.commit()
 
     modbus.write_register.assert_called_once_with(55, 32607)
-    assert hc.indoor_humidity_external.scaled_value == 55
+
+
+def test_external_room_humidity_is_read_back_in_tenths():
+    """The controller echoes 32607 in tenths, in the unit it feeds 1102 with.
+
+    Verified against a Vampair on 26.020: writing 44 makes the register read
+    back 440 and the heating system report a room humidity of 44.0 percent.
+    """
+    hc = HeatingCircuit(api_version=ApiVersions.V_26_020)
+
+    hc.indoor_humidity_external.value = 440
+
+    assert hc.indoor_humidity_external.scaled_value == 44.0
 
 
 def test_external_room_temperature_stays_in_tenths():
