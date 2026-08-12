@@ -47,7 +47,7 @@ Python client library to interact with heating systems of [Solarfocus](https://w
 > **Important**
 > This integration has been tested with Solarfocus eco<sup>manager-touch</sup> version `25.030`.
 
-Supported versions: `21.140` - `25.030`. Features added in later versions are not yet supported.
+Supported versions: `21.140` - `26.020`. Features added in later versions are not yet supported.
 
 The eco<sup>manager-touch</sup> Modbus TCP specification can be found [here](https://www.solarfocus.com/partnerbereich/ecomanager-touch_modbus-tcp_registerdaten_anleitung1.pdf)).
 
@@ -190,6 +190,9 @@ You can find the API-Version displayed in the header of the screen of your Solar
 > The API-Version of Solarfocus is independent of the versions of this library. Below list refers to
 > the Solarfocus versions. See [releases](https://github.com/LavermanJJ/pysolarfocus/releases) for the changelog
 > of this library.
+
+#### 26.020
+* Add HEMS target electrical power for the PV overcharge (`photovoltaic.hems_target_electrical_power`, register `33415`).
 
 #### 25.030
 * Add differential modules

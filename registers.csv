@@ -338,6 +338,7 @@ Holding,33409,1,Netzbezug / Einspeisung,int16,W,-,Grid consumption/feed-in,V21.0
 Holding,33410,1,Kaminkehrerfunktion Start/Stopp,int16,-,-,1=Start chimney sweep function 2=End chimney sweep function,V22.090
 Holding,33411,1,Kaminkehrer Messung verlängern,int16,-,-,1=Extend chimney sweep measurement by 30 minutes,V22.090
 Holding,33412,1,Pelletvorratslagerraum befüllt,int16,-,-,1=Reset pellet consumption since last storage room filling,V23.010
+Holding,33415,1,Elektrische Sollleistung HEMS (PV),int16,W,-,Target electrical power of the heat generator during PV overcharge (0-32767),V26.020
 Holding,34000,1,Puffertemperatur oben X44 extern,int16,°C,1/10,External buffer 1 temperature top,V22.090
 Holding,34001,1,Puffertemperatur unten/Mitte X36 extern,int16,°C,1/10,External buffer 1 temperature bottom/middle,V22.090
 Holding,34002,1,Puffertemperatur unten X35 extern,int16,°C,1/10,External buffer 1 temperature bottom X35,V22.090
