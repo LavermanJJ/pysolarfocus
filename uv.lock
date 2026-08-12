@@ -188,7 +188,7 @@ wheels = [
 
 [[package]]
 name = "pysolarfocus"
-version = "5.1.4"
+version = "5.2.0"
 source = { editable = "." }
 dependencies = [
     { name = "packaging" },

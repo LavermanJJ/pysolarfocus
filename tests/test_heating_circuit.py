@@ -1,5 +1,7 @@
 """Tests for heating circuit component"""
 
+from unittest.mock import MagicMock
+
 from pysolarfocus import ApiVersions
 from pysolarfocus.components.base.data_value import DataValue
 from pysolarfocus.components.heating_circuit import HeatingCircuit
@@ -64,3 +66,35 @@ def test_heating_circuit_enums():
 
     assert HeatingCircuitCooling.HEATING.value == 0
     assert HeatingCircuitCooling.COOLING.value == 1
+
+
+def test_external_room_humidity_is_written_as_whole_percent():
+    """Register 32607 has no scale factor, see registers.csv.
+
+    The temperature registers around it are written as tenths (32606: 230 = 23.0
+    degrees), and the humidity register was given the same multiplier by analogy.
+    The controller then rejected every value above 10 percent, because 55 percent
+    was sent as 550. See home-assistant-solarfocus issue #150.
+    """
+    modbus = MagicMock()
+    modbus.write_register.return_value = True
+    hc = HeatingCircuit(api_version=ApiVersions.V_26_020).initialize(modbus)
+
+    hc.indoor_humidity_external.set_unscaled_value(55)
+    hc.indoor_humidity_external.commit()
+
+    modbus.write_register.assert_called_once_with(55, 32607)
+    assert hc.indoor_humidity_external.scaled_value == 55
+
+
+def test_external_room_temperature_stays_in_tenths():
+    """The neighbouring register does have a scale factor (32606: 230 = 23.0)."""
+    modbus = MagicMock()
+    modbus.write_register.return_value = True
+    hc = HeatingCircuit(api_version=ApiVersions.V_26_020).initialize(modbus)
+
+    hc.indoor_temperature_external.set_unscaled_value(23)
+    hc.indoor_temperature_external.commit()
+
+    modbus.write_register.assert_called_once_with(230, 32606)
+    assert hc.indoor_temperature_external.scaled_value == 23
