@@ -23,6 +23,7 @@
 3. [How To](#how-to)
    - [Installation](#installation)
    - [Basic Example](#basic-example)
+   - [Detecting the configuration](#detecting-the-configuration)
    - [Handling multiple components](#handling-multiple-components)
    - [Conveniently set modes](#convenitently-set-modes)
    - [API-Version specification](#api-version-specification)
@@ -137,6 +138,74 @@ Boiler
 ---Input:
 ....
 ```
+
+### Detecting the configuration
+
+Rather than being told which system, version and components it is talking to, the
+client can ask the heating system:
+
+```python
+from pysolarfocus import SolarfocusAPI
+
+solarfocus = SolarfocusAPI.autodetect(ip="[Your-IP]")
+solarfocus.connect()
+solarfocus.update()
+
+print(solarfocus.detection.system)       # Systems.VAMPAIR
+print(solarfocus.detection.api_version)  # ApiVersions.V_26_020
+```
+
+To detect without building a client - to show the result to a user first, say -
+use the detector on its own and hand the outcome to the constructor:
+
+```python
+from pysolarfocus import SolarfocusAPI, SolarfocusDetector
+
+detector = SolarfocusDetector(ip="[Your-IP]")
+detector.connect()
+detection = detector.detect()
+detector.close()
+
+print(detection.heating_circuit_count, detection.solar_count)
+solarfocus = SolarfocusAPI(ip="[Your-IP]", **detection.as_api_kwargs())
+```
+
+Detection costs around ninety register reads - a few seconds - so it belongs in
+setup rather than in anything that runs repeatedly.
+
+#### How it works, and what it cannot tell you
+
+The eco<sup>manager-touch</sup> has no register listing what is installed, so
+detection reads two different things:
+
+- **Which registers exist.** An address the firmware does not map is refused
+  with *illegal data address*. That establishes the API version and the register
+  layout, and almost nothing else: on a `26.020` controller every documented
+  register was mapped except the X35 sensors of the buffers that are not there.
+- **What the registers say.** The specification defines *nicht vorhanden* and
+  *nicht freigeschaltet* values for the components that repeat, and an
+  unconfigured sensor channel reports a temperature far outside its range
+  (`130.0 °C`, `270.0 °C` or `-1`). The counts come from these.
+
+`DetectionResult.evidence` holds the values each conclusion was reached from, so
+a wrong answer can be argued with rather than guessed at.
+
+Two things to know before trusting it:
+
+- **Differential modules are never detected.** `differential_module_count` is
+  always `0`, for the user to raise. On the installation this was written
+  against the block read as though a module were there - three channels each
+  repeating a temperature belonging to another component - while none was
+  configured, and nothing in the registers separates the two cases.
+- **Solar circuits have no "not present" value.** A circuit is taken to be
+  absent when its whole register block reads plain zero. A channel that is
+  configured but has no sensor on it reports `130.0 °C` or `270.0 °C` and counts
+  as present; only zero says the circuit is not there.
+- **Only vampair systems have been checked against real hardware.** Telling a
+  therminator, ecotop and octoplus apart is reasoned from the specification -
+  log wood at `2412`, Kesselbetriebsart at `2409`, the octoplus buffer at
+  `2410`/`2411` - and `DetectionResult.system_confident` is `False` when no heat
+  generator reported anything alive at all.
 
 ### Handling multiple components
 Solarfocus systems allow the use of multiple heating circuits, buffers, boilers, and fresh water modules. The api can be configured to interact with multiple components.
