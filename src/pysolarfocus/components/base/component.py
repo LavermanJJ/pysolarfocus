@@ -87,7 +87,10 @@ class Component:
         slices = []
         if len(datavalues) < 1:
             return slices
-        current_slice = RegisterSlice(datavalues[0].get_absolute_address(), datavalues[0].address, datavalues[-1].address + datavalues[-1].count)
+        # The count of a slice is how many registers to read from where it
+        # starts, so it is measured from its own address - the first value of a
+        # component is not necessarily the one at relative address 0.
+        current_slice = RegisterSlice(datavalues[0].get_absolute_address(), datavalues[0].address, (datavalues[-1].address + datavalues[-1].count) - datavalues[0].address)
         for i, datavalue in enumerate(datavalues[:-1]):
             if datavalue.address + datavalue.count != datavalues[i + 1].address:
                 # A gap was found => define the range from the start of the current slice to the end of the current address+count

@@ -1,8 +1,12 @@
 """Tests for biomass boiler component"""
+from contextlib import contextmanager
+import unittest.mock as mock
+from unittest.mock import MagicMock
 
-from pysolarfocus import ApiVersions
+from pysolarfocus import ApiVersions, Systems
 from pysolarfocus.components.base.data_value import DataValue
 from pysolarfocus.components.biomass_boiler import BiomassBoiler
+from pysolarfocus.modbus_wrapper import ModbusConnector
 
 
 def test_biomass_boiler_data_values():
@@ -34,3 +38,47 @@ def test_biomass_boiler_data_values():
     assert bb.boiler_operating_mode.address == 9
     assert bb.octoplus_buffer_temperature_bottom.address == 10
     assert bb.octoplus_buffer_temperature_top.address == 11
+
+
+@contextmanager
+def modbus_answering_with_zeros():
+    """A connector whose server answers every read with the registers asked for."""
+
+    def answer(address, count, **kwargs):
+        response = MagicMock()
+        response.isError.return_value = False
+        response.registers = [0] * count
+        return response
+
+    with mock.patch("pysolarfocus.modbus_wrapper.ModbusClient") as client:
+        client.return_value.is_socket_open.return_value = True
+        client.return_value.read_input_registers.side_effect = answer
+        client.return_value.read_holding_registers.side_effect = answer
+        yield ModbusConnector("localhost", 502, 1)
+
+
+def test_ecotop_reads_its_single_holding_register():
+    """The Ecotop has one holding register, and it is not the first of the range.
+
+    Reading from the start of the component instead of the start of the slice
+    asked the controller for seven registers rather than one, and the answer was
+    too long to be parsed - the whole boiler was reported as unreadable.
+    """
+    boiler = BiomassBoiler(api_version=ApiVersions.V_25_030, system=Systems.ECOTOP)
+
+    with modbus_answering_with_zeros() as modbus:
+        boiler.initialize(modbus)
+
+        assert [(s.absolute_address, s.count) for s in boiler.holding_slices] == [(33406, 1)]
+        assert boiler.update() is True
+
+
+def test_the_sweep_registers_are_read_on_their_own():
+    """Before 23.010 the holding registers start at the sweep function."""
+    boiler = BiomassBoiler(api_version=ApiVersions.V_22_090, system=Systems.PELLETELEGANCE)
+
+    with modbus_answering_with_zeros() as modbus:
+        boiler.initialize(modbus)
+
+        assert [(s.absolute_address, s.count) for s in boiler.holding_slices] == [(33410, 2)]
+        assert boiler.update() is True
