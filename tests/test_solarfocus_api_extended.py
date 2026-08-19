@@ -2,6 +2,8 @@
 import unittest.mock as mock
 from unittest.mock import MagicMock, patch
 
+import pytest
+
 from pysolarfocus import (
     ApiVersions,
     DomesticHotWaterMode,
@@ -230,11 +232,44 @@ def test_solarfocus_api_different_systems():
         # Test PELLETELEGANCE system
         api_pellet = SolarfocusAPI(ip="localhost", system=Systems.PELLETELEGANCE)
         assert api_pellet.system == Systems.PELLETELEGANCE
-        assert api_pellet.update_biomassboiler() is True  # Should return True for non-THERMINATOR/ECOTOP
+        assert api_pellet.update_biomassboiler() is True
 
-    # Test OCTOPLUS system
-    api_octoplus = SolarfocusAPI(ip="localhost", system=Systems.OCTOPLUS)
-    assert api_octoplus.system == Systems.OCTOPLUS
+        # Test OCTOPLUS system
+        api_octoplus = SolarfocusAPI(ip="localhost", system=Systems.OCTOPLUS)
+        assert api_octoplus.system == Systems.OCTOPLUS
+        assert api_octoplus.update_biomassboiler() is True
+
+
+@pytest.mark.parametrize("system", [s for s in Systems if s is not Systems.VAMPAIR])
+def test_biomass_boiler_is_read_on_every_biomass_system(system):
+    """The boiler has to actually be read, not merely reported as fine.
+
+    `update_biomassboiler` returns True both when the read succeeded and when
+    it decided the system has no boiler to read, so asserting on the return
+    value alone cannot tell the two apart. It used to name THERMINATOR and
+    ECOTOP, which left Pellet Elegance and Octoplus unread and every register
+    on 0 - reported as a successful refresh, so nothing anywhere raised.
+    """
+    with patch("pysolarfocus.ModbusConnector") as mock_modbus_class:
+        mock_modbus_class.return_value = MagicMock()
+        api = SolarfocusAPI(ip="localhost", system=system)
+
+        with patch.object(type(api.biomassboiler), "update", MagicMock(return_value=True)) as update:
+            assert api.update_biomassboiler() is True
+
+        assert update.called, f"the biomass boiler is never read on a {system.name}"
+
+
+def test_the_vampair_has_no_biomass_boiler_to_read():
+    """The one system that is a heat pump instead."""
+    with patch("pysolarfocus.ModbusConnector") as mock_modbus_class:
+        mock_modbus_class.return_value = MagicMock()
+        api = SolarfocusAPI(ip="localhost", system=Systems.VAMPAIR)
+
+        with patch.object(type(api.biomassboiler), "update", MagicMock(return_value=True)) as update:
+            assert api.update_biomassboiler() is True
+
+        assert not update.called
 
 
 def test_solarfocus_api_version_dependent_features():
