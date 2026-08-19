@@ -201,7 +201,12 @@ class SolarfocusAPI:
 
     def update_biomassboiler(self) -> bool:
         """Read values from biomass boiler"""
-        if self._system in [Systems.THERMINATOR, Systems.ECOTOP]:
+        # Every system bar the vampair is a biomass boiler, so name the one that
+        # is not. Listing the boilers instead meant that Pellet Elegance and
+        # Octoplus - in `Systems` and built by the factory, but in neither
+        # branch - were never read at all, and said so by returning success:
+        # every register kept its default of 0 and nothing reported a fault.
+        if self._system is not Systems.VAMPAIR:
             return self.__component_manager.update("biomassboiler")
         return True
 
