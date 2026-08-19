@@ -1,6 +1,7 @@
 """Python client lib for Solarfocus"""
 import importlib.metadata
 from enum import Enum
+from typing import Optional
 
 from packaging import version
 
@@ -55,7 +56,8 @@ from .const import (
     HeatingCircuitMode,
     HeatPumpSgReadyMode,
 )
-from .exceptions import InvalidConfigurationError
+from .detector import DetectionResult, SolarfocusDetector
+from .exceptions import InvalidConfigurationError, ModbusConnectionError
 from .modbus_wrapper import ModbusConnector
 
 
@@ -102,6 +104,8 @@ class SolarfocusAPI:
 
         self.__conn = ModbusConnector(ip, port, slave_id)
         self._slave_id = slave_id
+        # Set by autodetect(), so a caller can show what the configuration was read from
+        self.detection: Optional[DetectionResult] = None
         self._system = system
         self._api_version = api_version
 
@@ -133,6 +137,31 @@ class SolarfocusAPI:
         self.heatpump = components.get("heatpump")
         self.photovoltaic = components.get("photovoltaic")
         self.biomassboiler = components.get("biomassboiler")
+
+    @classmethod
+    def autodetect(cls, ip: str, port: int = PORT, slave_id: int = SLAVE_ID) -> "SolarfocusAPI":
+        """Build a client for whatever is on the controller at `ip`.
+
+        Asks the heating system what it is instead of being told: see
+        `SolarfocusDetector` for what that can and cannot establish. The
+        detection is kept on the client as `detection`, so that a caller showing
+        the result to a user - a Home Assistant config flow, say - can offer the
+        evidence behind it and let the user correct it.
+
+        Costs a few seconds of probing, so this belongs in setup rather than in
+        anything that runs repeatedly.
+        """
+        detector = SolarfocusDetector(ip, port, slave_id)
+        if not detector.connect():
+            raise ModbusConnectionError(f"Could not connect to {ip}:{port}")
+        try:
+            detection = detector.detect()
+        finally:
+            detector.close()
+
+        api = cls(ip=ip, port=port, slave_id=slave_id, **detection.as_api_kwargs())
+        api.detection = detection
+        return api
 
     def connect(self):
         """Connect to Solarfocus eco manager-touch"""

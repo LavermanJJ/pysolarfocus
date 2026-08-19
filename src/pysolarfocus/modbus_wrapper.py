@@ -24,6 +24,7 @@ except ImportError:
         IS_VERSION_3_10 = False
 
 
+from .components.base.enums import RegisterTypes
 from .components.base.register_slice import RegisterSlice
 from .exceptions import ModbusConnectionError, RegisterReadError, RegisterWriteError
 
@@ -116,6 +117,35 @@ class ModbusConnector:
         except Exception as e:
             logging.exception(f"Exception while reading holding registers for address: '{slices[0].absolute_address}': {e}")
             return False, None
+
+    def probe_registers(self, address: int, register_type: RegisterTypes, count: int = 1) -> Optional[List[int]]:
+        """Read one register on its own, to find out whether the controller has it.
+
+        The eco manager-touch answers an address its firmware does not map with
+        illegal data address, which is how the register set - and with it the api
+        version and the layout of the repeated components - can be established
+        without asking the user. A refusal is an answer here rather than a
+        failure, so it comes back as None and is not logged as an error.
+
+        A 32-bit register is only handed out whole: it refuses count=1 exactly
+        like an address that does not exist, so a caller probing one has to ask
+        for both of its registers.
+
+        Returns:
+            The registers read, or None if the controller refused the address.
+        """
+        try:
+            if register_type == RegisterTypes.INPUT:
+                result = self.client.read_input_registers(address=address, count=count, **self.__slave_args)
+            else:
+                result = self.client.read_holding_registers(address=address, count=count, **self.__slave_args)
+        except Exception as e:
+            logging.debug(f"Exception while probing address={address}, count={count}: {e}")
+            return None
+        if result.isError():
+            logging.debug(f"Controller refused address={address}, count={count}: {result}")
+            return None
+        return result.registers
 
     def write_register(self, value: int, address: int, check_connection: bool = True) -> bool:
         """Write a value to the modbus server"""
