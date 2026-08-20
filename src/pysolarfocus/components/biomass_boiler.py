@@ -23,7 +23,23 @@ class BiomassBoiler(Component):
         self.ash_container = DataValue(address=7)
         self.outdoor_temperature = DataValue(address=8, multiplier=0.1)
         self.boiler_operating_mode = DataValue(address=9)
-        self.octoplus_buffer_temperature_bottom = DataValue(address=10, multiplier=0.1)
+
+        # Register 2410 is two different measurements at one address. The
+        # register document splits it three ways: "octoplus:
+        # Speichertemperatur-Unten - alle anderen Sigmatek Kessel (ohne
+        # vampair): Ruecklauftemperatur - Therminator: nicht belegt". So the
+        # octoplus reads the bottom of its buffer there, the EcoTop and the
+        # Pellet Elegance read the return flow of the boiler, and a therminator
+        # reads nothing - which is why this is a branch rather than two
+        # attributes at one address: a therminator would otherwise report
+        # whatever an unassigned register happens to hold, and defining both
+        # would split the read of the component in two to cover one address
+        # twice.
+        if system is Systems.OCTOPLUS:
+            self.octoplus_buffer_temperature_bottom = DataValue(address=10, multiplier=0.1)
+        elif system in (Systems.ECOTOP, Systems.PELLETELEGANCE):
+            self.return_temperature = DataValue(address=10, multiplier=0.1)
+
         self.octoplus_buffer_temperature_top = DataValue(address=11, multiplier=0.1)
 
         if api_version.greater_or_equal(ApiVersions.V_22_090.value) and system is not Systems.ECOTOP:

@@ -222,7 +222,7 @@ Input,2406,1,Kesselreinigung,int16,%,-,0-100% (boiler cleaning recommended at 10
 Input,2407,1,Ascheboxfüllstand,int16,%,-,0-100% (ash box should be emptied at 100%),
 Input,2408,1,Außentemperatur,int16,°C,1/10,Outdoor temperature (e.g. 270 = 27.0°C),
 Input,2409,1,Kesselbetriebsart therminator,int16,-,-,Boiler operating mode (therminator),
-Input,2410,1,SpeichertemperaturUnten octoplus,int16,°C,1/10,Buffer temperature bottom (octoplus),V20.110
+Input,2410,1,SpeichertemperaturUnten octoplus / Rücklauftemperatur,int16,°C,1/10,Buffer temperature bottom on the octoplus; return flow temperature on the EcoTop and the Pellet Elegance; unassigned on the therminator,V20.110
 Input,2411,1,SpeichertemperaturOben octoplus,int16,°C,1/10,Buffer temperature top (octoplus),V20.110
 Input,2412,1,Stückholz therminator,uint16,-,-,0=No wood fueling needed 1=Wood can be added,
 Input,2414,2,Pelletverbrauch seit letzter Lagerraumbefüllung,uint32,kg,1/10,Pellet consumption since last filling,V23.010
