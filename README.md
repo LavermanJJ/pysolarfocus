@@ -15,6 +15,16 @@
 </p>
 
 
+> [!IMPORTANT]
+> ### This library is in maintenance mode. Its successor is [aiosolarfocus](https://github.com/LavermanJJ/aiosolarfocus).
+>
+> `aiosolarfocus` is the async rewrite: every call is awaited rather than blocking, the register map is validated data rather than branches in component constructors, and it ships `py.typed`. [home-assistant-solarfocus](https://github.com/LavermanJJ/home-assistant-solarfocus) reads through it from version 7.0.0 on, and no longer depends on this library.
+>
+> **The rewrite exists because several defects here are not fixable without it.** A register the document grants to one system was read on all of them, and a read spanning an address the firmware does not map comes back *compacted* rather than padded — so every value after the gap silently lands under the wrong name. That is [#61](https://github.com/LavermanJJ/pysolarfocus/issues/61) and [#62](https://github.com/LavermanJJ/pysolarfocus/issues/62), and it is why a pellet boiler here reports a return flow temperature of 270 °C where its sensor says 22.1. Fixing it properly means gating every register per system and firmware version, which is the change `aiosolarfocus` is.
+>
+> **What maintenance mode means:** this library keeps working, stays on PyPI, and security fixes still go out. New registers, new firmware versions and the open defects above go to `aiosolarfocus` instead. If you are starting something new, start there; if you depend on this one, [migrating](https://github.com/LavermanJJ/aiosolarfocus#readme) is the path forward.
+
+
 <details open="open">
   <summary>Table of Contents</summary>
 
@@ -34,7 +44,7 @@
 
 ## About
 
-Python client library to interact with heating systems of [Solarfocus](https://www.solarfocus.com/) (eco<sup>_manager-touch_</sup>) via Modbus TCP. This library has been developed for the integration into [Home-Assistant](https://www.home-assistant.io/) via a [custom integration](https://github.com/LavermanJJ/home-assistant-solarfocus), but can be used indepdently.
+Python client library to interact with heating systems of [Solarfocus](https://www.solarfocus.com/) (eco<sup>_manager-touch_</sup>) via Modbus TCP. This library has been developed for the integration into [Home-Assistant](https://www.home-assistant.io/) via a [custom integration](https://github.com/LavermanJJ/home-assistant-solarfocus), but can be used indepdently. That integration moved to [aiosolarfocus](https://github.com/LavermanJJ/aiosolarfocus) in its 7.0.0 release, and this library is in maintenance mode — see the notice at the top.
 
 > **Warning**
 > Use with caution, in case of doubt check with Solarfocus or your installer if a feature / functionality (e.g. cooling) is supported by your installation to avoid damages to your heating system or the building.
